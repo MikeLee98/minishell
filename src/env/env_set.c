@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env_set.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/21 21:50:46 by mario             #+#    #+#             */
-/*   Updated: 2025/11/24 12:35:00 by mario            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../minishell.h"
 
-#include "env.h"
-
-int env_update(t_env *env, char *key, char *new_value)
+static int env_update(t_env *env, char *key, char *new_value)
 {
     t_env *node;
 

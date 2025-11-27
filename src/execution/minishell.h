@@ -1,19 +1,19 @@
-#ifndef ENV_H
-# define ENV_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-#include "libft/libft.h"
+#include "../../libft/libft.h"
 #include <stdlib.h>
-
-typedef struct s_shell {
-	t_env   *env;
-	int	exit_status;
-} t_shell;
 
 typedef struct s_env {
     char *key;
     char *value;
     struct s_env *next;
 } t_env;
+
+typedef struct s_shell {
+	t_env   *env;
+	int	exit_status;
+} t_shell;
 
 // struct s_cmd{
 // 	char	**command
@@ -35,6 +35,5 @@ void    env_add_back(t_env **env, t_env *new);
 //built_ins
 void	ft_env(t_shell *shell, char **args);
 void 	ft_export(t_env **env, char **args);
-
 
 #endif

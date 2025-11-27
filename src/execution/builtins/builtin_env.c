@@ -1,4 +1,4 @@
-#include "../../minishell.h"
+#include "../minishell.h"
 
 void	ft_env(t_shell *shell, char **args)
 {

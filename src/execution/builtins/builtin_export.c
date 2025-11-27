@@ -1,6 +1,6 @@
-#include "../../minishell.h"
+#include "../minishell.h"
 
-int is_valid_identifier(char *s)
+static int is_valid_identifier(char *s)
 {
     int i;
 
@@ -16,7 +16,7 @@ int is_valid_identifier(char *s)
     return (1);
 }
 
-void split_export_arg(char *arg, char **key, char **value)
+static void split_export_arg(char *arg, char **key, char **value)
 {
     int i;
 
@@ -30,7 +30,7 @@ void split_export_arg(char *arg, char **key, char **value)
         *value = NULL;
 }
 
-void export_assign(t_env **env, char *arg)
+static void export_assign(t_env **env, char *arg)
 {
     char *key;
     char *value;
@@ -44,7 +44,7 @@ void export_assign(t_env **env, char *arg)
     free(value);
 }
 
-void print_export(t_env *env)
+static void print_export(t_env *env)
 {
     while (env)
     {

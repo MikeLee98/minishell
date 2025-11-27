@@ -1,4 +1,4 @@
-#include "../../minishell.h"
+#include "../minishell.h"
 
 static char    *extract_key(char *str)
 {
@@ -35,7 +35,7 @@ static t_env   *env_new(char *str)
     return (node);
 }
 
-static void    env_add_back(t_env **env, t_env *new)
+void    env_add_back(t_env **env, t_env *new)
 {
     t_env   *tmp;
 

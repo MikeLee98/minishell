@@ -60,7 +60,7 @@ $(NAME): $(OBJ)
 
 v: $(NAME)
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
-		--suppressions=readline.supp ./$(NAME)
+		--suppressions=valgrind.supp ./$(NAME)
 
 p: parsing
 
@@ -73,7 +73,7 @@ $(NAME_PARSING): $(PARSING_OBJ)
 
 vp: parsing
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
-		--suppressions=readline.supp ./$(NAME_PARSING)
+		--suppressions=valgrind.supp ./$(NAME_PARSING)
 
 # Execution target
 e: execution
@@ -87,7 +87,7 @@ $(NAME_EXECUTION): $(EXECUTION_OBJ)
 
 ve: execution
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
-		--suppressions=readline.supp ./$(NAME_EXECUTION)
+		--suppressions=valgrind.supp ./$(NAME_EXECUTION)
 
 $(LIBFT):
 	@echo "$(YELLOW)Building libft...$(RESET)"

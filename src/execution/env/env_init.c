@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../../includes/minishell.h"
 
 static char    *extract_key(char *str)
 {

@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../../includes/minishell.h"
 
 t_env   *env_find(t_env *env, char *key)
 {

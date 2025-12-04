@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../../includes/minishell.h"
 
 static int env_update(t_env *env, char *key, char *new_value)
 {

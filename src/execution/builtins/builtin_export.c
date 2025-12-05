@@ -20,12 +20,13 @@ static void export_assign(t_env **env, char *arg)
     char *value;
 
     split_export_arg(arg, &key, &value);
-    if (value)
+	if (value == NULL)
+	{
+        if (!env_find(*env, key))
+            env_set(env, key, NULL);
+    }
+    else
         env_set(env, key, value);
-	else if (value = 0)
-		env_set(env, key, "");
-    else if (!env_find(*env, key))
-        env_set(env, key, NULL);
     free(key);
     free(value);
 }

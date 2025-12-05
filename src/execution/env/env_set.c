@@ -8,7 +8,10 @@ static int env_update(t_env *env, char *key, char *new_value)
     if (!node)
         return (0);
     free(node->value);
-    node->value = ft_strdup(new_value);
+	if (new_value == NULL)
+		node->value = NULL;
+	else
+    	node->value = ft_strdup(new_value);
     return (1);
 }
 
@@ -20,7 +23,10 @@ static void    env_add_var(t_env **env, char *key, char *value)
     if (!new)
         return;
     new->key = ft_strdup(key);
-    new->value = ft_strdup(value);
+	if (value == NULL)
+		new->value = NULL;
+	else
+    	new->value = ft_strdup(value);
     new->next = NULL;
     env_add_back(env, new);
 }

@@ -44,25 +44,13 @@ static void export_assign(t_env **env, char *arg)
     free(value);
 }
 
-static void print_export(t_env *env)
-{
-    while (env)
-    {
-        if (env->value)
-            ft_printf("declare -x %s=\"%s\"\n", env->key, env->value);
-        else
-            ft_printf("declare -x %s\n", env->key);
-        env = env->next;
-    }
-}
-
-void ft_export(t_env **env, char **args)
+void ft_export(t_shell *shell, char **args)
 {
     int i;
 
-    if (!args[1])
+    if (!args)
     {
-        print_export(*env);
+        print_export(shell->env);
         return ;
     }
     i = 1;
@@ -71,7 +59,7 @@ void ft_export(t_env **env, char **args)
         if (!is_valid_identifier(args[i]))
             ft_printf("minishell: export: `%s': not a valid identifier\n", args[i]);
         else
-            export_assign(env, args[i]);
+            export_assign(&shell->env, args[i]);
         i++;
     }
 }

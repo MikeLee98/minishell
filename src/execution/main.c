@@ -21,30 +21,18 @@ static void    env_free_all(t_env *env)
     }
 }
 
-static void    free_env_array(char **array)
-{
-    int i;
-
-    if (!array)
-        return;
-    i = 0;
-    while (array[i])
-    {
-        free(array[i]);
-        i++;
-    }
-    free(array);
-}
-
 int main(int ac, char **av, char **envp)
 {
     t_shell shell;
 
+	if (ac != 2)
+		return (0);
     shell.env = init_env(envp);
     shell.exit_status = 0;
-    // minishell_loop(&shell);
-	ft_env(&shell, NULL);
-	ft_export(&shell.env, NULL);
+	if (ft_strncmp(av[1], "env", 3))
+		ft_env(&shell, NULL);
+	if (ft_strncmp(av[1], "export", 6))
+		ft_export(&shell.env, NULL);
 	env_free_all(shell.env);
 
     return (0);

@@ -29,10 +29,10 @@ int main(int ac, char **av, char **envp)
 		return (0);
     shell.env = init_env(envp);
     shell.exit_status = 0;
-	if (ft_strncmp(av[1], "env", 3))
-		ft_env(&shell, NULL);
-	if (ft_strncmp(av[1], "export", 6))
-		ft_export(&shell.env, NULL);
+	if (!ft_strcmp(av[1], "env"))
+		ft_env(&shell);
+	if (!ft_strcmp(av[1], "export"))
+		ft_export(&shell, NULL);
 	env_free_all(shell.env);
 
     return (0);

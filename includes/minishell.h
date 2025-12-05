@@ -15,6 +15,9 @@ typedef struct s_shell {
 	int	exit_status;
 } t_shell;
 
+//libft_plus
+int ft_strcmp(char *s1, char *s2);
+
 //env_init
 t_env   *init_env(char **envp);
 void    env_add_back(t_env **env, t_env *new);
@@ -30,9 +33,12 @@ char    *env_get_value(t_env *env, char *key);
 t_env   *env_find(t_env *env, char *key);
 
 //builtin_env
-void	ft_env(t_shell *shell, char **args);
+void	ft_env(t_shell *shell);
 
 //builtin_export
-void 	ft_export(t_env **env, char **args);
+void ft_export(t_shell *shell, char **args);
+
+//pint_export
+void    print_export(t_env *env);
 
 #endif

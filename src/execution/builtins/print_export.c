@@ -98,13 +98,14 @@ void print_export(t_env *env)
         if (value)
         {
             *value = '\0';
-            ft_printf("declare -x %s=\"%s\"\n", array[i], value + 1);
+            if (ft_strcmp(array[i], "_") != 0)
+            	ft_printf("declare -x %s=\"%s\"\n", array[i], value + 1);
             *value = '=';
         }
         else
-            ft_printf("declare -x %s\n", array[i]);
+			if (ft_strcmp(array[i], "_") != 0)
+            	ft_printf("declare -x %s\n", array[i]);
 		i++;
-        env = env->next;
     }
 	free_env_array(array);
 }

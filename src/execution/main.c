@@ -25,14 +25,17 @@ int main(int ac, char **av, char **envp)
 {
     t_shell shell;
 
-	if (ac != 2)
+	if (ac < 2)
 		return (0);
     shell.env = init_env(envp);
     shell.exit_status = 0;
 	if (!ft_strcmp(av[1], "env"))
 		ft_env(&shell);
 	if (!ft_strcmp(av[1], "export"))
-		ft_export(&shell, NULL);
+	{
+		ft_export(&shell, av);
+		ft_env(&shell);
+	}
 	env_free_all(shell.env);
 
     return (0);

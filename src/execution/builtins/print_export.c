@@ -102,9 +102,11 @@ void print_export(t_env *env)
             	ft_printf("declare -x %s=\"%s\"\n", array[i], value + 1);
             *value = '=';
         }
-        else
+        else 
+		{
 			if (ft_strcmp(array[i], "_") != 0)
             	ft_printf("declare -x %s\n", array[i]);
+		}
 		i++;
     }
 	free_env_array(array);

@@ -9,6 +9,8 @@ void	ft_env(t_shell *shell)
 	{
 		if (tmp->value)
 			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		else
+			ft_printf("%s\n", tmp->key);
 		tmp = tmp->next;
 	}
 }

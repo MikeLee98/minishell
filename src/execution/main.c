@@ -34,7 +34,8 @@ int main(int ac, char **av, char **envp)
 	if (!ft_strcmp(av[1], "export"))
 	{
 		ft_export(&shell, av);
-		ft_env(&shell);
+		if (ac == 3)
+			ft_env(&shell);
 	}
 	env_free_all(shell.env);
 

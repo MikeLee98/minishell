@@ -4,12 +4,14 @@
 #include "../libft/includes/libft.h"
 #include <stdlib.h>
 
+// Environment Structure
 typedef struct s_env {
     char *key;
     char *value;
     struct s_env *next;
 } t_env;
 
+// Shell Structure
 typedef struct s_shell {
 	t_env   *env;
 	int	exit_status;

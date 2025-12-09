@@ -4,14 +4,14 @@ t_env   *env_find(t_env *env, char *key)
 {
     while (env)
     {
-        if (ft_strncmp(env->key, key, ft_strlen(env->key) + 1) == 0)
+        if (ft_strcmp(env->key, key) == 0)
             return (env);
         env = env->next;
     }
     return (NULL);
 }
 
-char    *env_get_value(t_env *env, char *key)
+char    *ft_getenv(t_env *env, char *key)
 {
     t_env *node;
 

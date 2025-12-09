@@ -9,7 +9,7 @@ void    env_unset(t_env **env, char *key)
     prev = NULL;
     while (tmp)
     {
-        if (ft_strncmp(tmp->key, key, ft_strlen(tmp->key) + 1) == 0)
+        if (ft_strcmp(tmp->key, key) == 0)
         {
             if (prev)
                 prev->next = tmp->next;

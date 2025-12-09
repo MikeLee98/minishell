@@ -27,17 +27,27 @@ int main(int ac, char **av, char **envp)
 
 	if (ac < 2)
 		return (0);
+
     shell.env = init_env(envp);
-    shell.exit_status = 0;
+
 	if (!ft_strcmp(av[1], "env"))
 		ft_env(&shell);
+
 	if (!ft_strcmp(av[1], "export"))
 	{
 		ft_export(&shell, av);
 		if (ac == 3)
 			ft_env(&shell);
 	}
+	if(!ft_strcmp(av[1], "cd"))
+	{
+		ft_cd(&shell, av);
+		ft_env(&shell);
+	}
+	if(!ft_strcmp(av[1], "pwd"))
+	{
+		ft_pwd();
+	}
 	env_free_all(shell.env);
-
     return (0);
 }

@@ -26,7 +26,7 @@ static void export_assign(t_env **env, char *arg)
             env_set(env, key, NULL);
     }
     else
-        env_set(env, key, value);
+		env_set(env, key, value);
     free(key);
     free(value);
 }

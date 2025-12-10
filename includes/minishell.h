@@ -87,4 +87,7 @@ void	ft_cd(t_shell *shell, char **args);
 //builtin_pwd
 void	ft_pwd(void);
 
+//builtin_echo
+void	ft_echo(char **args);
+
 #endif

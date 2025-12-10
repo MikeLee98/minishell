@@ -36,17 +36,26 @@ int main(int ac, char **av, char **envp)
 	if (!ft_strcmp(av[1], "export"))
 	{
 		ft_export(&shell, av);
-		if (ac == 3)
+		if (ac > 2)
 			ft_env(&shell);
 	}
-	if(!ft_strcmp(av[1], "cd"))
+	if (!ft_strcmp(av[1], "unset"))
+	{
+		ft_unset(&shell, av);
+		ft_env(&shell);
+	}
+	if (!ft_strcmp(av[1], "cd"))
 	{
 		ft_cd(&shell, av);
 		ft_env(&shell);
 	}
-	if(!ft_strcmp(av[1], "pwd"))
+	if (!ft_strcmp(av[1], "pwd"))
 	{
 		ft_pwd();
+	}
+	if (!ft_strcmp(av[1], "echo"))
+	{
+		ft_echo(av);
 	}
 	env_free_all(shell.env);
     return (0);

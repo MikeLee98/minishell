@@ -9,4 +9,3 @@
 //          args = ["grep", "txt", NULL]
 //          redirs -> lista com <, >, >>, << (heredoc)
 // 		 next == NULL
-		 

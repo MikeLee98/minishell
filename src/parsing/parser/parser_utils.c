@@ -1,4 +1,4 @@
-#include "../../../includes/parsing.h"
+#include "../../../includes/minishell.h"
 
 static int	count_args(char **args)
 {
@@ -18,6 +18,8 @@ static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
 	int		i;
 	int		count;
 
+	if (!arg || !*arg)
+		return ;
 	count = count_args(cmd->args);
 	new_args = malloc(sizeof(char *) * (count + 2));
 	if (!new_args)
@@ -56,7 +58,7 @@ static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
 	current->next = new_redir;
 }
 
-t_token	*parse_single_cmd(t_cmd *cmd, t_token *current)
+t_token	*parse_cmd(t_cmd *cmd, t_token *current)
 {
 	while (current && current->type != TOKEN_PIPE)
 	{

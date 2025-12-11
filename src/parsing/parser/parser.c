@@ -1,4 +1,4 @@
-#include "../../../includes/parsing.h"
+#include "../../../includes/minishell.h"
 
 static t_cmd	*create_cmd(void)
 {
@@ -13,28 +13,40 @@ static t_cmd	*create_cmd(void)
 	return (cmd);
 }
 
-t_cmd	*parser(t_token *tokens)
+static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
+{
+	t_cmd	*current_cmd;
+
+	current_cmd = create_cmd();
+	if (!current_cmd)
+	{
+		free_cmd_list(*cmd_list);
+		return (NULL);
+	}
+	current_token = parse_cmd(current_cmd, current_token);
+	if (!current_token && current_cmd->args == NULL)
+	{
+		free_cmd(current_cmd);
+		return (NULL);
+	}
+	add_cmd_to_list(cmd_list, current_cmd);
+	if (current_token && current_token->type == TOKEN_PIPE)
+		current_token = current_token->next;
+	return (current_token);
+}
+
+t_cmd	*parser(t_token *tokens, char **envp)
 {
 	t_cmd	*cmd_list;
-	t_cmd	*current_cmd;
 	t_token	*current_token;
 
+	if (!tokens)
+		return (NULL);
+	expand_tokens(tokens, envp);
+	process_quotes(tokens);
 	cmd_list = NULL;
 	current_token = tokens;
 	while (current_token)
-	{
-		current_cmd = create_cmd();
-		if (!current_cmd)
-			return (free_cmd_list(cmd_list), NULL);
-		current_token = parse_single_cmd(current_cmd, current_token);
-		if (!current_token && current_cmd->args == NULL)
-		{
-			free_cmd(current_cmd);
-			break ;
-		}
-		add_cmd_to_list(&cmd_list, current_cmd);
-		if (current_token && current_token->type == TOKEN_PIPE)
-			current_token = current_token->next;
-	}
+		current_token = build_cmd(&cmd_list, current_token);
 	return (cmd_list);
 }

@@ -1,8 +1,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "../libft/includes/libft.h"
-#include <stdlib.h>
+# include "../libft/includes/libft.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
 // Token Types
 typedef enum e_token_type
@@ -14,6 +15,14 @@ typedef enum e_token_type
 	TOKEN_REDIR_APPEND,
 	TOKEN_REDIR_HEREDOC,
 }	t_token_type;
+
+// Quote State
+typedef enum e_quote_state
+{
+	QUOTE_NONE,
+	QUOTE_SINGLE,
+	QUOTE_DOUBLE,
+}	t_quote_state;
 
 // Token Structure
 typedef struct s_token
@@ -53,31 +62,70 @@ typedef struct s_shell {
 	int		exit_code;
 } t_shell;
 
+// **************************************************************************** //
+//                                   PARSING                                    //
+// **************************************************************************** //
+
+// Lexer Functions (lexer.c)
+t_token	*lexer(char *input);
+
+// Lexer Helper Functions (lexer_utils.c)
+char	*handle_word(char *input, int *i);
+
+// Lexer Helper Functions (lexer_utils_gen.c)
+int		is_whitespace(char c);
+int		is_special_char(char c);
+
+// Parser Functions (parser.c)
+t_cmd	*parser(t_token *tokens, char **envp);
+
+// Parser Helper Functions (parser_utils.c)
+t_token	*parse_cmd(t_cmd *cmd, t_token *current);
+void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
+
+// Expansion Functions (expander.c)
+void	expand_tokens(t_token *tokens, char **envp);
+
+// Expansion Helper Functions (expander_utils.c)
+char	*expand_variable(char *str, int *i, char **envp);
+
+// Quote Removal Functions (quote_removal.c)
+void	process_quotes(t_token *tokens);
+
+// Free Functions (free.c)
+void	free_tokens(t_token *tokens);
+void	free_cmd(t_cmd *cmd);
+void	free_cmd_list(t_cmd *cmd_list);
+
+// **************************************************************************** //
+//                                  EXECUTION                                   //
+// **************************************************************************** //
+
 //libft_plus
-int ft_strcmp(char *s1, char *s2);
+int	ft_strcmp(char *s1, char *s2);
 
 //env_init
-t_env   *init_env(char **envp);
-void    env_add_back(t_env **env, t_env *new);
+t_env	*init_env(char **envp);
+void	env_add_back(t_env **env, t_env *new);
 
 //env_set
-void    env_set(t_env **env, char *key, char *value);
+void	env_set(t_env **env, char *key, char *value);
 
 //env_unset
-void    env_unset(t_env **env, char *key);
+void	env_unset(t_env **env, char *key);
 
 //env_utils
-char    *ft_getenv(t_env *env, char *key);
-t_env   *env_find(t_env *env, char *key);
+char	*ft_getenv(t_env *env, char *key);
+t_env	*env_find(t_env *env, char *key);
 
 //builtin_env
 void	ft_env(t_shell *shell);
 
 //builtin_export
-void ft_export(t_shell *shell, char **args);
+void	ft_export(t_shell *shell, char **args);
 
 //pint_export
-void    print_export(t_env *env);
+void	print_export(t_env *env);
 
 //builtin_unset
 void	ft_unset(t_shell *shell, char **args);
@@ -92,6 +140,6 @@ void	ft_pwd(void);
 void	ft_echo(char **args);
 
 //builin_exit
-void    ft_exit(t_shell *shell, char **args);
+void	ft_exit(t_shell *shell, char **args);
 
 #endif

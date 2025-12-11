@@ -50,6 +50,7 @@ typedef struct s_env {
 typedef struct s_shell {
 	t_env   *env;
 	t_cmd   *cmds;
+	int		exit_code;
 } t_shell;
 
 //libft_plus

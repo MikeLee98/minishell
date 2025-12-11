@@ -25,6 +25,7 @@ int main(int ac, char **av, char **envp)
 {
     t_shell shell;
 
+	shell.exit_code = 0;
 	if (ac < 2)
 		return (0);
 
@@ -57,6 +58,7 @@ int main(int ac, char **av, char **envp)
 	{
 		ft_echo(av);
 	}
+
 	env_free_all(shell.env);
     return (0);
 }

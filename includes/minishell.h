@@ -91,4 +91,7 @@ void	ft_pwd(void);
 //builtin_echo
 void	ft_echo(char **args);
 
+//builin_exit
+void    ft_exit(t_shell *shell, char **args);
+
 #endif

@@ -58,7 +58,6 @@ int main(int ac, char **av, char **envp)
 	{
 		ft_echo(av);
 	}
-
 	env_free_all(shell.env);
     return (0);
 }

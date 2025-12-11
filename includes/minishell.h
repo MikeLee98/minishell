@@ -16,14 +16,6 @@ typedef enum e_token_type
 	TOKEN_REDIR_HEREDOC,
 }	t_token_type;
 
-// Quote State
-typedef enum e_quote_state
-{
-	QUOTE_NONE,
-	QUOTE_SINGLE,
-	QUOTE_DOUBLE,
-}	t_quote_state;
-
 // Token Structure
 typedef struct s_token
 {

@@ -16,14 +16,6 @@ typedef enum e_token_type
 	TOKEN_REDIR_HEREDOC,
 }	t_token_type;
 
-// Quote State
-typedef enum e_quote_state
-{
-	QUOTE_NONE,
-	QUOTE_SINGLE,
-	QUOTE_DOUBLE,
-}	t_quote_state;
-
 // Token Structure
 typedef struct s_token
 {
@@ -49,22 +41,24 @@ typedef struct s_cmd
 }	t_cmd;
 
 // Environment Structure
-typedef struct s_env {
-    char *key;
-    char *value;
-    struct s_env *next;
-} t_env;
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 // Shell Structure
-typedef struct s_shell {
-	t_env   *env;
-	t_cmd   *cmds;
-	int		exit_code;
-} t_shell;
+typedef struct s_shell
+{
+	t_env			*env;
+	t_cmd			*cmds;
+	int				exit_code;
+}	t_shell;
 
-// **************************************************************************** //
-//                                   PARSING                                    //
-// **************************************************************************** //
+// ************************************************************************** //
+//                                  PARSING                                   //
+// ************************************************************************** //
 
 // Lexer Functions (lexer.c)
 t_token	*lexer(char *input);
@@ -97,12 +91,12 @@ void	free_tokens(t_token *tokens);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd *cmd_list);
 
-// **************************************************************************** //
-//                                  EXECUTION                                   //
-// **************************************************************************** //
+// ************************************************************************** //
+//                                 EXECUTION                                  //
+// ************************************************************************** //
 
 //libft_plus
-int	ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 
 //env_init
 t_env	*init_env(char **envp);

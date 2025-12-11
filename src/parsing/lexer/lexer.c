@@ -1,4 +1,4 @@
-#include "../../../includes/parsing.h"
+#include "../../../includes/minishell.h"
 
 static t_token	*create_token(t_token_type type, char *value)
 {
@@ -30,24 +30,48 @@ static void	add_token(t_token **head, t_token *new_token)
 
 static int	handle_operator(char *input, int *i, t_token **head)
 {
+	t_token	*new_token;
+
+	new_token = NULL;
 	if (input[*i] == '|')
-		add_token(head, create_token(TOKEN_PIPE, ft_strdup("|")));
+		new_token = create_token(TOKEN_PIPE, ft_strdup("|"));
 	else if (input[*i] == '<' && input[*i + 1] == '<')
 	{
-		add_token(head, create_token(TOKEN_REDIR_HEREDOC, ft_strdup("<<")));
+		new_token = create_token(TOKEN_REDIR_HEREDOC, ft_strdup("<<"));
 		(*i)++;
 	}
 	else if (input[*i] == '<')
-		add_token(head, create_token(TOKEN_REDIR_IN, ft_strdup("<")));
+		new_token = create_token(TOKEN_REDIR_IN, ft_strdup("<"));
 	else if (input[*i] == '>' && input[*i + 1] == '>')
 	{
-		add_token(head, create_token(TOKEN_REDIR_APPEND, ft_strdup(">>")));
+		new_token = create_token(TOKEN_REDIR_APPEND, ft_strdup(">>"));
 		(*i)++;
 	}
 	else if (input[*i] == '>')
-		add_token(head, create_token(TOKEN_REDIR_OUT, ft_strdup(">")));
-	else
+		new_token = create_token(TOKEN_REDIR_OUT, ft_strdup(">"));
+	if (!new_token)
 		return (0);
+	add_token(head, new_token);
+	return (1);
+}
+
+static int	handle_token(char *input, int *i, t_token **head)
+{
+	char	*word;
+
+	if (is_special_char(input[*i]))
+	{
+		if (!handle_operator(input, i, head))
+			return (0);
+		(*i)++;
+	}
+	else
+	{
+		word = handle_word(input, i);
+		if (!word)
+			return (0);
+		add_token(head, create_token(TOKEN_WORD, word));
+	}
 	return (1);
 }
 
@@ -55,7 +79,6 @@ t_token	*lexer(char *input)
 {
 	t_token	*head;
 	int		i;
-	char	*word;
 
 	head = NULL;
 	i = 0;
@@ -65,17 +88,10 @@ t_token	*lexer(char *input)
 			i++;
 		if (!input[i])
 			break ;
-		if (is_special_char(input[i]))
+		if (!handle_token(input, &i, &head))
 		{
-			if (!handle_operator(input, &i, &head))
-				return (free_tokens(head), NULL);
-			i++;
-		}
-		else
-		{
-			word = extract_word(input, &i);
-			if (word)
-				add_token(&head, create_token(TOKEN_WORD, word));
+			free_tokens(head);
+			return (NULL);
 		}
 	}
 	return (head);

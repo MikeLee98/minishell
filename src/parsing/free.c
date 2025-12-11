@@ -1,4 +1,4 @@
-#include "../../includes/parsing.h"
+#include "../../includes/minishell.h"
 
 void	free_tokens(t_token *tokens)
 {

@@ -18,9 +18,7 @@ else (pipeline):
 
 **************************************************************************
 
-Builtins que não precisam de fork
-
-— mudam o estado do shell
+Builtins que não precisam de fork (mudam o estado do shell)
 
 cd
 
@@ -43,7 +41,7 @@ pwd
 
 **************************************************************************
 
-Regra 1 — Se houver pipes → TODOS os comandos são executados em fork
+Regra 1 — Se houver pipes TODOS os comandos são executados em fork
 
 if pipeline:
     builtins run in child

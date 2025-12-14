@@ -48,6 +48,8 @@ static char    *join_key_value(char *key, char *value)
     if (!tmp)
         return (NULL);
     res = ft_strjoin(tmp, value);
+	if (!res)
+		return (NULL);
     free(tmp);
     return (res);
 }
@@ -73,7 +75,7 @@ static char    **env_to_array(t_env *env)
 	env = head;
     while (env)
     {
-        array[i] = join_key_value(env->key, env->value);
+        array[i] = join_key_value(env->key, env->value); //free array if malloc fails
         i++;
         env = env->next;
     }

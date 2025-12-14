@@ -1,11 +1,14 @@
 #include "../../../includes/minishell.h"
 
-// void execute(t_shell *shell, t_cmd *cmd)
+// void executor(t_shell *shell)
 // {
-//     if (!cmd)
+//     if (!shell->cmds)
 //         return;
-//     if (!cmd->next)
-//         execute_single(shell, cmd);
+
+//     if (!shell->cmds->next)
+//         execute_simnple(shell, shell->cmds);
 //     else
-//         execute_pipeline(shell, cmd);
+//         execute_pipeline(shell, shell->cmds);
 // }
+
+

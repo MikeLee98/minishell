@@ -7,7 +7,7 @@ static char    *extract_key(char *str)
     i = 0;
     while (str[i] && str[i] != '=')
         i++;
-    return (ft_substr(str, 0, i));
+    return (ft_substr(str, 0, i)); //do malloc check
 }
 
 static char    *extract_value(char *str)
@@ -18,7 +18,7 @@ static char    *extract_value(char *str)
     while (str[i] && str[i] != '=')
         i++;
     if (str[i] == '=')
-        return (ft_strdup(str + i + 1));
+        return (ft_strdup(str + i + 1)); //do malloc check
     return (NULL);
 }
 

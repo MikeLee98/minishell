@@ -8,8 +8,14 @@ static void split_key_value(char *arg, char **key, char **value)
     while (arg[i] && arg[i] != '=')
         i++;
     *key = ft_substr(arg, 0, i);
+	if (!key)
+		return (NULL);
     if (arg[i] == '=')
+	{
         *value = ft_strdup(arg + i + 1);
+		if (!value)
+			return (NULL);
+	}
     else
         *value = NULL;
 }
@@ -66,3 +72,5 @@ void ft_export(t_shell *shell, char **args)
         i++;
     }
 }
+
+//concatenar values

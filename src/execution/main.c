@@ -61,3 +61,5 @@ int main(int ac, char **av, char **envp)
 	env_free_all(shell.env);
     return (0);
 }
+
+// use readline

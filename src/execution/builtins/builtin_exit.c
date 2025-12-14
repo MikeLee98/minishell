@@ -73,3 +73,6 @@ void    ft_exit(t_shell *shell, char **args)
     }
     exit((unsigned char)code);
 }
+
+//write to stderror
+//review -> not working as intended

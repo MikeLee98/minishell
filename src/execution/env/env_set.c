@@ -3,15 +3,22 @@
 static int env_update(t_env *env, char *key, char *new_value)
 {
     t_env *node;
+	char *tmp;
 
     node = env_find(env, key);
     if (!node)
         return (0);
-    free(node->value);
 	if (new_value == NULL)
-		node->value = NULL;
-	else
-    	node->value = ft_strdup(new_value); //do malloc check
+    {
+        free(node->value);
+        node->value = NULL;
+        return (1);
+    }
+	tmp = ft_strdup(new_value);
+	if (!tmp)
+		return (1);
+    free(node->value);
+    node->value = tmp;
     return (1);
 }
 
@@ -22,11 +29,23 @@ static void    env_add_var(t_env **env, char *key, char *value)
     new = malloc(sizeof(t_env));
     if (!new)
         return;
-    new->key = ft_strdup(key); //do malloc check
-	if (value == NULL)
-		new->value = NULL;
-	else
-    	new->value = ft_strdup(value);
+    if (!new->key)
+    {
+        free(new);
+        return;
+    }
+	if (value)
+    {
+        new->value = ft_strdup(value);
+        if (!new->value)
+        {
+            free(new->key);
+            free(new);
+            return;
+        }
+    }
+    else
+        new->value = NULL;
     new->next = NULL;
     env_add_back(env, new);
 }

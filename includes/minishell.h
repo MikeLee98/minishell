@@ -4,6 +4,10 @@
 # include "../libft/includes/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <fcntl.h>
 
 // Token Types
 typedef enum e_token_type

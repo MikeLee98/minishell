@@ -1,6 +1,4 @@
-#include "../../includes/parsing.h"
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "../../includes/minishell.h"
 
 static char	*token_type_str(t_token_type type)
 {
@@ -19,22 +17,6 @@ static char	*token_type_str(t_token_type type)
 	return ("UNKNOWN");
 }
 
-static void	print_tokens(t_token *tokens)
-{
-	int	i;
-
-	i = 0;
-	printf("\nTOKENS:\n");
-	while (tokens)
-	{
-		printf("[%d] Type: %-15s Value: %s\n",
-			i, token_type_str(tokens->type), tokens->value);
-		tokens = tokens->next;
-		i++;
-	}
-	printf("\n");
-}
-
 static void	print_redirections(t_redir *redir)
 {
 	while (redir)
@@ -45,13 +27,13 @@ static void	print_redirections(t_redir *redir)
 	}
 }
 
-static void	print_cmd_list(t_cmd *cmd_list)
+static void	print_cmd_list(t_cmd *cmd_list, char *stage)
 {
 	int	cmd_num;
 	int	i;
 
 	cmd_num = 0;
-	printf("COMMANDS:\n");
+	printf("\n%s:\n", stage);
 	while (cmd_list)
 	{
 		printf("[%d] Args: ", cmd_num);
@@ -70,7 +52,68 @@ static void	print_cmd_list(t_cmd *cmd_list)
 	printf("\n");
 }
 
-static void	process_input(char *input)
+static void	print_tokens(t_token *tokens, char *stage)
+{
+	int	i;
+
+	i = 0;
+	printf("\n%s:\n", stage);
+	while (tokens)
+	{
+		printf("[%d] Type: %-15s Value: %s\n",
+			i, token_type_str(tokens->type), tokens->value);
+		tokens = tokens->next;
+		i++;
+	}
+}
+
+static t_token	*copy_tokens(t_token *tokens)
+{
+	t_token	*copy;
+	t_token	*current;
+	t_token	*new_token;
+	t_token	*last;
+
+	copy = NULL;
+	last = NULL;
+	current = tokens;
+	while (current)
+	{
+		new_token = malloc(sizeof(t_token));
+		if (!new_token)
+			return (NULL);
+		new_token->type = current->type;
+		new_token->value = ft_strdup(current->value);
+		new_token->next = NULL;
+		if (!copy)
+			copy = new_token;
+		else
+			last->next = new_token;
+		last = new_token;
+		current = current->next;
+	}
+	return (copy);
+}
+
+static void	print_tokens_copy(t_token *tokens, char *stage, char **envp)
+{
+	t_token	*copy;
+
+	copy = copy_tokens(tokens);
+	if (!copy)
+		return ;
+	if (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0)
+		expand_tokens(copy, envp);
+	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
+	{
+		expand_tokens(copy, envp);
+		process_quotes(copy);
+	}
+	print_tokens(copy, stage);
+	free_tokens(copy);
+}
+
+static void	process_input(char *input, char **envp)
 {
 	t_token	*tokens;
 	t_cmd	*cmd_list;
@@ -83,39 +126,95 @@ static void	process_input(char *input)
 		printf("Error: Failed to tokenize input.\n");
 		return ;
 	}
-	print_tokens(tokens);
-	cmd_list = parser(tokens);
+	print_tokens(tokens, "TOKENS");
+	print_tokens_copy(tokens, "TOKENS (after expansion)", envp);
+	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
+	cmd_list = parser(tokens, envp);
 	if (!cmd_list)
 	{
-		printf("Error: Failed to parse tokens.\n");
+		printf("\nError: Failed to parse tokens.\n\n");
 		free_tokens(tokens);
 		return ;
 	}
-	print_cmd_list(cmd_list);
+	print_cmd_list(cmd_list, "COMMANDS");
 	free_tokens(tokens);
 	free_cmd_list(cmd_list);
 }
 
-int	main(void)
+static char	get_unclosed_quote_type(char *str)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			quote = str[i];
+			i++;
+			while (str[i] && str[i] != quote)
+				i++;
+			if (!str[i])
+				return (quote);
+			i++;
+		}
+		else
+			i++;
+	}
+	return (0);
+}
+
+static void	print_unclosed_quote_error(char quote)
+{
+	ft_putstr_fd("minishell: unexpected EOF while looking for matching `", 2);
+	ft_putchar_fd(quote, 2);
+	ft_putstr_fd("'\n", 2);
+}
+
+static int	handle_input_validation(char *input)
+{
+	char	unclosed_quote;
+
+	if (!input)
+	{
+		printf("exit\n");
+		return (1);
+	}
+	if (ft_strncmp(input, "exit", 5) == 0)
+	{
+		free(input);
+		return (1);
+	}
+	unclosed_quote = get_unclosed_quote_type(input);
+	if (unclosed_quote)
+	{
+		print_unclosed_quote_error(unclosed_quote);
+		free(input);
+		return (2);
+	}
+	return (0);
+}
+
+int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
+	int		validation_result;
 
+	(void)argc;
+	(void)argv;
+	setup_signals();
 	while (1)
 	{
 		input = readline("minishell$ ");
-		if (!input)
-		{
-			printf("exit\n");
+		validation_result = handle_input_validation(input);
+		if (validation_result == 1)
 			break ;
-		}
-		if (ft_strncmp(input, "exit", 5) == 0)
-		{
-			free(input);
-			break ;
-		}
+		if (validation_result == 2)
+			continue ;
 		if (*input)
 			add_history(input);
-		process_input(input);
+		process_input(input, envp);
 		free(input);
 	}
 	rl_clear_history();

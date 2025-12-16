@@ -39,79 +39,30 @@ static void sort_array(char **arr)
     }
 }
 
-static char    *join_key_value(char *key, char *value)
-{
-    char    *tmp;
-    char    *res;
-
-    tmp = ft_strjoin(key, "=");
-    if (!tmp)
-        return (NULL);
-    res = ft_strjoin(tmp, value);
-	free(tmp);
-	if (!res)
-		return (NULL);
-    return (res);
-}
-
-static char    **env_to_array(t_env *env)
-{
-    char    **array;
-    int     count;
-    int     i;
-	t_env   *head;
-
-	head = env;
-    count = 0;
-    while (env)
-    {
-        count++;
-        env = env->next;
-    }
-    array = malloc(sizeof(char *) * (count + 1));
-    if (!array)
-        return (NULL);
-    i = 0;
-	env = head;
-    while (env)
-    {
-        array[i] = join_key_value(env->key, env->value);
-		if (!array[i])
-		{
-			free_env_array(array);
-			return (NULL);
-		}
-        i++;
-        env = env->next;
-    }
-    array[i] = NULL;
-    return (array);
-}
-
 void print_export(t_env *env)
 {
-	char	**array;
+	char	**envp;
 	int i;
 	char *value;
 
-	array = env_to_array(env);
-	if (!array)
+	envp = env_to_array(env);
+	if (!envp)
 		return ;
-	sort_array(array);
+	sort_array(envp);
 	i = 0;
-    while (array[i])
+    while (envp[i])
     {
-		value = ft_strchr(array[i], '=');
+		value = ft_strchr(envp[i], '=');
         if (value)
         {
             *value = '\0';
-            if (ft_strcmp(array[i], "_") != 0)
-            	ft_printf("declare -x %s=\"%s\"\n", array[i], value + 1);
+            if (ft_strcmp(envp[i], "_") != 0)
+            	ft_printf("declare -x %s=\"%s\"\n", envp[i], value + 1);
             *value = '=';
         }
-        else if (ft_strcmp(array[i], "_") != 0)
-            ft_printf("declare -x %s\n", array[i]);
+        else if (ft_strcmp(envp[i], "_") != 0)
+            ft_printf("declare -x %s\n", envp[i]);
 		i++;
     }
-	free_env_array(array);
+	free_env_array(envp);
 }

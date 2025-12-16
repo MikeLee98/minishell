@@ -115,6 +115,7 @@ void	env_unset(t_env **env, char *key);
 //env_utils
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
+char    **env_to_array(t_env *env);
 
 //builtin_env
 void	ft_env(t_shell *shell);
@@ -122,7 +123,7 @@ void	ft_env(t_shell *shell);
 //builtin_export
 void	ft_export(t_shell *shell, char **args);
 
-//pint_export
+//builtin_pint_export
 void	print_export(t_env *env);
 
 //builtin_unset

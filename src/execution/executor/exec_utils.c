@@ -54,3 +54,14 @@ int run_builtin(t_shell *shell, char **args)
         return (ft_exit(shell, args), shell->exit_code);
     return (1);
 }
+
+int has_slash(char *s)
+{
+    while (*s)
+    {
+        if (*s == '/')
+            return (1);
+        s++;
+    }
+    return (0);
+}

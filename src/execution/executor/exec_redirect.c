@@ -3,7 +3,7 @@
 int apply_redirections(t_cmd *cmd)
 {
     t_redir *r;
-    int     fd;
+    int fd;
 
     r = cmd->redirections;
     while (r)
@@ -14,10 +14,13 @@ int apply_redirections(t_cmd *cmd)
             fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         else if (r->type == TOKEN_REDIR_APPEND)
             fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        else
-            fd = open_heredoc_fd(r);
+        else if (r->type == TOKEN_REDIR_HEREDOC)
+            fd = open_temp_heredoc_file(r->file);
         if (fd < 0)
-            return (1);
+        {
+            perror(r->file);
+            return (-1);
+        }
         if (r->type == TOKEN_REDIR_IN || r->type == TOKEN_REDIR_HEREDOC)
             dup2(fd, STDIN_FILENO);
         else

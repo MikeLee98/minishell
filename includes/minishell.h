@@ -4,6 +4,7 @@
 # include "../libft/includes/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 // Token Types
 typedef enum e_token_type
@@ -85,6 +86,9 @@ char	*expand_variable(char *str, int *i, char **envp);
 
 // Quote Removal Functions (quote_removal.c)
 void	process_quotes(t_token *tokens);
+
+// Signal Functions (signals.c)
+void	setup_signals(void);
 
 // Free Functions (free.c)
 void	free_tokens(t_token *tokens);

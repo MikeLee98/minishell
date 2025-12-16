@@ -57,7 +57,7 @@ void ft_export(t_shell *shell, char **args)
 {
     int i;
 
-    if (!args[2])
+    if (!args[1])
     {
         print_export(shell->env);
         return ;

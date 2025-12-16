@@ -2,7 +2,7 @@
 
 void	ft_unset(t_shell *shell, char **args)
 {
-	int i = 2;
+	int i = 1;
 
 	while (args[i])
 	{

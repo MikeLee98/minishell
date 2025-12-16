@@ -4,8 +4,8 @@ static char *cd_get_target(t_shell *shell, char **args)
 {
 	char *home;
 
-	if (args[2])
-		return (args[2]);
+	if (args[1])
+		return (args[1]);
 	home = ft_getenv(shell->env, "HOME");
 	if (!home)
 	{

@@ -42,7 +42,7 @@ typedef struct s_cmd
 	char			**args;
 	t_redir			*redirections;
 	struct s_cmd	*next;
-}	t_cmd;			//pipe
+}	t_cmd;
 
 // Environment Structure
 typedef struct s_env

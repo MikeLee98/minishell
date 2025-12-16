@@ -54,9 +54,3 @@ int run_builtin(t_shell *shell, char **args)
         return (ft_exit(shell, args), shell->exit_code);
     return (1);
 }
-
-// int run_builtin_in_child(t_shell *shell, t_cmd *cmd);
-// int run_builtin_in_parent(t_shell *shell, t_cmd *cmd);
-
-// if strcmp(cmd, "cd") == 0 -> ft_cd()
-// if strcmp(cmd, "echo") == 0 -> ft_echo()

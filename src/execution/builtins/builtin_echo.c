@@ -21,7 +21,7 @@ void	ft_echo(char **args)
 	int i;
 	int newline;
 
-	i = 2;
+	i = 1;
 	newline = 1;
 	while (args[i] && is_flag_n(args[i]))
 	{

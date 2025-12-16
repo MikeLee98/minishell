@@ -12,7 +12,6 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
     {
         if (cmd->next && pipe(pipefd) == -1)
             return;
-
         pid = fork();
         if (pid == 0)
         {
@@ -27,16 +26,12 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
                 close(pipefd[0]);
                 close(pipefd[1]);
             }
-
             apply_redirections(cmd);
-
             if (is_builtin(cmd->args[0]))
                 exit(run_builtin(shell, cmd->args));
-
             execve_with_path(shell, cmd);
             exit(127);
         }
-
         if (prev_fd != -1)
             close(prev_fd);
         if (cmd->next)
@@ -46,7 +41,6 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
         }
         cmd = cmd->next;
     }
-
     while (wait(&status) > 0)
     {
         if (WIFEXITED(status))

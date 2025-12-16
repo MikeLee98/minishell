@@ -11,15 +11,12 @@ void execute_single(t_shell *shell, t_cmd *cmd)
         shell->exit_code = run_builtin(shell, cmd->args);
         return;
     }
-
     pid = fork();
     if (pid == 0)
     {
         apply_redirections(cmd);
-
         if (is_builtin(cmd->args[0]))
             exit(run_builtin(shell, cmd->args));
-
         execve_with_path(shell, cmd);
         exit(127);
     }

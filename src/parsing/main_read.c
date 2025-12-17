@@ -113,22 +113,42 @@ static void	print_tokens_copy(t_token *tokens, char *stage, char **envp)
 	free_tokens(copy);
 }
 
+static t_token	*tokenize_and_validate(char *input)
+{
+	t_token	*tokens;
+
+	if (!input || !*input)
+		return (NULL);
+	tokens = lexer(input);
+	if (!tokens)
+	{
+		printf("Error: Failed to tokenize input.\n");
+		return (NULL);
+	}
+	if (!check_syntax(tokens))
+	{
+		free_tokens(tokens);
+		return (NULL);
+	}
+	return (tokens);
+}
+
+static void	print_debug_info(t_token *tokens, char **envp)
+{
+	print_tokens(tokens, "TOKENS");
+	print_tokens_copy(tokens, "TOKENS (after expansion)", envp);
+	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
+}
+
 static void	process_input(char *input, char **envp)
 {
 	t_token	*tokens;
 	t_cmd	*cmd_list;
 
-	if (!input || !*input)
-		return ;
-	tokens = lexer(input);
+	tokens = tokenize_and_validate(input);
 	if (!tokens)
-	{
-		printf("Error: Failed to tokenize input.\n");
 		return ;
-	}
-	print_tokens(tokens, "TOKENS");
-	print_tokens_copy(tokens, "TOKENS (after expansion)", envp);
-	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
+	print_debug_info(tokens, envp);
 	cmd_list = parser(tokens, envp);
 	if (!cmd_list)
 	{
@@ -181,7 +201,7 @@ static int	handle_input_validation(char *input)
 		printf("exit\n");
 		return (1);
 	}
-	if (ft_strncmp(input, "exit", 5) == 0)
+	else if (ft_strncmp(input, "exit", 5) == 0)
 	{
 		free(input);
 		return (1);
@@ -210,7 +230,7 @@ int	main(int argc, char **argv, char **envp)
 		validation_result = handle_input_validation(input);
 		if (validation_result == 1)
 			break ;
-		if (validation_result == 2)
+		else if (validation_result == 2)
 			continue ;
 		if (*input)
 			add_history(input);

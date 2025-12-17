@@ -71,6 +71,9 @@ char	*handle_word(char *input, int *i);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
+// Syntax Checker Functions
+int		check_syntax(t_token *tokens);
+
 // Parser Functions (parser.c)
 t_cmd	*parser(t_token *tokens, char **envp);
 

@@ -11,6 +11,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <errno.h>
+# include <signal.h>
 
 // Token Types
 typedef enum e_token_type
@@ -77,6 +78,9 @@ char	*handle_word(char *input, int *i);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
+// Syntax Checker Functions
+int		check_syntax(t_token *tokens);
+
 // Parser Functions (parser.c)
 t_cmd	*parser(t_token *tokens, char **envp);
 
@@ -92,6 +96,9 @@ char	*expand_variable(char *str, int *i, char **envp);
 
 // Quote Removal Functions (quote_removal.c)
 void	process_quotes(t_token *tokens);
+
+// Signal Functions (signals.c)
+void	setup_signals(void);
 
 // Free Functions (free.c)
 void	free_tokens(t_token *tokens);
@@ -126,7 +133,7 @@ void	ft_env(t_shell *shell);
 //builtin_export
 void	ft_export(t_shell *shell, char **args);
 
-//builtin_pint_export
+//builtin_print_export
 void	print_export(t_env *env);
 
 //builtin_unset

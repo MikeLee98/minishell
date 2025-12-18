@@ -62,6 +62,7 @@ v: $(NAME)
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 		--suppressions=valgrind.supp ./$(NAME)
 
+# Parsing target
 p: parsing
 
 parsing: $(LIBFT) $(NAME_PARSING)

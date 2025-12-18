@@ -1,0 +1,97 @@
+#include "../../../includes/minishell.h"
+
+static int	count_args(char **args)
+{
+	int	count;
+
+	count = 0;
+	if (!args)
+		return (0);
+	while (args[count])
+		count++;
+	return (count);
+}
+
+static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
+{
+	char	**new_args;
+	int		i;
+	int		count;
+
+	if (!arg || !*arg)
+		return ;
+	count = count_args(cmd->args);
+	new_args = malloc(sizeof(char *) * (count + 2));
+	if (!new_args)
+		return ;
+	i = 0;
+	while (i < count)
+	{
+		new_args[i] = cmd->args[i];
+		i++;
+	}
+	new_args[i] = ft_strdup(arg);
+	new_args[i + 1] = NULL;
+	free(cmd->args);
+	cmd->args = new_args;
+}
+
+static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
+{
+	t_redir	*new_redir;
+	t_redir	*current;
+
+	new_redir = malloc(sizeof(t_redir));
+	if (!new_redir)
+		return ;
+	new_redir->type = type;
+	new_redir->file = ft_strdup(file);
+	new_redir->next = NULL;
+	if (!cmd->redirections)
+	{
+		cmd->redirections = new_redir;
+		return ;
+	}
+	current = cmd->redirections;
+	while (current->next)
+		current = current->next;
+	current->next = new_redir;
+}
+
+t_token	*parse_cmd(t_cmd *cmd, t_token *current)
+{
+	while (current && current->type != TOKEN_PIPE)
+	{
+		if (current->type == TOKEN_WORD)
+		{
+			add_arg_to_cmd(cmd, current->value);
+			current = current->next;
+		}
+		else if (current->type >= TOKEN_REDIR_IN
+			&& current->type <= TOKEN_REDIR_HEREDOC)
+		{
+			if (!current->next || current->next->type != TOKEN_WORD)
+				return (NULL);
+			add_redir_to_cmd(cmd, current->type, current->next->value);
+			current = current->next->next;
+		}
+		else
+			current = current->next;
+	}
+	return (current);
+}
+
+void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd)
+{
+	t_cmd	*current;
+
+	if (!*head)
+	{
+		*head = new_cmd;
+		return ;
+	}
+	current = *head;
+	while (current->next)
+		current = current->next;
+	current->next = new_cmd;
+}

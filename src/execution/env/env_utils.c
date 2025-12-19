@@ -21,20 +21,6 @@ char    *ft_getenv(t_env *env, char *key)
     return (NULL);
 }
 
-void free_env_array_nodes(t_env *env)
-{
-    t_env *tmp;
-
-    while (env)
-    {
-        tmp = env->next;
-        free(env->key);
-        free(env->value);
-        free(env);
-        env = tmp;
-    }
-}
-
 static char *join_key_value(char *key, char *value)
 {
     char *tmp;

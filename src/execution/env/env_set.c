@@ -7,8 +7,8 @@ static int env_update(t_env *env, char *key, char *new_value)
 
     node = env_find(env, key);
     if (!node)
-        return (0);
-	if (new_value == NULL)
+		return (0);
+    if (new_value == NULL)
     {
         free(node->value);
         node->value = NULL;
@@ -28,7 +28,8 @@ static void    env_add_var(t_env **env, char *key, char *value)
 
     new = malloc(sizeof(t_env));
     if (!new)
-        return;
+		return;
+	new->key = ft_strdup(key);
     if (!new->key)
     {
         free(new);

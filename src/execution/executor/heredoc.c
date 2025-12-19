@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-int create_heredoc(char *delimiter)
+static int create_heredoc(char *delimiter)
 {
     int     pipefd[2];
     pid_t   pid;

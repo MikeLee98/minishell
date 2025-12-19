@@ -53,6 +53,7 @@ static int is_valid_identifier(char *s)
     return (1);
 }
 
+//acrescentar concatenar values
 void ft_export(t_shell *shell, char **args)
 {
     int i;
@@ -72,5 +73,3 @@ void ft_export(t_shell *shell, char **args)
         i++;
     }
 }
-
-//concatenar values

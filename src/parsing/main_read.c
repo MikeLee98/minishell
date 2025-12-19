@@ -140,7 +140,19 @@ static void	print_debug_info(t_token *tokens, char **envp)
 	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
 }
 
-static void	process_input(char *input, char **envp)
+void run_executor(t_shell *shell, t_cmd *cmd_list)
+{
+	shell->cmds = cmd_list;
+    setup_exec_signals();
+    if (prepare_heredocs(cmd_list) < 0)
+    {
+        shell->exit_code = 130;
+        return ;
+    }
+    executor(shell);
+}
+
+static void	process_input(char *input, char **envp, t_shell *shell)
 {
 	t_token	*tokens;
 	t_cmd	*cmd_list;
@@ -157,6 +169,7 @@ static void	process_input(char *input, char **envp)
 		return ;
 	}
 	print_cmd_list(cmd_list, "COMMANDS");
+	run_executor(shell, cmd_list);
 	free_tokens(tokens);
 	free_cmd_list(cmd_list);
 }
@@ -218,9 +231,13 @@ static int	handle_input_validation(char *input)
 
 int	main(int argc, char **argv, char **envp)
 {
+	t_shell	shell;
 	char	*input;
 	int		validation_result;
 
+	shell.env = init_env(envp);
+	shell.cmds = NULL;
+	shell.exit_code = 0;
 	(void)argc;
 	(void)argv;
 	setup_signals();
@@ -234,9 +251,10 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		if (*input)
 			add_history(input);
-		process_input(input, envp);
+		process_input(input, envp, &shell);
 		free(input);
 	}
 	rl_clear_history();
+	env_free_all(shell.env);
 	return (0);
 }

@@ -131,6 +131,8 @@ char    **env_to_array(t_env *env);
 
 //free_env
 void    env_free_all(t_env *env);
+void 	free_env_array_nodes(t_env *env);
+void    free_env_array(char **array);
 
 //builtin_env
 void	ft_env(t_shell *shell);
@@ -155,5 +157,30 @@ void	ft_echo(char **args);
 
 //builin_exit
 void	ft_exit(t_shell *shell, char **args);
+
+//exec_main
+void	executor(t_shell *shell);
+void 	execve_with_path(t_shell *shell, t_cmd *cmd);
+
+//exec_single
+void	execute_single(t_shell *shell, t_cmd *cmd);
+
+//exec_pipeline
+void	execute_pipeline(t_shell *shell, t_cmd *cmd);
+
+//exec_redirect
+int		apply_redirections(t_cmd *cmd);
+
+//exec_utils
+int		is_builtin(char *cmd);
+int		run_builtin(t_shell *shell, char **args);
+int		builtin_needs_parent(char *cmd);
+int 	has_slash(char *s);
+
+//heredoc
+int		prepare_heredocs(t_cmd *cmds);
+
+//signals
+void    setup_exec_signals(void);
 
 #endif

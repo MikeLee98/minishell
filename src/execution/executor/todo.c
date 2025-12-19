@@ -1,5 +1,5 @@
+//signals
 //remove builtin_needs_parent
-//heredoc
 //corrigir o ft_exit
 //verificar exit codes
 //escrever para o stderror com ft_putstr_fd

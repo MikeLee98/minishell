@@ -23,6 +23,8 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
         pid = fork();
         if (pid == 0)
         {
+			signal(SIGINT, SIG_DFL);
+    		signal(SIGQUIT, SIG_DFL);
             if (prev_fd != -1)
             {
                 dup2(prev_fd, STDIN_FILENO);

@@ -37,6 +37,7 @@ typedef struct s_redir
 {
 	t_token_type	type;
 	char			*file;
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -111,6 +112,7 @@ void	free_cmd_list(t_cmd *cmd_list);
 
 //libft_plus
 int		ft_strcmp(char *s1, char *s2);
+void ft_itoa_heredoc(int n, char *buffer);
 
 //env_init
 t_env	*init_env(char **envp);
@@ -126,6 +128,9 @@ void	env_unset(t_env **env, char *key);
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
 char    **env_to_array(t_env *env);
+
+//free_env
+void    env_free_all(t_env *env);
 
 //builtin_env
 void	ft_env(t_shell *shell);

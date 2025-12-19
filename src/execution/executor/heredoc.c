@@ -1,33 +1,70 @@
 #include "../../../includes/minishell.h"
 
-int open_temp_heredoc_file(char *delimiter)
+int create_heredoc(char *delimiter)
 {
-    char    filename[64];
-    int     fd;
+    int     pipefd[2];
+    pid_t   pid;
+    int     status;
     char    *line;
 
-    ft_memset(filename, 0, 64);
-    ft_strcpy(filename, "/tmp/minishell_heredoc_");
-    ft_itoa(getpid(), filename + ft_strlen(filename));
-    fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
-    if (fd < 0)
+    if (pipe(pipefd) == -1)
         return (-1);
-    while (1)
+
+    pid = fork();
+    if (pid == 0)
     {
-        ft_printf("> ");
-        line = get_next_line(0);
-        if (!line)
-            break;
-        if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_IGN);
+
+        close(pipefd[0]);
+
+        while (1)
         {
+            line = readline("> ");
+            if (!line || ft_strcmp(line, delimiter) == 0)
+            {
+                free(line);
+                break;
+            }
+            write(pipefd[1], line, ft_strlen(line));
+            write(pipefd[1], "\n", 1);
             free(line);
-            break;
         }
-        write(fd, line, ft_strlen(line));
-        write(fd, "\n", 1);
-        free(line);
+        close(pipefd[1]);
+        exit(0);
     }
-    lseek(fd, 0, SEEK_SET);
-    unlink(filename);
-    return (fd);
+
+    close(pipefd[1]);
+    waitpid(pid, &status, 0);
+
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+    {
+        close(pipefd[0]);
+        return (-1);
+    }
+    return (pipefd[0]);
+}
+
+int prepare_heredocs(t_cmd *cmds)
+{
+    t_cmd   *cmd;
+    t_redir *r;
+
+    cmd = cmds;
+    while (cmd)
+    {
+        r = cmd->redirections;
+        while (r)
+        {
+            if (r->type == TOKEN_REDIR_HEREDOC)
+            {
+                r->fd = create_heredoc(r->file);
+                if (r->fd < 0)
+                    return (-1);
+            }
+            r = r->next;
+        }
+        cmd = cmd->next;
+    }
+    return (0);
 }

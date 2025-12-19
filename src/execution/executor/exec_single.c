@@ -20,6 +20,8 @@ void execute_single(t_shell *shell, t_cmd *cmd)
     pid = fork();
     if (pid == 0)
     {
+		signal(SIGINT, SIG_DFL);
+    	signal(SIGQUIT, SIG_DFL);
         if (apply_redirections(cmd) != 0)
             exit(1);
         if (is_builtin(cmd->args[0]))

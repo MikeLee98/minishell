@@ -18,6 +18,7 @@ void execve_with_path(t_shell *shell, t_cmd *cmd)
     char    *path_env;
     char    **envp;
     int     i;
+	char	*tmp;
 
     envp = env_to_array(shell->env);
     if (has_slash(cmd->args[0]))
@@ -37,7 +38,13 @@ void execve_with_path(t_shell *shell, t_cmd *cmd)
     i = 0;
     while (paths[i])
     {
-        full_path = ft_strjoin3(paths[i], "/", cmd->args[0]);
+    	tmp = ft_strjoin(paths[i], "/");
+    	if (!tmp)
+			exit(1);
+   	 	full_path = ft_strjoin(tmp, cmd->args[0]);
+    	free(tmp);
+    	if (!full_path)
+			exit(1);
         execve(full_path, cmd->args, envp);
         free(full_path);
         i++;

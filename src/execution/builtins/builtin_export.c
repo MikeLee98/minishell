@@ -9,12 +9,12 @@ static void split_key_value(char *arg, char **key, char **value)
         i++;
     *key = ft_substr(arg, 0, i);
 	if (!key)
-		return (NULL);
+		return;
     if (arg[i] == '=')
 	{
         *value = ft_strdup(arg + i + 1);
 		if (!value)
-			return (NULL);
+			return;
 	}
     else
         *value = NULL;

@@ -57,7 +57,7 @@ void    ft_exit(t_shell *shell, char **args)
     if (!is_numeric(args[1]))
     {
         ft_printf("minishell: exit: %s: numeric argument required\n", args[1]);
-        exit(255);
+        exit(2);
     }
     code = ft_atoll_overflow(args[1], &overflow);
     if (overflow)

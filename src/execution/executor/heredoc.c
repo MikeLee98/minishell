@@ -26,7 +26,10 @@ static int create_heredoc(char *delimiter)
                 free(line);
                 break;
             }
-            write(pipefd[1], line, ft_strlen(line));
+			if (flag_hdoc == 1)
+				expand
+			else
+            	write(pipefd[1], line, ft_strlen(line));
             write(pipefd[1], "\n", 1);
             free(line);
         }

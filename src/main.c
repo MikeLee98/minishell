@@ -112,7 +112,7 @@ static void	print_tokens_copy(t_shell *shell, t_token *tokens, char *stage)
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
 		expand_tokens(&temp_shell);
-		process_quotes(temp_shell.toks);
+		process_quotes(&temp_shell);
 	}
 	print_tokens(temp_shell.toks, stage);
 	free_tokens(temp_shell.toks);

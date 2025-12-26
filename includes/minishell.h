@@ -92,7 +92,7 @@ void	expand_tokens(t_shell *shell);
 char	*expand_variable(t_shell *shell, char *str, int *i);
 
 // Quote Removal Functions (quote_removal.c)
-void	process_quotes(t_token *tokens);
+void	process_quotes(t_shell *shell);
 
 // Signal Functions (signals.c)
 void	setup_signals(void);

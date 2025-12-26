@@ -42,12 +42,12 @@ int	parser(t_shell *shell)
 	if (!shell || !shell->toks)
 		return (0);
 	expand_tokens(shell);
-	process_quotes(shell->toks);
+	process_quotes(shell);
 	shell->cmds = NULL;
 	current_token = shell->toks;
 	while (current_token)
 		current_token = build_cmd(&shell->cmds, current_token);
-	if (!shell->cmds)
+	if (! shell->cmds)
 		return (0);
 	return (1);
 }

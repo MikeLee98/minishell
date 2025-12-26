@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-static char	*get_env_value(char *var_name, t_shell *shell)
+static char	*get_env_value(t_shell *shell, char *var_name)
 {
 	char	*value;
 
@@ -54,25 +54,25 @@ static char	*extract_var_name(char *str, int *i)
 	return (extract_regular_var_name(str, i));
 }
 
-static char	*expand_dollar_var(char *str, int *i, t_shell *shell)
+static char	*expand_dollar_var(t_shell *shell, char *str, int *i)
 {
 	char	*var_name;
 	char	*var_value;
 
 	var_name = extract_var_name(str, i);
-	var_value = get_env_value(var_name, shell);
+	var_value = get_env_value(shell, var_name);
 	free(var_name);
 	return (var_value);
 }
 
-char	*expand_variable(char *str, int *i, t_shell *shell)
+char	*expand_variable(t_shell *shell, char *str, int *i)
 {
 	char	char_str[2];
 
 	if (str[*i] == '$')
 	{
 		if (str[*i + 1])
-			return (expand_dollar_var(str, i, shell));
+			return (expand_dollar_var(shell, str, i));
 		else
 		{
 			char_str[0] = '$';

@@ -41,7 +41,7 @@ int	parser(t_shell *shell)
 
 	if (!shell || !shell->toks)
 		return (0);
-	expand_tokens(shell->toks, shell);
+	expand_tokens(shell);
 	process_quotes(shell->toks);
 	shell->cmds = NULL;
 	current_token = shell->toks;

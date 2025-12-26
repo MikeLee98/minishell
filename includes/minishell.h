@@ -86,10 +86,10 @@ t_token	*parse_cmd(t_cmd *cmd, t_token *current);
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 
 // Expansion Functions (expander.c)
-void	expand_tokens(t_token *tokens, t_shell *shell);
+void	expand_tokens(t_shell *shell);
 
 // Expansion Helper Functions (expander_utils.c)
-char	*expand_variable(char *str, int *i, t_shell *shell);
+char	*expand_variable(t_shell *shell, char *str, int *i);
 
 // Quote Removal Functions (quote_removal.c)
 void	process_quotes(t_token *tokens);

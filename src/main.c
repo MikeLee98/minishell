@@ -95,25 +95,31 @@ static t_token	*copy_tokens(t_token *tokens)
 	return (copy);
 }
 
-static void	print_tokens_copy(t_token *tokens, char *stage, t_shell *shell)
+static void	print_tokens_copy(t_shell *shell, t_token *tokens, char *stage)
 {
 	t_token	*copy;
+	t_shell	temp_shell;
 
 	copy = copy_tokens(tokens);
 	if (!copy)
 		return ;
+	temp_shell.env = shell->env;
+	temp_shell.exit_code = shell->exit_code;
+	temp_shell.toks = copy;
+	temp_shell.cmds = NULL;
 	if (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0)
-		expand_tokens(copy, shell);
+		expand_tokens(&temp_shell);
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
-		expand_tokens(copy, shell);
-		process_quotes(copy);
+		expand_tokens(&temp_shell);
+		process_quotes(temp_shell.toks);
 	}
-	print_tokens(copy, stage);
-	free_tokens(copy);
+	print_tokens(temp_shell.toks, stage);
+	free_tokens(temp_shell.toks);
 }
 
-static int	tokenize_and_validate(char *input, t_shell *shell)
+
+static int	tokenize_and_validate(t_shell *shell, char *input)
 {
 	shell->toks = lexer(input);
 	if (!shell->toks)
@@ -130,11 +136,11 @@ static int	tokenize_and_validate(char *input, t_shell *shell)
 	return (1);
 }
 
-static void	print_debug_info(t_token *tokens, t_shell *shell)
+static void	print_debug_info(t_shell *shell, t_token *tokens)
 {
 	print_tokens(tokens, "TOKENS");
-	print_tokens_copy(tokens, "TOKENS (after expansion)", shell);
-	print_tokens_copy(tokens, "TOKENS (after quote removal)", shell);
+	print_tokens_copy(shell, tokens, "TOKENS (after expansion)");
+	print_tokens_copy(shell, tokens, "TOKENS (after quote removal)");
 }
 
 void	run_executor(t_shell *shell, t_cmd *cmd_list)
@@ -149,11 +155,11 @@ void	run_executor(t_shell *shell, t_cmd *cmd_list)
 	executor(shell);
 }
 
-static void	process_input(char *input, t_shell *shell)
+static void	process_input(t_shell *shell, char *input)
 {
-	if (!tokenize_and_validate(input, shell))
+	if (!tokenize_and_validate(shell, input))
 		return ;
-	print_debug_info(shell->toks, shell);
+	print_debug_info(shell, shell->toks);
 	if (!parser(shell))
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
@@ -249,7 +255,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		if (*input)
 			add_history(input);
-		process_input(input, &shell);
+		process_input(&shell, input);
 		free(input);
 	}
 	rl_clear_history();

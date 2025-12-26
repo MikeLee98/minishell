@@ -24,7 +24,7 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 		return (NULL);
 	}
 	current_token = parse_cmd(current_cmd, current_token);
-	if (!current_token && current_cmd->args == NULL)
+	if (!current_token && ! current_cmd->args && !current_cmd->redirections)
 	{
 		free_cmd(current_cmd);
 		return (NULL);

@@ -36,14 +36,13 @@ static void	print_cmd_list(t_cmd *cmd_list, char *stage)
 	printf("\n%s:\n", stage);
 	while (cmd_list)
 	{
-		printf("[%d] Args: ", cmd_num);
+		printf("[%d] Args:\n", cmd_num);
 		i = 0;
 		while (cmd_list->args && cmd_list->args[i])
 		{
-			printf("%s ", cmd_list->args[i]);
+			printf("    args[%d] = \"%s\"\n", i, cmd_list->args[i]);
 			i++;
 		}
-		printf("\n");
 		if (cmd_list->redirections)
 			print_redirections(cmd_list->redirections);
 		cmd_list = cmd_list->next;

@@ -57,6 +57,7 @@ typedef struct s_shell
 {
 	t_env			*env;
 	t_cmd			*cmds;
+	t_token			*toks;
 	int				exit_code;
 }	t_shell;
 
@@ -75,7 +76,7 @@ int		is_whitespace(char c);
 int		is_special_char(char c);
 
 // Syntax Checker Functions (syntax_checker.c)
-int		check_syntax(t_token *tokens);
+int		check_syntax(t_shell *shell);
 
 // Parser Functions (parser.c)
 t_cmd	*parser(t_token *tokens, t_shell *shell);

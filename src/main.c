@@ -113,24 +113,21 @@ static void	print_tokens_copy(t_token *tokens, char *stage, t_shell *shell)
 	free_tokens(copy);
 }
 
-static t_token	*tokenize_and_validate(char *input)
+static int	tokenize_and_validate(char *input, t_shell *shell)
 {
-	t_token	*tokens;
-
-	if (!input || !*input)
-		return (NULL);
-	tokens = lexer(input);
-	if (!tokens)
+	shell->toks = lexer(input);
+	if (!shell->toks)
 	{
 		printf("Error: Failed to tokenize input.\n");
-		return (NULL);
+		return (0);
 	}
-	if (!check_syntax(tokens))
+	if (!check_syntax(shell))
 	{
-		free_tokens(tokens);
-		return (NULL);
+		free_tokens(shell->toks);
+		shell->toks = NULL;
+		return (0);
 	}
-	return (tokens);
+	return (1);
 }
 
 static void	print_debug_info(t_token *tokens, t_shell *shell)
@@ -154,23 +151,23 @@ void	run_executor(t_shell *shell, t_cmd *cmd_list)
 
 static void	process_input(char *input, t_shell *shell)
 {
-	t_token	*tokens;
 	t_cmd	*cmd_list;
 
-	tokens = tokenize_and_validate(input);
-	if (!tokens)
+	if (!tokenize_and_validate(input, shell))
 		return ;
-	print_debug_info(tokens, shell);
-	cmd_list = parser(tokens, shell);
+	print_debug_info(shell->toks, shell);
+	cmd_list = parser(shell->toks, shell);
 	if (!cmd_list)
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
-		free_tokens(tokens);
+		free_tokens(shell->toks);
+		shell->toks = NULL;
 		return ;
 	}
 	print_cmd_list(cmd_list, "COMMANDS");
 	run_executor(shell, cmd_list);
-	free_tokens(tokens);
+	free_tokens(shell->toks);
+	shell->toks = NULL;
 	free_cmd_list(cmd_list);
 }
 
@@ -241,6 +238,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!shell.env)
 		return (1);
 	shell.cmds = NULL;
+	shell.toks = NULL;
 	shell. exit_code = 0;
 	setup_signals();
 	while (1)

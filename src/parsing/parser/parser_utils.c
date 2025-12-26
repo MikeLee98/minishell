@@ -46,6 +46,7 @@ static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
 		return ;
 	new_redir->type = type;
 	new_redir->file = ft_strdup(file);
+	new_redir->fd = -1;
 	new_redir->next = NULL;
 	if (!cmd->redirections)
 	{

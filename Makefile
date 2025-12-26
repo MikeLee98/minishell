@@ -75,14 +75,14 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 clean:
 	@if [ -d "$(OBJ_DIR)" ]; then \
 		$(RM) -r $(OBJ_DIR); \
-		echo "$(RED)Object files have been cleaned! $(RESET)"; \
+		echo "$(RED)Object files have been cleaned!$(RESET)"; \
 		echo "$(YELLOW)└── Removed directory: $(OBJ_DIR)$(RESET)"; \
 	fi
 	@make -C $(LIBFT_DIR) clean
 
 fclean: clean
 	@if [ -f "$(NAME)" ]; then \
-		echo "$(RED)Everything has been cleaned! $(RESET)"; \
+		echo "$(RED)Everything has been cleaned!$(RESET)"; \
 		$(RM) $(NAME); \
 		echo "$(YELLOW)└── Removed executable: $(NAME)$(RESET)"; \
 	fi
@@ -90,4 +90,4 @@ fclean: clean
 
 re: fclean all
 
-. PHONY: all clean fclean re v
+.PHONY: all clean fclean re v

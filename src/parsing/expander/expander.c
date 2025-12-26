@@ -1,7 +1,7 @@
 #include "../../../includes/minishell.h"
 
 static char	*process_expansion_char(char *str, int *i, char **result,
-	char **envp)
+	t_shell *shell)
 {
 	char	*temp;
 	char	*var_expansion;
@@ -9,7 +9,7 @@ static char	*process_expansion_char(char *str, int *i, char **result,
 
 	if (str[*i] == '$')
 	{
-		var_expansion = expand_variable(str, i, envp);
+		var_expansion = expand_variable(str, i, shell);
 		temp = ft_strjoin(*result, var_expansion);
 		free(*result);
 		free(var_expansion);
@@ -27,7 +27,7 @@ static char	*process_expansion_char(char *str, int *i, char **result,
 	return (*result);
 }
 
-static char	*expand_in_double_quotes(char *str, int *i, char **envp)
+static char	*expand_in_double_quotes(char *str, int *i, t_shell *shell)
 {
 	char	*result;
 	char	*temp;
@@ -35,7 +35,7 @@ static char	*expand_in_double_quotes(char *str, int *i, char **envp)
 	(*i)++;
 	result = ft_strdup("\"");
 	while (str[*i] && str[*i] != '"')
-		process_expansion_char(str, i, &result, envp);
+		process_expansion_char(str, i, &result, shell);
 	if (str[*i] == '"')
 	{
 		temp = ft_strjoin(result, "\"");
@@ -61,14 +61,14 @@ static char	*expand_in_single_quotes(char *str, int *i)
 	return (result);
 }
 
-static char	*expand_token(char *token, char **envp)
+static char	*expand_token(char *token, t_shell *shell)
 {
 	char	*result;
 	char	*temp;
 	char	*segment;
 	int		i;
 
-	if (!token)
+	if (! token)
 		return (NULL);
 	result = ft_strdup("");
 	i = 0;
@@ -77,9 +77,9 @@ static char	*expand_token(char *token, char **envp)
 		if (token[i] == '\'')
 			segment = expand_in_single_quotes(token, &i);
 		else if (token[i] == '"')
-			segment = expand_in_double_quotes(token, &i, envp);
+			segment = expand_in_double_quotes(token, &i, shell);
 		else
-			segment = expand_variable(token, &i, envp);
+			segment = expand_variable(token, &i, shell);
 		temp = ft_strjoin(result, segment);
 		free(result);
 		free(segment);
@@ -88,7 +88,7 @@ static char	*expand_token(char *token, char **envp)
 	return (result);
 }
 
-void	expand_tokens(t_token *tokens, char **envp)
+void	expand_tokens(t_token *tokens, t_shell *shell)
 {
 	char	*expanded;
 
@@ -96,7 +96,7 @@ void	expand_tokens(t_token *tokens, char **envp)
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			expanded = expand_token(tokens->value, envp);
+			expanded = expand_token(tokens->value, shell);
 			free(tokens->value);
 			tokens->value = expanded;
 		}
@@ -105,7 +105,7 @@ void	expand_tokens(t_token *tokens, char **envp)
 		{
 			if (tokens->next && tokens->next->type == TOKEN_WORD)
 			{
-				expanded = expand_token(tokens->next->value, envp);
+				expanded = expand_token(tokens->next->value, shell);
 				free(tokens->next->value);
 				tokens->next->value = expanded;
 			}

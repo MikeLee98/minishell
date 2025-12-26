@@ -95,7 +95,7 @@ static t_token	*copy_tokens(t_token *tokens)
 	return (copy);
 }
 
-static void	print_tokens_copy(t_token *tokens, char *stage, char **envp)
+static void	print_tokens_copy(t_token *tokens, char *stage, t_shell *shell)
 {
 	t_token	*copy;
 
@@ -103,10 +103,10 @@ static void	print_tokens_copy(t_token *tokens, char *stage, char **envp)
 	if (!copy)
 		return ;
 	if (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0)
-		expand_tokens(copy, envp);
+		expand_tokens(copy, shell);
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
-		expand_tokens(copy, envp);
+		expand_tokens(copy, shell);
 		process_quotes(copy);
 	}
 	print_tokens(copy, stage);
@@ -133,11 +133,11 @@ static t_token	*tokenize_and_validate(char *input)
 	return (tokens);
 }
 
-static void	print_debug_info(t_token *tokens, char **envp)
+static void	print_debug_info(t_token *tokens, t_shell *shell)
 {
 	print_tokens(tokens, "TOKENS");
-	print_tokens_copy(tokens, "TOKENS (after expansion)", envp);
-	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
+	print_tokens_copy(tokens, "TOKENS (after expansion)", shell);
+	print_tokens_copy(tokens, "TOKENS (after quote removal)", shell);
 }
 
 void	run_executor(t_shell *shell, t_cmd *cmd_list)
@@ -152,7 +152,7 @@ void	run_executor(t_shell *shell, t_cmd *cmd_list)
 	executor(shell);
 }
 
-static void	process_input(char *input, char **envp, t_shell *shell)
+static void	process_input(char *input, t_shell *shell)
 {
 	t_token	*tokens;
 	t_cmd	*cmd_list;
@@ -160,8 +160,8 @@ static void	process_input(char *input, char **envp, t_shell *shell)
 	tokens = tokenize_and_validate(input);
 	if (!tokens)
 		return ;
-	print_debug_info(tokens, envp);
-	cmd_list = parser(tokens, envp);
+	print_debug_info(tokens, shell);
+	cmd_list = parser(tokens, shell);
 	if (!cmd_list)
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
@@ -235,11 +235,13 @@ int	main(int argc, char **argv, char **envp)
 	char	*input;
 	int		validation_result;
 
-	shell.env = init_env(envp);
-	shell.cmds = NULL;
-	shell.exit_code = 0;
 	(void)argc;
-	(void)argv;
+	(void)argv;	
+	shell.env = init_env(envp);
+	if (!shell.env)
+		return (1);
+	shell.cmds = NULL;
+	shell. exit_code = 0;
 	setup_signals();
 	while (1)
 	{
@@ -251,7 +253,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		if (*input)
 			add_history(input);
-		process_input(input, envp, &shell);
+		process_input(input, &shell);
 		free(input);
 	}
 	rl_clear_history();

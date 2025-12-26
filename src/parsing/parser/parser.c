@@ -35,14 +35,14 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 	return (current_token);
 }
 
-t_cmd	*parser(t_token *tokens, char **envp)
+t_cmd	*parser(t_token *tokens, t_shell *shell)
 {
 	t_cmd	*cmd_list;
 	t_token	*current_token;
 
 	if (!tokens)
 		return (NULL);
-	expand_tokens(tokens, envp);
+	expand_tokens(tokens, shell);
 	process_quotes(tokens);
 	cmd_list = NULL;
 	current_token = tokens;

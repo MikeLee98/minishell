@@ -95,12 +95,14 @@ static t_token	*copy_tokens(t_token *tokens)
 	return (copy);
 }
 
-static void	print_tokens_copy(t_shell *shell, t_token *tokens, char *stage)
+static void	print_tokens_copy(t_shell *shell, char *stage)
 {
-	t_token	*copy;
 	t_shell	temp_shell;
+	t_token	*copy;
 
-	copy = copy_tokens(tokens);
+	if (!shell || !shell->toks)
+		return ;
+	copy = copy_tokens(shell->toks);
 	if (!copy)
 		return ;
 	temp_shell.env = shell->env;
@@ -136,18 +138,21 @@ static int	tokenize_and_validate(t_shell *shell, char *input)
 	return (1);
 }
 
-static void	print_debug_info(t_shell *shell, t_token *tokens)
+static void	print_debug_info(t_shell *shell)
 {
-	print_tokens(tokens, "TOKENS");
-	print_tokens_copy(shell, tokens, "TOKENS (after expansion)");
-	print_tokens_copy(shell, tokens, "TOKENS (after quote removal)");
+	if (!shell || !shell->toks)
+		return ;
+	print_tokens(shell->toks, "TOKENS");
+	print_tokens_copy(shell, "TOKENS (after expansion)");
+	print_tokens_copy(shell, "TOKENS (after quote removal)");
 }
 
-void	run_executor(t_shell *shell, t_cmd *cmd_list)
+void	run_executor(t_shell *shell)
 {
-	shell->cmds = cmd_list;
+	if (!shell || !shell->cmds)
+		return ;
 	setup_exec_signals();
-	if (prepare_heredocs(cmd_list) < 0)
+	if (prepare_heredocs(shell->cmds) < 0)
 	{
 		shell->exit_code = 130;
 		return ;
@@ -159,7 +164,7 @@ static void	process_input(t_shell *shell, char *input)
 {
 	if (!tokenize_and_validate(shell, input))
 		return ;
-	print_debug_info(shell, shell->toks);
+	print_debug_info(shell);
 	if (!parser(shell))
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
@@ -168,7 +173,7 @@ static void	process_input(t_shell *shell, char *input)
 		return ;
 	}
 	print_cmd_list(shell->cmds, "COMMANDS");
-	run_executor(shell, shell->cmds);
+	run_executor(shell);
 	free_tokens(shell->toks);
 	shell->toks = NULL;
 	free_cmd_list(shell->cmds);
@@ -215,11 +220,6 @@ static int	handle_input_validation(char *input)
 		printf("exit\n");
 		return (1);
 	}
-	else if (ft_strncmp(input, "exit", 5) == 0)
-	{
-		free(input);
-		return (1);
-	}
 	unclosed_quote = get_unclosed_quote_type(input);
 	if (unclosed_quote)
 	{
@@ -253,12 +253,16 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		else if (validation_result == 2)
 			continue ;
-		if (*input)
-			add_history(input);
+		if (!*input)
+		{
+			free(input);
+			continue ;
+		}	
+		add_history(input);
 		process_input(&shell, input);
 		free(input);
 	}
 	rl_clear_history();
 	env_free_all(shell.env);
-	return (0);
+	return (shell.exit_code);
 }

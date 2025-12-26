@@ -97,7 +97,7 @@ void	process_quotes(t_shell *shell);
 // Signal Functions (signals.c)
 void	setup_signals(void);
 
-// Free Functions (free. c)
+// Free Functions (free.c)
 void	free_tokens(t_token *tokens);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd *cmd_list);

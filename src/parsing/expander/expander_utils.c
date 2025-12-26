@@ -6,7 +6,7 @@ static char	*get_env_value(t_shell *shell, char *var_name)
 
 	if (!var_name)
 		return (ft_strdup(""));
-	if (ft_strncmp(var_name, "?", 2) == 0)
+	else if (ft_strncmp(var_name, "?", 2) == 0)
 		return (ft_itoa(shell->exit_code));
 	else if (ft_strlen(var_name) == 1 && !ft_isalnum(var_name[0]))
 		return (ft_strdup(""));

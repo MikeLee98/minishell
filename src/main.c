@@ -151,24 +151,22 @@ void	run_executor(t_shell *shell, t_cmd *cmd_list)
 
 static void	process_input(char *input, t_shell *shell)
 {
-	t_cmd	*cmd_list;
-
 	if (!tokenize_and_validate(input, shell))
 		return ;
 	print_debug_info(shell->toks, shell);
-	cmd_list = parser(shell->toks, shell);
-	if (!cmd_list)
+	if (!parser(shell))
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
 		free_tokens(shell->toks);
 		shell->toks = NULL;
 		return ;
 	}
-	print_cmd_list(cmd_list, "COMMANDS");
-	run_executor(shell, cmd_list);
+	print_cmd_list(shell->cmds, "COMMANDS");
+	run_executor(shell, shell->cmds);
 	free_tokens(shell->toks);
 	shell->toks = NULL;
-	free_cmd_list(cmd_list);
+	free_cmd_list(shell->cmds);
+	shell->cmds = NULL;
 }
 
 static char	get_unclosed_quote_type(char *str)
@@ -239,7 +237,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell.cmds = NULL;
 	shell.toks = NULL;
-	shell. exit_code = 0;
+	shell.exit_code = 0;
 	setup_signals();
 	while (1)
 	{

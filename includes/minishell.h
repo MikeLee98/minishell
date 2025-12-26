@@ -79,7 +79,7 @@ int		is_special_char(char c);
 int		check_syntax(t_shell *shell);
 
 // Parser Functions (parser.c)
-t_cmd	*parser(t_token *tokens, t_shell *shell);
+int		parser(t_shell *shell);
 
 // Parser Helper Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);

@@ -78,17 +78,17 @@ int		is_special_char(char c);
 int		check_syntax(t_token *tokens);
 
 // Parser Functions (parser.c)
-t_cmd	*parser(t_token *tokens, char **envp);
+t_cmd	*parser(t_token *tokens, t_shell *shell);
 
 // Parser Helper Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 
 // Expansion Functions (expander.c)
-void	expand_tokens(t_token *tokens, char **envp);
+void	expand_tokens(t_token *tokens, t_shell *shell);
 
 // Expansion Helper Functions (expander_utils.c)
-char	*expand_variable(char *str, int *i, char **envp);
+char	*expand_variable(char *str, int *i, t_shell *shell);
 
 // Quote Removal Functions (quote_removal.c)
 void	process_quotes(t_token *tokens);

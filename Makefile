@@ -46,12 +46,12 @@ OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(LIBFT) $(OBJ)
 	@echo "$(YELLOW)Building $(NAME)...$(RESET)"
 	@$(CC) $(OBJ) -L$(LIBFT_DIR) -lft $(LDFLAGS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) successfully created!$(RESET)"
 
-v: $(NAME)
+v: all
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 		--suppressions=valgrind.supp ./$(NAME)
 
@@ -82,7 +82,7 @@ clean:
 
 fclean: clean
 	@if [ -f "$(NAME)" ]; then \
-		echo "$(RED)Everything has been cleaned!$(RESET)"; \
+		echo "$(RED)Everything has been cleaned! $(RESET)"; \
 		$(RM) $(NAME); \
 		echo "$(YELLOW)└── Removed executable: $(NAME)$(RESET)"; \
 	fi

@@ -4,6 +4,8 @@
 # include "../libft/includes/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <signal.h>
 
 // Token Types
@@ -30,6 +32,7 @@ typedef struct s_redir
 {
 	t_token_type	type;
 	char			*file;
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -71,7 +74,7 @@ char	*handle_word(char *input, int *i);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
-// Syntax Checker Functions
+// Syntax Checker Functions (syntax_checker.c)
 int		check_syntax(t_token *tokens);
 
 // Parser Functions (parser.c)
@@ -93,7 +96,7 @@ void	process_quotes(t_token *tokens);
 // Signal Functions (signals.c)
 void	setup_signals(void);
 
-// Free Functions (free.c)
+// Free Functions (free. c)
 void	free_tokens(t_token *tokens);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd *cmd_list);
@@ -102,45 +105,77 @@ void	free_cmd_list(t_cmd *cmd_list);
 //                                 EXECUTION                                  //
 // ************************************************************************** //
 
-//libft_plus
+// libft_plus
 int		ft_strcmp(char *s1, char *s2);
+void	ft_itoa_heredoc(int n, char *buffer);
 
-//env_init
+// env_init
 t_env	*init_env(char **envp);
 void	env_add_back(t_env **env, t_env *new);
 
-//env_set
+// env_set
 void	env_set(t_env **env, char *key, char *value);
 
-//env_unset
+// env_unset
 void	env_unset(t_env **env, char *key);
 
-//env_utils
+// env_utils
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
+char	**env_to_array(t_env *env);
 
-//builtin_env
+// free_env
+void	env_free_all(t_env *env);
+void	free_env_array_nodes(t_env *env);
+void	free_env_array(char **array);
+
+// builtin_env
 void	ft_env(t_shell *shell);
 
-//builtin_export
+// builtin_export
 void	ft_export(t_shell *shell, char **args);
 
-//pint_export
+// builtin_print_export
 void	print_export(t_env *env);
 
-//builtin_unset
+// builtin_unset
 void	ft_unset(t_shell *shell, char **args);
 
-//builtin_cd
+// builtin_cd
 void	ft_cd(t_shell *shell, char **args);
 
-//builtin_pwd
+// builtin_pwd
 void	ft_pwd(void);
 
-//builtin_echo
+// builtin_echo
 void	ft_echo(char **args);
 
-//builin_exit
+// builtin_exit
 void	ft_exit(t_shell *shell, char **args);
+
+// exec_main
+void	executor(t_shell *shell);
+void	execve_with_path(t_shell *shell, t_cmd *cmd);
+
+// exec_single
+void	execute_single(t_shell *shell, t_cmd *cmd);
+
+// exec_pipeline
+void	execute_pipeline(t_shell *shell, t_cmd *cmd);
+
+// exec_redirect
+int		apply_redirections(t_cmd *cmd);
+
+// exec_utils
+int		is_builtin(char *cmd);
+int		run_builtin(t_shell *shell, char **args);
+int		builtin_needs_parent(char *cmd);
+int		has_slash(char *s);
+
+// heredoc
+int		prepare_heredocs(t_cmd *cmds);
+
+// signals
+void	setup_exec_signals(void);
 
 #endif

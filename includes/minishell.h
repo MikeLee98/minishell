@@ -89,6 +89,7 @@ void	mark_heredoc_expansion(t_token *tokens);
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 
 // Expansion Functions (expander.c)
+char	*expand_token(t_shell *shell, char *token);
 void	expand_tokens(t_shell *shell);
 
 // Expansion Helper Functions (expander_utils.c)
@@ -177,7 +178,7 @@ int		builtin_needs_parent(char *cmd);
 int		has_slash(char *s);
 
 // heredoc
-int		prepare_heredocs(t_cmd *cmds);
+int		prepare_heredocs(t_shell *shell);
 
 // signals
 void	setup_exec_signals(void);

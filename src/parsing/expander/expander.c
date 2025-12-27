@@ -61,7 +61,7 @@ static char	*expand_in_single_quotes(char *str, int *i)
 	return (result);
 }
 
-static char	*expand_token(t_shell *shell, char *token)
+char	*expand_token(t_shell *shell, char *token)
 {
 	char	*result;
 	char	*temp;

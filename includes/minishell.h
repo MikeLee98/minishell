@@ -24,6 +24,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	int				hd_expand;
 	struct s_token	*next;
 }	t_token;
 
@@ -33,6 +34,7 @@ typedef struct s_redir
 	t_token_type	type;
 	char			*file;
 	int				fd;
+	int				hd_expand;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -83,6 +85,7 @@ int		parser(t_shell *shell);
 
 // Parser Helper Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
+void	mark_heredoc_expansion(t_token *tokens);
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 
 // Expansion Functions (expander.c)

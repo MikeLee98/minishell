@@ -36,7 +36,38 @@ static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
 	cmd->args = new_args;
 }
 
-static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
+static int	has_quotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	mark_heredoc_expansion(t_token *tokens)
+{
+	while (tokens)
+	{
+		if (tokens->type == TOKEN_REDIR_HEREDOC 
+			&& tokens->next 
+			&& tokens->next->type == TOKEN_WORD)
+		{
+			if (has_quotes(tokens->next->value))
+				tokens->next->hd_expand = 0;
+			else
+				tokens->next->hd_expand = 1;
+		}
+		tokens = tokens->next;
+	}
+}
+
+static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file, int hd_expand)
 {
 	t_redir	*new_redir;
 	t_redir	*current;
@@ -47,6 +78,7 @@ static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
 	new_redir->type = type;
 	new_redir->file = ft_strdup(file);
 	new_redir->fd = -1;
+	new_redir->hd_expand = hd_expand;
 	new_redir->next = NULL;
 	if (!cmd->redirections)
 	{
@@ -61,6 +93,8 @@ static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file)
 
 t_token	*parse_cmd(t_cmd *cmd, t_token *current)
 {
+	int	hd_expand;
+
 	while (current && current->type != TOKEN_PIPE)
 	{
 		if (current->type == TOKEN_WORD)
@@ -73,7 +107,9 @@ t_token	*parse_cmd(t_cmd *cmd, t_token *current)
 		{
 			if (!current->next || current->next->type != TOKEN_WORD)
 				return (NULL);
-			add_redir_to_cmd(cmd, current->type, current->next->value);
+			
+			hd_expand = current->next->hd_expand;
+			add_redir_to_cmd(cmd, current->type, current->next->value, hd_expand);
 			current = current->next->next;
 		}
 		else

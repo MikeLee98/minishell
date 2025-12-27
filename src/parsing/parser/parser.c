@@ -24,7 +24,7 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 		return (NULL);
 	}
 	current_token = parse_cmd(current_cmd, current_token);
-	if (!current_token && ! current_cmd->args && !current_cmd->redirections)
+	if (!current_token && !current_cmd->args && !current_cmd->redirections)
 	{
 		free_cmd(current_cmd);
 		return (NULL);
@@ -42,6 +42,7 @@ int	parser(t_shell *shell)
 	if (!shell || !shell->toks)
 		return (0);
 	expand_tokens(shell);
+	mark_heredoc_expansion(shell->toks);
 	process_quotes(shell);
 	shell->cmds = NULL;
 	current_token = shell->toks;

@@ -21,8 +21,11 @@ static void	print_redirections(t_redir *redir)
 {
 	while (redir)
 	{
-		printf("      Redir: %s %s\n",
+		printf("        Redir: %s %s",
 			token_type_str(redir->type), redir->file);
+		if (redir->type == TOKEN_REDIR_HEREDOC)
+			printf(" (hd_expand: %d)", redir->hd_expand);
+		printf("\n");
 		redir = redir->next;
 	}
 }
@@ -40,7 +43,7 @@ static void	print_cmd_list(t_cmd *cmd_list, char *stage)
 		i = 0;
 		while (cmd_list->args && cmd_list->args[i])
 		{
-			printf("    args[%d] = \"%s\"\n", i, cmd_list->args[i]);
+			printf("    [%d] = %s\n", i, cmd_list->args[i]);
 			i++;
 		}
 		if (cmd_list->redirections)

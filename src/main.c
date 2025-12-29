@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
 static char	*token_type_str(t_token_type type)
 {
@@ -21,8 +21,11 @@ static void	print_redirections(t_redir *redir)
 {
 	while (redir)
 	{
-		printf("      Redir: %s %s\n",
+		printf("        Redir: %s %s",
 			token_type_str(redir->type), redir->file);
+		if (redir->type == TOKEN_REDIR_HEREDOC)
+			printf(" (hd_expand: %d)", redir->hd_expand);
+		printf("\n");
 		redir = redir->next;
 	}
 }
@@ -36,14 +39,13 @@ static void	print_cmd_list(t_cmd *cmd_list, char *stage)
 	printf("\n%s:\n", stage);
 	while (cmd_list)
 	{
-		printf("[%d] Args: ", cmd_num);
+		printf("[%d] Args:\n", cmd_num);
 		i = 0;
 		while (cmd_list->args && cmd_list->args[i])
 		{
-			printf("%s ", cmd_list->args[i]);
+			printf("    [%d] = %s\n", i, cmd_list->args[i]);
 			i++;
 		}
-		printf("\n");
 		if (cmd_list->redirections)
 			print_redirections(cmd_list->redirections);
 		cmd_list = cmd_list->next;
@@ -95,83 +97,89 @@ static t_token	*copy_tokens(t_token *tokens)
 	return (copy);
 }
 
-static void	print_tokens_copy(t_token *tokens, char *stage, char **envp)
+static void	print_tokens_copy(t_shell *shell, char *stage)
 {
+	t_shell	temp_shell;
 	t_token	*copy;
 
-	copy = copy_tokens(tokens);
+	if (!shell || !shell->toks)
+		return ;
+	copy = copy_tokens(shell->toks);
 	if (!copy)
 		return ;
+	temp_shell.env = shell->env;
+	temp_shell.exit_code = shell->exit_code;
+	temp_shell.toks = copy;
+	temp_shell.cmds = NULL;
 	if (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0)
-		expand_tokens(copy, envp);
+		expand_tokens(&temp_shell);
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
-		expand_tokens(copy, envp);
-		process_quotes(copy);
+		expand_tokens(&temp_shell);
+		process_quotes(&temp_shell);
 	}
-	print_tokens(copy, stage);
-	free_tokens(copy);
+	print_tokens(temp_shell.toks, stage);
+	free_tokens(temp_shell.toks);
 }
 
-static t_token	*tokenize_and_validate(char *input)
-{
-	t_token	*tokens;
 
-	if (!input || !*input)
-		return (NULL);
-	tokens = lexer(input);
-	if (!tokens)
+static int	tokenize_and_validate(t_shell *shell, char *input)
+{
+	shell->toks = lexer(input);
+	if (!shell->toks)
 	{
 		printf("Error: Failed to tokenize input.\n");
-		return (NULL);
+		return (0);
 	}
-	if (!check_syntax(tokens))
+	if (!check_syntax(shell))
 	{
-		free_tokens(tokens);
-		return (NULL);
+		free_tokens(shell->toks);
+		shell->toks = NULL;
+		return (0);
 	}
-	return (tokens);
+	return (1);
 }
 
-static void	print_debug_info(t_token *tokens, char **envp)
+static void	print_debug_info(t_shell *shell)
 {
-	print_tokens(tokens, "TOKENS");
-	print_tokens_copy(tokens, "TOKENS (after expansion)", envp);
-	print_tokens_copy(tokens, "TOKENS (after quote removal)", envp);
-}
-
-void run_executor(t_shell *shell, t_cmd *cmd_list)
-{
-	shell->cmds = cmd_list;
-    setup_exec_signals();
-    if (prepare_heredocs(cmd_list) < 0)
-    {
-        shell->exit_code = 130;
-        return ;
-    }
-    executor(shell);
-}
-
-static void	process_input(char *input, char **envp, t_shell *shell)
-{
-	t_token	*tokens;
-	t_cmd	*cmd_list;
-
-	tokens = tokenize_and_validate(input);
-	if (!tokens)
+	if (!shell || !shell->toks)
 		return ;
-	print_debug_info(tokens, envp);
-	cmd_list = parser(tokens, envp);
-	if (!cmd_list)
+	print_tokens(shell->toks, "TOKENS");
+	print_tokens_copy(shell, "TOKENS (after expansion)");
+	print_tokens_copy(shell, "TOKENS (after quote removal)");
+}
+
+void	run_executor(t_shell *shell)
+{
+	if (!shell || !shell->cmds)
+		return ;
+	setup_exec_signals();
+	if (prepare_heredocs(shell) < 0)
+	{
+		shell->exit_code = 130;
+		return ;
+	}
+	executor(shell);
+}
+
+static void	process_input(t_shell *shell, char *input)
+{
+	if (!tokenize_and_validate(shell, input))
+		return ;
+	print_debug_info(shell);
+	if (!parser(shell))
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
-		free_tokens(tokens);
+		free_tokens(shell->toks);
+		shell->toks = NULL;
 		return ;
 	}
-	print_cmd_list(cmd_list, "COMMANDS");
-	run_executor(shell, cmd_list);
-	free_tokens(tokens);
-	free_cmd_list(cmd_list);
+	print_cmd_list(shell->cmds, "COMMANDS");
+	run_executor(shell);
+	free_tokens(shell->toks);
+	shell->toks = NULL;
+	free_cmd_list(shell->cmds);
+	shell->cmds = NULL;
 }
 
 static char	get_unclosed_quote_type(char *str)
@@ -214,11 +222,6 @@ static int	handle_input_validation(char *input)
 		printf("exit\n");
 		return (1);
 	}
-	else if (ft_strncmp(input, "exit", 5) == 0)
-	{
-		free(input);
-		return (1);
-	}
 	unclosed_quote = get_unclosed_quote_type(input);
 	if (unclosed_quote)
 	{
@@ -239,7 +242,13 @@ int	main(int argc, char **argv, char **envp)
 	shell.cmds = NULL;
 	shell.exit_code = 0;
 	(void)argc;
-	(void)argv;
+	(void)argv;	
+	shell.env = init_env(envp);
+	if (!shell.env)
+		return (1);
+	shell.cmds = NULL;
+	shell.toks = NULL;
+	shell.exit_code = 0;
 	setup_signals();
 	while (1)
 	{
@@ -249,12 +258,16 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		else if (validation_result == 2)
 			continue ;
-		if (*input)
-			add_history(input);
-		process_input(input, envp, &shell);
+		if (!*input)
+		{
+			free(input);
+			continue ;
+		}	
+		add_history(input);
+		process_input(&shell, input);
 		free(input);
 	}
 	rl_clear_history();
 	env_free_all(shell.env);
-	return (0);
+	return (shell.exit_code);
 }

@@ -24,7 +24,7 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 		return (NULL);
 	}
 	current_token = parse_cmd(current_cmd, current_token);
-	if (!current_token && current_cmd->args == NULL)
+	if (!current_token && !current_cmd->args && !current_cmd->redirections)
 	{
 		free_cmd(current_cmd);
 		return (NULL);
@@ -35,18 +35,20 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 	return (current_token);
 }
 
-t_cmd	*parser(t_token *tokens, char **envp)
+int	parser(t_shell *shell)
 {
-	t_cmd	*cmd_list;
 	t_token	*current_token;
 
-	if (!tokens)
-		return (NULL);
-	expand_tokens(tokens, envp);
-	process_quotes(tokens);
-	cmd_list = NULL;
-	current_token = tokens;
+	if (!shell || !shell->toks)
+		return (0);
+	expand_tokens(shell);
+	mark_heredoc_expansion(shell->toks);
+	process_quotes(shell);
+	shell->cmds = NULL;
+	current_token = shell->toks;
 	while (current_token)
-		current_token = build_cmd(&cmd_list, current_token);
-	return (cmd_list);
+		current_token = build_cmd(&shell->cmds, current_token);
+	if (!shell->cmds)
+		return (0);
+	return (1);
 }

@@ -28,7 +28,7 @@ static void	add_token(t_token **head, t_token *new_token)
 	current->next = new_token;
 }
 
-static int	handle_operator(char *input, int *i, t_token **head)
+static int	handle_operator(t_token **head, char *input, int *i)
 {
 	t_token	*new_token;
 
@@ -55,13 +55,13 @@ static int	handle_operator(char *input, int *i, t_token **head)
 	return (1);
 }
 
-static int	handle_token(char *input, int *i, t_token **head)
+static int	handle_token(t_token **head, char *input, int *i)
 {
 	char	*word;
 
 	if (is_special_char(input[*i]))
 	{
-		if (!handle_operator(input, i, head))
+		if (!handle_operator(head, input, i))
 			return (0);
 		(*i)++;
 	}
@@ -88,7 +88,7 @@ t_token	*lexer(char *input)
 			i++;
 		if (!input[i])
 			break ;
-		if (!handle_token(input, &i, &head))
+		if (!handle_token(&head, input, &i))
 		{
 			free_tokens(head);
 			return (NULL);

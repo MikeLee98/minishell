@@ -77,10 +77,14 @@ static char	*remove_quotes(char *str)
 	return (result);
 }
 
-void	process_quotes(t_token *tokens)
+void	process_quotes(t_shell *shell)
 {
+	t_token	*tokens;
 	char	*unquoted;
 
+	if (!shell || !shell->toks)
+		return ;
+	tokens = shell->toks;
 	while (tokens)
 	{
 		if (tokens->type == TOKEN_WORD)

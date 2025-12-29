@@ -69,24 +69,26 @@ static int	check_pipe_syntax(t_token *token, t_token *prev)
 	return (1);
 }
 
-int	check_syntax(t_token *tokens)
+int	check_syntax(t_shell *shell)
 {
 	t_token	*current;
 	t_token	*prev;
 
-	current = tokens;
+	if (!shell || !shell->toks)
+		return (0);
+	current = shell->toks;
 	prev = NULL;
 	while (current)
 	{
 		if (is_redir(current->type))
 		{
 			if (!check_redir_syntax(current))
-				return (0);
+				return (shell->exit_code = 2, 0);
 		}
 		else if (current->type == TOKEN_PIPE)
 		{
 			if (!check_pipe_syntax(current, prev))
-				return (0);
+				return (shell->exit_code = 2, 0);
 		}
 		prev = current;
 		current = current->next;

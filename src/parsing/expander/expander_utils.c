@@ -1,28 +1,18 @@
 #include "../../../includes/minishell.h"
 
-static char	*get_env_value(char *var_name, char **envp)
+static char	*get_env_value(t_shell *shell, char *var_name)
 {
-	int		i;
-	int		len;
-	char	*result;
+	char	*value;
 
-	if (!var_name || !envp)
+	if (!var_name)
 		return (ft_strdup(""));
-	if (ft_strncmp(var_name, "?", 2) == 0)
-		return (ft_strdup("EXIT_STATUS_FUNCTION_HERE"));
+	else if (ft_strncmp(var_name, "?", 2) == 0)
+		return (ft_itoa(shell->exit_code));
 	else if (ft_strlen(var_name) == 1 && !ft_isalnum(var_name[0]))
 		return (ft_strdup(""));
-	len = ft_strlen(var_name);
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], var_name, len) == 0 && envp[i][len] == '=')
-		{
-			result = ft_strdup(envp[i] + len + 1);
-			return (result);
-		}
-		i++;
-	}
+	value = ft_getenv(shell->env, var_name);
+	if (value)
+		return (ft_strdup(value));
 	return (ft_strdup(""));
 }
 
@@ -64,25 +54,25 @@ static char	*extract_var_name(char *str, int *i)
 	return (extract_regular_var_name(str, i));
 }
 
-static char	*expand_dollar_var(char *str, int *i, char **envp)
+static char	*expand_dollar_var(t_shell *shell, char *str, int *i)
 {
 	char	*var_name;
 	char	*var_value;
 
 	var_name = extract_var_name(str, i);
-	var_value = get_env_value(var_name, envp);
+	var_value = get_env_value(shell, var_name);
 	free(var_name);
 	return (var_value);
 }
 
-char	*expand_variable(char *str, int *i, char **envp)
+char	*expand_variable(t_shell *shell, char *str, int *i)
 {
 	char	char_str[2];
 
 	if (str[*i] == '$')
 	{
 		if (str[*i + 1])
-			return (expand_dollar_var(str, i, envp));
+			return (expand_dollar_var(shell, str, i));
 		else
 		{
 			char_str[0] = '$';

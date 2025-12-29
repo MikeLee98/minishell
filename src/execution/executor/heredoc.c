@@ -1,6 +1,21 @@
 #include "../../../includes/minishell.h"
 
-static int create_heredoc(char *delimiter)
+static void write_heredoc_line(t_shell *shell, int hd_expand, int fd, char *line)
+{
+	char *expanded;
+
+	if (hd_expand)
+	{
+		expanded = expand_token(shell, line);
+		write(fd, expanded, ft_strlen(expanded));
+		free(expanded);
+	}
+	else
+		write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
+}
+
+static int create_heredoc(t_shell *shell, int hd_expand, char *delimiter)
 {
     int     pipefd[2];
     pid_t   pid;
@@ -26,11 +41,7 @@ static int create_heredoc(char *delimiter)
                 free(line);
                 break;
             }
-			if (flag_hdoc == 1)
-				expand
-			else
-            	write(pipefd[1], line, ft_strlen(line));
-            write(pipefd[1], "\n", 1);
+			write_heredoc_line(shell, hd_expand, pipefd[1], line);
             free(line);
         }
         close(pipefd[1]);
@@ -48,12 +59,12 @@ static int create_heredoc(char *delimiter)
     return (pipefd[0]);
 }
 
-int prepare_heredocs(t_cmd *cmds)
+int prepare_heredocs(t_shell *shell)
 {
     t_cmd   *cmd;
     t_redir *r;
 
-    cmd = cmds;
+    cmd = shell->cmds;
     while (cmd)
     {
         r = cmd->redirections;
@@ -61,7 +72,7 @@ int prepare_heredocs(t_cmd *cmds)
         {
             if (r->type == TOKEN_REDIR_HEREDOC)
             {
-                r->fd = create_heredoc(r->file);
+                r->fd = create_heredoc(shell, r->hd_expand, r->file);
                 if (r->fd < 0)
                     return (-1);
             }

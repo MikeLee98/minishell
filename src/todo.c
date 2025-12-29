@@ -1,10 +1,13 @@
+//concatenar values no export key+=value
 //remove builtin_needs_parent
 //corrigir o ft_exit
 //verificar exit codes
 //escrever para o stderror com ft_putstr_fd
 //transformar builtins em ints
 //exits para falhas de malloc
-//concatenar values no export key+=value
+
+// > test.txt não estava a criar um ficheiro vazio test.txt caso não existisse, ou truncava o ficheiro test.txt caso ele já existisse
+// >> test.txt não está a fazer append no ficheiro test.txt
 
 // marioro2@c1r11s2:~/minishell$ export a="ls -l"
 // marioro2@c1r11s2:~/minishell$ a
@@ -24,11 +27,4 @@
 
 // marioro2@c1r11s2:~/minishell$ export a=">"
 // marioro2@c1r11s2:~/minishell$ echo ola >$a
-// -----------------> cria ficheiro > com "ola" detro
-
-// >export key ----> env 0 
-// >export key= ----> env key=
-// >export key=1 ----> env key=1
-// >export key ----> export key
-// >export key= ----> env key=""
-// >export key=1 ----> env key="1"
+// -----------------> cria ficheiro > com "ola" dentro

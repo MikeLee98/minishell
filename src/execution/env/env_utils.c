@@ -26,13 +26,12 @@ static char *join_key_value(char *key, char *value)
     char *tmp;
     char *res;
 
+	if (!value)
+        return (ft_strdup(key));
     tmp = ft_strjoin(key, "=");
     if (!tmp)
         return (NULL);
-    if (value)
-        res = ft_strjoin(tmp, value);
-    else
-        res = ft_strdup(tmp);
+    res = ft_strjoin(tmp, value);
     free(tmp);
     return (res);
 }

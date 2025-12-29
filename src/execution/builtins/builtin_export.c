@@ -1,5 +1,18 @@
 #include "../../../includes/minishell.h"
 
+static int has_plus_equal(char *arg)
+{
+    int i = 0;
+
+    while (arg[i])
+    {
+        if (arg[i] == '+' && arg[i + 1] == '=')
+            return 1;
+        i++;
+    }
+    return 0;
+}
+
 static void split_key_value(char *arg, char **key, char **value)
 {
     int i;
@@ -8,12 +21,12 @@ static void split_key_value(char *arg, char **key, char **value)
     while (arg[i] && arg[i] != '=')
         i++;
     *key = ft_substr(arg, 0, i);
-	if (!key)
+	if (!*key)
 		return;
     if (arg[i] == '=')
 	{
         *value = ft_strdup(arg + i + 1);
-		if (!value)
+		if (!*value)
 			return;
 	}
     else
@@ -53,7 +66,6 @@ static int is_valid_identifier(char *s)
     return (1);
 }
 
-//acrescentar concatenar values
 void ft_export(t_shell *shell, char **args)
 {
     int i;
@@ -63,7 +75,7 @@ void ft_export(t_shell *shell, char **args)
         print_export(shell->env);
         return ;
     }
-    i = 2;
+    i = 1;
     while (args[i])
     {
         if (!is_valid_identifier(args[i]))

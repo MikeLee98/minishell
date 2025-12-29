@@ -1,33 +1,46 @@
 #include "../../../includes/minishell.h"
 
-static int has_plus_equal(char *arg)
+static int plus_equal_pos(char *arg)
 {
     int i = 0;
 
-    while (arg[i])
+    while (arg[i] && arg[i] != '=')
     {
         if (arg[i] == '+' && arg[i + 1] == '=')
-            return 1;
+            return i;
         i++;
     }
-    return 0;
+    return -1;
 }
 
-static void split_key_value(char *arg, char **key, char **value)
+static void split_key_value(char *arg, char **key, char **value, int *append)
 {
-    int i;
+    int pos;
 
-    i = 0;
-    while (arg[i] && arg[i] != '=')
-        i++;
-    *key = ft_substr(arg, 0, i);
+	*append = 0;
+	pos = plus_equal_pos(arg);
+	if (pos >= 0)
+	{
+		*append = 1;
+		*key = ft_substr(arg, 0, pos);
+		if (!*key)
+			return ;
+		*value = ft_strdup(arg + pos + 2);
+		if (!*value)
+			return ;
+		return ;
+	}
+    pos = 0;
+    while (arg[pos] && arg[pos] != '=')
+        pos++;
+    *key = ft_substr(arg, 0, pos);
 	if (!*key)
 		return;
-    if (arg[i] == '=')
+    if (arg[pos] == '=')
 	{
-        *value = ft_strdup(arg + i + 1);
+        *value = ft_strdup(arg + pos + 1);
 		if (!*value)
-			return;
+			return ;
 	}
     else
         *value = NULL;
@@ -35,17 +48,20 @@ static void split_key_value(char *arg, char **key, char **value)
 
 static void export_assign(t_env **env, char *arg)
 {
-    char *key;
-    char *value;
+    char	*key;
+    char	*value;
+	int 	append;
 
-    split_key_value(arg, &key, &value);
+    split_key_value(arg, &key, &value, &append);
+    if (!key)
+		return ;
 	if (value == NULL)
 	{
         if (!env_find(*env, key))
-            env_set(env, key, NULL);
+            env_set(env, key, NULL, 0);
     }
-    else
-		env_set(env, key, value);
+	else
+		env_set(env, key, value, append);
     free(key);
     free(value);
 }
@@ -59,6 +75,8 @@ static int is_valid_identifier(char *s)
     i = 1;
     while (s[i] && s[i] != '=')
     {
+		if (s[i] == '+' && s[i + 1] == '=')
+			break ;
         if (!ft_isalnum(s[i]) && s[i] != '_')
             return (0);
         i++;

@@ -119,7 +119,7 @@ t_env	*init_env(char **envp);
 void	env_add_back(t_env **env, t_env *new);
 
 // env_set
-void	env_set(t_env **env, char *key, char *value);
+void	env_set(t_env **env, char *key, char *value, int append);
 
 // env_unset
 void	env_unset(t_env **env, char *key);

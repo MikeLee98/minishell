@@ -1,9 +1,13 @@
-//concatenar values no export key+=value
 //remove builtin_needs_parent
+
 //corrigir o ft_exit
+
 //verificar exit codes
+
 //escrever para o stderror com ft_putstr_fd
+
 //transformar builtins em ints
+
 //exits para falhas de malloc
 
 // > test.txt não estava a criar um ficheiro vazio test.txt caso não existisse, ou truncava o ficheiro test.txt caso ele já existisse
@@ -23,8 +27,4 @@
 // -rw-r--r-- 1 marioro2 2025_lisbon   631 dez  3 20:59 valgrind.supp
 // marioro2@c1r11s2:~/minishell$ echo ola >$a
 // bash: $a: ambiguous redirect
-// marioro2@c1r11s2:~/minishell$ 
-
-// marioro2@c1r11s2:~/minishell$ export a=">"
-// marioro2@c1r11s2:~/minishell$ echo ola >$a
-// -----------------> cria ficheiro > com "ola" dentro
+// marioro2@c1r11s2:~/minishell$

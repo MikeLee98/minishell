@@ -19,11 +19,11 @@ static void	cd_update_env(t_shell *shell, char *oldpwd)
 {
 	char	*newpwd;
 
-	env_set(&shell->env, "OLDPWD", oldpwd);
+	env_set(&shell->env, "OLDPWD", oldpwd, 0);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 		return ;
-	env_set(&shell->env, "PWD", newpwd);
+	env_set(&shell->env, "PWD", newpwd, 0);
 	free(newpwd);
 }
 

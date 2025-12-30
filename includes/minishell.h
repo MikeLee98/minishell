@@ -63,6 +63,8 @@ typedef struct s_shell
 	int				exit_code;
 }	t_shell;
 
+
+
 // ************************************************************************** //
 //                                  PARSING                                   //
 // ************************************************************************** //
@@ -174,7 +176,6 @@ int		apply_redirections(t_cmd *cmd);
 // exec_utils
 int		is_builtin(char *cmd);
 int		run_builtin(t_shell *shell, char **args);
-int		builtin_needs_parent(char *cmd);
 int		has_slash(char *s);
 
 // heredoc

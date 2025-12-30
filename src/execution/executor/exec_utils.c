@@ -21,21 +21,6 @@ int is_builtin(char *cmd)
     return (0);
 }
 
-int builtin_needs_parent(char *cmd)
-{
-    if (!cmd)
-        return (0);
-    if (ft_strcmp(cmd, "cd") == 0)
-        return (1);
-    if (ft_strcmp(cmd, "export") == 0)
-        return (1);
-    if (ft_strcmp(cmd, "unset") == 0)
-        return (1);
-    if (ft_strcmp(cmd, "exit") == 0)
-        return (1);
-    return (0);
-}
-
 int run_builtin(t_shell *shell, char **args)
 {
     if (ft_strcmp(args[0], "echo") == 0)

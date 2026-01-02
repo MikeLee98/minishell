@@ -1,0 +1,34 @@
+#include "../includes/minishell.h"
+
+void	print_debug_info(t_shell *shell)
+{
+	if (!shell || !shell->toks)
+		return ;
+	print_tokens(shell->toks, "TOKENS");
+	print_tokens_copy(shell, "TOKENS (after expansion)");
+	print_tokens_copy(shell, "TOKENS (after quote removal)");
+}
+
+void	print_cmd_list(t_cmd *cmd_list, char *stage)
+{
+	int	cmd_num;
+	int	i;
+
+	cmd_num = 0;
+	printf("\n%s:\n", stage);
+	while (cmd_list)
+	{
+		printf("[%d] Args:\n", cmd_num);
+		i = 0;
+		while (cmd_list->args && cmd_list->args[i])
+		{
+			printf("    [%d] = %s\n", i, cmd_list->args[i]);
+			i++;
+		}
+		if (cmd_list->redirections)
+			print_redirections(cmd_list->redirections);
+		cmd_list = cmd_list->next;
+		cmd_num++;
+	}
+	printf("\n");
+}

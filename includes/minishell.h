@@ -72,10 +72,10 @@ typedef struct s_shell
 // Lexer Functions (lexer.c)
 t_token	*lexer(char *input);
 
-// Lexer Helper Functions (lexer_utils.c)
+// Lexer Utils Functions (lexer_utils.c)
 char	*handle_word(char *input, int *i);
 
-// Lexer Helper Functions (lexer_utils_gen.c)
+// Lexer Helpers Functions (lexer_helpers.c)
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
@@ -85,8 +85,10 @@ int		check_syntax(t_shell *shell);
 // Parser Functions (parser.c)
 int		parser(t_shell *shell);
 
-// Parser Helper Functions (parser_utils.c)
+// Parser Utils Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
+
+// Parser Helpers Functions (parser_helpers.c)
 void	mark_heredoc_expansion(t_token *tokens);
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 
@@ -94,7 +96,7 @@ void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 char	*expand_token(t_shell *shell, char *token);
 void	expand_tokens(t_shell *shell);
 
-// Expansion Helper Functions (expander_utils.c)
+// Expansion Utils Functions (expander_utils.c)
 char	*expand_variable(t_shell *shell, char *str, int *i);
 
 // Quote Removal Functions (quote_removal.c)
@@ -183,5 +185,24 @@ int		prepare_heredocs(t_shell *shell);
 
 // signals
 void	setup_exec_signals(void);
+
+// ************************************************************************** //
+//                                   MAIN                                     //
+// ************************************************************************** //
+
+// Main Utils Functions (main_utils.c)
+int		validate_input(char *input);
+
+// Main Pipeline Functions (main_pipeline.c)
+void	process_and_execute(t_shell *shell, char *input);
+
+// Main Debug Functions (main_debug.c)
+void	print_debug_info(t_shell *shell);
+void	print_cmd_list(t_cmd *cmd_list, char *stage);
+
+// Main Debug Utils Functions (main_debug_utils.c)
+void	print_tokens(t_token *tokens, char *stage);
+void	print_tokens_copy(t_shell *shell, char *stage);
+void	print_redirections(t_redir *redir);
 
 #endif

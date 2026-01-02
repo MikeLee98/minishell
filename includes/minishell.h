@@ -157,7 +157,7 @@ int	ft_cd(t_shell *shell, char **args);
 int	ft_pwd(t_shell *shell);
 
 // builtin_echo
-int	ft_echo(char **args);
+int	ft_echo(t_shell *shell, char **args);
 
 // builtin_exit
 int	ft_exit(t_shell *shell, char **args);

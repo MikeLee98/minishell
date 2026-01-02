@@ -24,15 +24,12 @@ static int create_heredoc(t_shell *shell, int hd_expand, char *delimiter)
 
     if (pipe(pipefd) == -1)
         return (-1);
-
     pid = fork();
     if (pid == 0)
     {
         signal(SIGINT, SIG_DFL);
         signal(SIGQUIT, SIG_IGN);
-
         close(pipefd[0]);
-
         while (1)
         {
             line = readline("> ");
@@ -47,10 +44,8 @@ static int create_heredoc(t_shell *shell, int hd_expand, char *delimiter)
         close(pipefd[1]);
         exit(0);
     }
-
     close(pipefd[1]);
     waitpid(pid, &status, 0);
-
     if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
     {
         close(pipefd[0]);

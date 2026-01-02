@@ -28,7 +28,7 @@ int run_builtin(t_shell *shell, char **args)
     if (ft_strcmp(args[0], "cd") == 0)
         return (ft_cd(shell, args));
     if (ft_strcmp(args[0], "pwd") == 0)
-        return (ft_pwd());
+        return (ft_pwd(shell));
     if (ft_strcmp(args[0], "export") == 0)
         return (ft_export(shell, args));
     if (ft_strcmp(args[0], "unset") == 0)
@@ -36,7 +36,7 @@ int run_builtin(t_shell *shell, char **args)
     if (ft_strcmp(args[0], "env") == 0)
         return (ft_env(shell));
     if (ft_strcmp(args[0], "exit") == 0)
-        return (ft_exit(shell, args), args);
+        return (ft_exit(shell, args));
     return (1);
 }
 

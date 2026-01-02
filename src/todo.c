@@ -1,12 +1,4 @@
-//remove builtin_needs_parent
-
-//corrigir o ft_exit
-
-//verificar exit codes
-
-//escrever para o stderror com ft_putstr_fd
-
-//transformar builtins em ints
+//ft_exit, builtins para ints, exit codes, escrever para o stderror ft_putstr_fd
 
 //exits para falhas de malloc
 

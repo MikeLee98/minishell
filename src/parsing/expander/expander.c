@@ -105,14 +105,13 @@ void	expand_tokens(t_shell *shell)
 			tokens->value = expanded;
 		}
 		else if (tokens->type >= TOKEN_REDIR_IN
-			&& tokens->type <= TOKEN_REDIR_APPEND)
+			&& tokens->type <= TOKEN_REDIR_APPEND
+			&& tokens->next
+			&& tokens->next->type == TOKEN_WORD)
 		{
-			if (tokens->next && tokens->next->type == TOKEN_WORD)
-			{
-				expanded = expand_token(shell, tokens->next->value);
-				free(tokens->next->value);
-				tokens->next->value = expanded;
-			}
+			expanded = expand_token(shell, tokens->next->value);
+			free(tokens->next->value);
+			tokens->next->value = expanded;
 		}
 		tokens = tokens->next;
 	}

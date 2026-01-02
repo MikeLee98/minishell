@@ -94,14 +94,13 @@ void	process_quotes(t_shell *shell)
 			tokens->value = unquoted;
 		}
 		else if (tokens->type >= TOKEN_REDIR_IN
-			&& tokens->type <= TOKEN_REDIR_APPEND)
+			&& tokens->type <= TOKEN_REDIR_APPEND
+			&& tokens->next
+			&& tokens->next->type == TOKEN_WORD)
 		{
-			if (tokens->next && tokens->next->type == TOKEN_WORD)
-			{
-				unquoted = remove_quotes(tokens->next->value);
-				free(tokens->next->value);
-				tokens->next->value = unquoted;
-			}
+			unquoted = remove_quotes(tokens->next->value);
+			free(tokens->next->value);
+			tokens->next->value = unquoted;
 		}
 		tokens = tokens->next;
 	}

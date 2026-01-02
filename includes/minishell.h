@@ -119,7 +119,7 @@ t_env	*init_env(char **envp);
 void	env_add_back(t_env **env, t_env *new);
 
 // env_set
-void	env_set(t_env **env, char *key, char *value);
+void	env_set(t_env **env, char *key, char *value, int append);
 
 // env_unset
 void	env_unset(t_env **env, char *key);
@@ -174,7 +174,6 @@ int		apply_redirections(t_cmd *cmd);
 // exec_utils
 int		is_builtin(char *cmd);
 int		run_builtin(t_shell *shell, char **args);
-int		builtin_needs_parent(char *cmd);
 int		has_slash(char *s);
 
 // heredoc

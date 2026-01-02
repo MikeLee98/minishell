@@ -86,20 +86,24 @@ static int is_valid_identifier(char *s)
 
 void ft_export(t_shell *shell, char **args)
 {
-    int i;
+	int	i;
 
-    if (!args[1])
-    {
-        print_export(shell->env);
-        return ;
-    }
-    i = 1;
-    while (args[i])
-    {
-        if (!is_valid_identifier(args[i]))
-            ft_printf("minishell: export: `%s': not a valid identifier\n", args[i]);
-        else
-            export_assign(&shell->env, args[i]);
-        i++;
-    }
+	if (!args[1])
+	{
+		print_export(shell->env);
+		return ;
+	}
+	i = 1;
+	while (args[i])
+	{
+		if (!is_valid_identifier(args[i]))
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(args[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+		}
+		else
+			export_assign(&shell->env, args[i]);
+		i++;
+	}
 }

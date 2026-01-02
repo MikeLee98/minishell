@@ -7,7 +7,7 @@ void	ft_pwd(void)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
-		ft_printf("minishell: pwd: error retrieving current directory\n");
+		ft_putstr_fd("minishell: pwd: error retrieving current directory\n", 2);
 		return ;
 	}
 	ft_printf("%s\n", cwd);

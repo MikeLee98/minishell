@@ -1,78 +1,53 @@
 #include "../../../includes/minishell.h"
 
-static int is_numeric(const char *s)
+static int	parse_exit_code(const char *s, long *out)
 {
-	int i = 0;
+	long	result;
+	int		sign;
 
-	if (!s || !s[0])
-		return (0);
-	if (s[i] == '+' || s[i] == '-')
-		i++;
-	if (!s[i])
-		return (0);
-	while (s[i])
-	{
-		if (!ft_isdigit(s[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-static long long ft_atoll_overflow(const char *s, int *overflow)
-{
-	long long sign = 1;
-	unsigned long long res = 0;
-	unsigned long long limit = LLONG_MAX;
-
-	*overflow = 0;
-	if (*s == '-' || *s == '+')
+	result = 0;
+	sign = 1;
+	if (*s == '+' || *s == '-')
 	{
 		if (*s == '-')
 			sign = -1;
 		s++;
 	}
+	if (!*s)
+		return (0);
 	while (*s)
 	{
-		if (res > (limit - (*s - '0')) / 10)
-		{
-			*overflow = 1;
+		if (!ft_isdigit(*s))
 			return (0);
-		}
-		res = res * 10 + (*s - '0');
+		if (result > (LONG_MAX - (*s - '0')) / 10)
+			return (0);
+		result = result * 10 + (*s - '0');
 		s++;
 	}
-	return (res * sign);
+	*out = result * sign;
+	return (1);
 }
 
-void    ft_exit(t_shell *shell, char **args)
+int	ft_exit(t_shell *shell, char **args)
 {
-    long long   code;
-    int         overflow;
+	long	code;
 
-    ft_printf("exit\n");
-    if (!args[1])
-        exit(shell->exit_code);
+	ft_putstr_fd("exit\n", 1);
+	if (!args[1])
+		exit(shell->exit_code);
 
-    if (!is_numeric(args[1]))
-    {
-        ft_printf("minishell: exit: %s: numeric argument required\n", args[1]);
-        exit(2);
-    }
-    code = ft_atoll_overflow(args[1], &overflow);
-    if (overflow)
-    {
-        ft_printf("minishell: exit: %s: numeric argument required\n", args[1]);
-        exit(255);
-    }
-    if (args[2])
-    {
-        ft_printf("minishell: exit: too many arguments\n");
-        shell->exit_code = 1;
-        return ;
-    }
-    exit((unsigned char)code);
+	if (!parse_exit_code(args[1], &code))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		exit(2);
+	}
+	if (args[2])
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell->exit_code = 1;
+		return (1);
+	}
+	exit((unsigned char)code);
 }
-
-//write to stderror
-//remake -> not working as intended

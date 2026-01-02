@@ -9,7 +9,8 @@ static char *cd_get_target(t_shell *shell, char **args)
 	home = ft_getenv(shell->env, "HOME");
 	if (!home)
 	{
-		ft_printf("minishell: cd: HOME not set\n");
+		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+		shell->exit_code = 1;
 		return (NULL);
 	}
 	return (home);
@@ -27,20 +28,27 @@ static void	cd_update_env(t_shell *shell, char *oldpwd)
 	free(newpwd);
 }
 
-void	ft_cd(t_shell *shell, char **args)
+int	ft_cd(t_shell *shell, char **args)
 {
 	char	*oldpwd;
 	char	*target;
 
 	target = cd_get_target(shell, args);
 	if (!target)
-		return ;
+		return (shell->exit_code);
 	oldpwd = getcwd(NULL, 0);
 	if (chdir(target) != 0)
 	{
-		ft_printf("minishell: cd: %s: %s\n", target, strerror(errno));
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(target, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
 		free(oldpwd);
-		return ;
+		shell->exit_code = 1;
+		return (1);
 	}
 	cd_update_env(shell, oldpwd);
+	shell->exit_code = 0;
+	return (0);
 }

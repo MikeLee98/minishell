@@ -2,11 +2,11 @@
 
 void execute_pipeline(t_shell *shell, t_cmd *cmd)
 {
-    int pipefd[2];
-    int prev_fd;
-    pid_t pid;
-    int status;
-    t_cmd *current;
+    int     pipefd[2];
+    int     prev_fd;
+    pid_t   pid;
+    int     status;
+    t_cmd   *current;
 
     prev_fd = -1;
     current = cmd;
@@ -16,15 +16,17 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
         {
             if (pipe(pipefd) == -1)
             {
-                perror("pipe");
+                ft_putstr_fd("minishell: pipe: ", 2);
+                ft_putstr_fd(strerror(errno), 2);
+                ft_putstr_fd("\n", 2);
                 return;
             }
         }
         pid = fork();
         if (pid == 0)
         {
-			signal(SIGINT, SIG_DFL);
-    		signal(SIGQUIT, SIG_DFL);
+            signal(SIGINT, SIG_DFL);
+            signal(SIGQUIT, SIG_DFL);
             if (prev_fd != -1)
             {
                 dup2(prev_fd, STDIN_FILENO);

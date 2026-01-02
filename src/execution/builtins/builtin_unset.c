@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-void	ft_unset(t_shell *shell, char **args)
+int	ft_unset(t_shell *shell, char **args)
 {
 	int i = 1;
 
@@ -10,4 +10,6 @@ void	ft_unset(t_shell *shell, char **args)
 			env_unset(&shell->env, args[i]);
 		i++;
 	}
+	shell->exit_code = 0;
+	return (0);
 }

@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-void	ft_pwd(void)
+int	ft_pwd(t_shell *shell)
 {
 	char	*cwd;
 
@@ -8,8 +8,11 @@ void	ft_pwd(void)
 	if (!cwd)
 	{
 		ft_putstr_fd("minishell: pwd: error retrieving current directory\n", 2);
-		return ;
+		shell->exit_code = 1;
+		return (1);
 	}
 	ft_printf("%s\n", cwd);
 	free(cwd);
+	shell->exit_code = 0;
+	return (0);
 }

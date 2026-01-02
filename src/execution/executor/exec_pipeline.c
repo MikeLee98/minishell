@@ -4,23 +4,20 @@ void execute_pipeline(t_shell *shell, t_cmd *cmd)
 {
     int     pipefd[2];
     int     prev_fd;
+    t_cmd   *current;
     pid_t   pid;
     int     status;
-    t_cmd   *current;
 
     prev_fd = -1;
     current = cmd;
     while (current)
     {
-        if (current->next)
+        if (current->next && pipe(pipefd) == -1)
         {
-            if (pipe(pipefd) == -1)
-            {
-                ft_putstr_fd("minishell: pipe: ", 2);
-                ft_putstr_fd(strerror(errno), 2);
-                ft_putstr_fd("\n", 2);
-                return;
-            }
+            ft_putstr_fd("minishell: pipe: ", 2);
+            ft_putstr_fd(strerror(errno), 2);
+            ft_putstr_fd("\n", 2);
+            return;
         }
         pid = fork();
         if (pid == 0)

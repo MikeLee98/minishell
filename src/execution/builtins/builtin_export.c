@@ -84,14 +84,16 @@ static int is_valid_identifier(char *s)
     return (1);
 }
 
-void ft_export(t_shell *shell, char **args)
+int ft_export(t_shell *shell, char **args)
 {
 	int	i;
+	int had_error = 0;
 
 	if (!args[1])
 	{
 		print_export(shell->env);
-		return ;
+		shell->exit_code = 0;
+		return (0);
 	}
 	i = 1;
 	while (args[i])
@@ -101,9 +103,12 @@ void ft_export(t_shell *shell, char **args)
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(args[i], 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
+			had_error = 1;
 		}
 		else
 			export_assign(&shell->env, args[i]);
 		i++;
 	}
+	shell->exit_code = had_error ? 1 : 0;
+	return (shell->exit_code);
 }

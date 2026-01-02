@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-void	ft_env(t_shell *shell)
+int	ft_env(t_shell *shell)
 {
 	t_env	*tmp;
 
@@ -11,4 +11,6 @@ void	ft_env(t_shell *shell)
 			ft_printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
+	shell->exit_code = 0;
+	return (0);
 }

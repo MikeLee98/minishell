@@ -4,7 +4,7 @@ static int is_flag_n(char *s)
 {
 	int i;
 
-	if (s[0] != '-' || s[1] != 'n')
+	if (!s || s[0] != '-' || s[1] != 'n')
 		return (0);
 	i = 2;
 	while (s[i])
@@ -16,7 +16,7 @@ static int is_flag_n(char *s)
 	return (1);
 }
 
-void	ft_echo(char **args)
+int	ft_echo(t_shell *shell, char **args)
 {
 	int i;
 	int newline;
@@ -37,4 +37,7 @@ void	ft_echo(char **args)
 	}
 	if (newline)
 		ft_printf("\n");
+
+	shell->exit_code = 0;
+	return (0);
 }

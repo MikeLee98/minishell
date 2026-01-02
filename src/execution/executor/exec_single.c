@@ -20,35 +20,34 @@ static void restore_fds(int saved[3])
 
 void execute_single(t_shell *shell, t_cmd *cmd)
 {
-    pid_t   pid;
-    int     status;
-	int saved_fds[3];
+    int saved_fds[3];
 
     if (!cmd || !cmd->args || !cmd->args[0])
         return;
     if (is_builtin(cmd->args[0]))
     {
-		save_fds(saved_fds);
+        save_fds(saved_fds);
         if (apply_redirections(cmd) != 0)
         {
-			restore_fds(saved_fds);
+            restore_fds(saved_fds);
             shell->exit_code = 1;
             return;
         }
         shell->exit_code = run_builtin(shell, cmd->args);
-		restore_fds(saved_fds);
+        restore_fds(saved_fds);
         return;
     }
-    pid = fork();
+    pid_t pid = fork();
     if (pid == 0)
     {
-		signal(SIGINT, SIG_DFL);
-    	signal(SIGQUIT, SIG_DFL);
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
         if (apply_redirections(cmd) != 0)
             exit(1);
         execve_with_path(shell, cmd);
         exit(127);
     }
+    int status;
     waitpid(pid, &status, 0);
     if (WIFEXITED(status))
         shell->exit_code = WEXITSTATUS(status);

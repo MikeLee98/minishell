@@ -4,7 +4,7 @@ static int is_flag_n(char *s)
 {
 	int i;
 
-	if (!s || s[0] != '-' || s[1] != 'n')
+	if (!s || s[0] != '-' || s[1] == '\0' || s[1] != 'n')
 		return (0);
 	i = 2;
 	while (s[i])

@@ -24,7 +24,7 @@ int is_builtin(char *cmd)
 int run_builtin(t_shell *shell, char **args)
 {
     if (ft_strcmp(args[0], "echo") == 0)
-        return (ft_echo(args));
+        return (ft_echo(shell, args));
     if (ft_strcmp(args[0], "cd") == 0)
         return (ft_cd(shell, args));
     if (ft_strcmp(args[0], "pwd") == 0)

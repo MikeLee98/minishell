@@ -145,7 +145,7 @@ int	ft_env(t_shell *shell);
 int	ft_export(t_shell *shell, char **args);
 
 // builtin_print_export
-int	print_export(t_env *env);
+void	print_export(t_env *env);
 
 // builtin_unset
 int	ft_unset(t_shell *shell, char **args);

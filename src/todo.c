@@ -1,9 +1,9 @@
 // TO DO LIST:
 
-//exits para falhas de malloc
-
 // > test.txt não estava a criar um ficheiro vazio test.txt caso não existisse, ou truncava o ficheiro test.txt caso ele já existisse
 // >> test.txt não está a fazer append no ficheiro test.txt
+// pedir redireçoes
+
 
 // marioro2@c1r11s2:~/minishell$ export a="ls -l"
 // marioro2@c1r11s2:~/minishell$ a
@@ -20,3 +20,4 @@
 // marioro2@c1r11s2:~/minishell$ echo ola >$a
 // bash: $a: ambiguous redirect
 // marioro2@c1r11s2:~/minishell$
+// flags separadas

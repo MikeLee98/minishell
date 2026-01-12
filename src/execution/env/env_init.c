@@ -35,13 +35,17 @@ static t_env   *env_new(char *str)
         free(node);
         return (NULL);
     }
-    node->value = extract_value(str);
-	if (node->value == NULL && ft_strchr(str, '='))
-    {
-        free(node->key);
-        free(node);
-        return (NULL);
-    }
+	node->value = NULL;
+	if (ft_strchr(str, '='))
+	{
+   		node->value = extract_value(str);
+    	if (!node->value)
+    	{
+        	free(node->key);
+        	free(node);
+        	return (NULL);
+    	}
+	}
     node->next = NULL;
     return (node);
 }

@@ -1,4 +1,4 @@
-//ft_exit, builtins para ints, exit codes, escrever para o stderror ft_putstr_fd
+// TO DO LIST:
 
 //exits para falhas de malloc
 

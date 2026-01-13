@@ -1,8 +1,8 @@
-// TO DO LIST:
+// ISSUES
 
 // > test.txt não estava a criar um ficheiro vazio test.txt caso não existisse, ou truncava o ficheiro test.txt caso ele já existisse
 // >> test.txt não está a fazer append no ficheiro test.txt
-// pedir redireçoes
+// investigação sugere que r->file nao esta populado corretamente
 
 
 // marioro2@c1r11s2:~/minishell$ export a="ls -l"
@@ -21,3 +21,22 @@
 // bash: $a: ambiguous redirect
 // marioro2@c1r11s2:~/minishell$
 // flags separadas
+// investigar export de variaveis com espacos
+// split por espacos no export para comandos
+
+// empty double quotes should create an empty token and be expanded as space
+// input:
+// echo "" a
+// output esperado:
+//  a
+// output atual:
+// a
+
+// input:
+// ""
+// output esperado:
+// command not found
+// output atual:
+// Error: Failed to parse tokens.
+
+

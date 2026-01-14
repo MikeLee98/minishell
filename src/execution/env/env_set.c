@@ -14,9 +14,6 @@ static int env_update(t_env *env, char *key, char *new_value, int append)
         node->value = NULL;
         return (1);
     }
-	tmp = ft_strdup(new_value);
-	if (!tmp)
-		return (1);
 	if (append && node->value)
 	{
 		tmp = ft_strjoin(node->value, new_value);
@@ -26,6 +23,9 @@ static int env_update(t_env *env, char *key, char *new_value, int append)
 		node->value = tmp;
 		return (1);
 	}
+	tmp = ft_strdup(new_value);
+	if (!tmp)
+    	return (1);
     free(node->value);
     node->value = tmp;
     return (1);
@@ -41,6 +41,7 @@ static void    env_add_var(t_env **env, char *key, char *value)
 	new->key = ft_strdup(key);
     if (!new->key)
     {
+		free(new->key);
         free(new);
         return;
     }

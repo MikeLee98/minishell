@@ -20,30 +20,49 @@ static void restore_fds(int saved[3])
 
 void execute_single(t_shell *shell, t_cmd *cmd)
 {
+    int     saved_fds[3];
     pid_t   pid;
     int     status;
-	int saved_fds[3];
 
-    if (!cmd || !cmd->args || !cmd->args[0])
+    if (!cmd)
         return;
+    if (!cmd->args || !cmd->args[0])
+    {
+        if (cmd->redirections)
+        {
+            save_fds(saved_fds);
+            if (apply_redirections(cmd) != 0)
+                shell->exit_code = 1;
+            else
+                shell->exit_code = 0;
+            restore_fds(saved_fds);
+        }
+        return;
+    }
     if (is_builtin(cmd->args[0]))
     {
-		save_fds(saved_fds);
+        save_fds(saved_fds);
         if (apply_redirections(cmd) != 0)
         {
-			restore_fds(saved_fds);
+            restore_fds(saved_fds);
             shell->exit_code = 1;
             return;
         }
         shell->exit_code = run_builtin(shell, cmd->args);
-		restore_fds(saved_fds);
+        restore_fds(saved_fds);
         return;
     }
     pid = fork();
+    if (pid < 0)
+    {
+        perror("fork");
+        shell->exit_code = 1;
+        return;
+    }
     if (pid == 0)
     {
-		signal(SIGINT, SIG_DFL);
-    	signal(SIGQUIT, SIG_DFL);
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
         if (apply_redirections(cmd) != 0)
             exit(1);
         execve_with_path(shell, cmd);

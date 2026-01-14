@@ -21,7 +21,6 @@ static void	run_executor(t_shell *shell)
 {
 	if (!shell || !shell->cmds)
 		return ;
-	setup_exec_signals();
 	if (prepare_heredocs(shell) < 0)
 	{
 		shell->exit_code = 130;

@@ -1,5 +1,7 @@
 #include "../includes/minishell.h"
 
+volatile sig_atomic_t	g_signal_received = 0;
+
 static int	init_shell(t_shell *shell, char **envp)
 {
 	shell->env = init_env(envp);
@@ -20,6 +22,11 @@ static void	shell_loop(t_shell *shell)
 	while (1)
 	{
 		input = readline("minishell$ ");
+		if (g_signal_received)
+		{
+			shell->exit_code = g_signal_received;
+			g_signal_received = 0;
+		}
 		validation_result = validate_input(input);
 		if (validation_result == 1)
 			break ;

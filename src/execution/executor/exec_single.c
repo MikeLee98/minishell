@@ -20,10 +20,25 @@ static void restore_fds(int saved[3])
 
 void execute_single(t_shell *shell, t_cmd *cmd)
 {
-    int saved_fds[3];
+    int     saved_fds[3];
+    pid_t   pid;
+    int     status;
 
-    if (!cmd || !cmd->args || !cmd->args[0])
+    if (!cmd)
         return;
+    if (!cmd->args || !cmd->args[0])
+    {
+        if (cmd->redirections)
+        {
+            save_fds(saved_fds);
+            if (apply_redirections(cmd) != 0)
+                shell->exit_code = 1;
+            else
+                shell->exit_code = 0;
+            restore_fds(saved_fds);
+        }
+        return;
+    }
     if (is_builtin(cmd->args[0]))
     {
         save_fds(saved_fds);
@@ -37,7 +52,13 @@ void execute_single(t_shell *shell, t_cmd *cmd)
         restore_fds(saved_fds);
         return;
     }
-    pid_t pid = fork();
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("fork");
+        shell->exit_code = 1;
+        return;
+    }
     if (pid == 0)
     {
         signal(SIGINT, SIG_DFL);
@@ -47,7 +68,6 @@ void execute_single(t_shell *shell, t_cmd *cmd)
         execve_with_path(shell, cmd);
         exit(127);
     }
-    int status;
     waitpid(pid, &status, 0);
     if (WIFEXITED(status))
         shell->exit_code = WEXITSTATUS(status);

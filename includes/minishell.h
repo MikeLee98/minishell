@@ -100,9 +100,6 @@ char	*expand_variable(t_shell *shell, char *str, int *i);
 // Quote Removal Functions (quote_removal.c)
 void	process_quotes(t_shell *shell);
 
-// Global Signal Handling Variable
-extern volatile sig_atomic_t	g_signal_received;
-
 // Signal Functions (signals.c)
 void	setup_signals(void);
 

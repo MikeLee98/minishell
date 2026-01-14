@@ -140,28 +140,28 @@ void	free_env_array_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env
-void	ft_env(t_shell *shell);
+int	ft_env(t_shell *shell);
 
 // builtin_export
-void	ft_export(t_shell *shell, char **args);
+int	ft_export(t_shell *shell, char **args);
 
 // builtin_print_export
 void	print_export(t_env *env);
 
 // builtin_unset
-void	ft_unset(t_shell *shell, char **args);
+int	ft_unset(t_shell *shell, char **args);
 
 // builtin_cd
-void	ft_cd(t_shell *shell, char **args);
+int	ft_cd(t_shell *shell, char **args);
 
 // builtin_pwd
-void	ft_pwd(void);
+int	ft_pwd(t_shell *shell);
 
 // builtin_echo
-void	ft_echo(char **args);
+int	ft_echo(t_shell *shell, char **args);
 
 // builtin_exit
-void	ft_exit(t_shell *shell, char **args);
+int	ft_exit(t_shell *shell, char **args);
 
 // exec_main
 void	executor(t_shell *shell);

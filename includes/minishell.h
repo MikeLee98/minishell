@@ -183,9 +183,6 @@ int		has_slash(char *s);
 // heredoc
 int		prepare_heredocs(t_shell *shell);
 
-// signals
-void	setup_exec_signals(void);
-
 // ************************************************************************** //
 //                                   MAIN                                     //
 // ************************************************************************** //

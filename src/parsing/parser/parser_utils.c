@@ -18,7 +18,7 @@ static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
 	int		i;
 	int		count;
 
-	if (!arg || !*arg)
+	if (!arg)
 		return ;
 	count = count_args(cmd->args);
 	new_args = malloc(sizeof(char *) * (count + 2));

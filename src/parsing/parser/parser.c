@@ -13,6 +13,21 @@ static t_cmd	*create_cmd(void)
 	return (cmd);
 }
 
+void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd)
+{
+	t_cmd	*current;
+
+	if (!*head)
+	{
+		*head = new_cmd;
+		return ;
+	}
+	current = *head;
+	while (current->next)
+		current = current->next;
+	current->next = new_cmd;
+}
+
 static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 {
 	t_cmd	*current_cmd;
@@ -42,8 +57,10 @@ int	parser(t_shell *shell)
 	if (!shell || !shell->toks)
 		return (0);
 	expand_tokens(shell);
+	mark_word_split(shell->toks);
+	word_split_tokens(&shell->toks);
 	mark_heredoc_expansion(shell->toks);
-	process_quotes(shell);
+	handle_quotes(shell);
 	shell->cmds = NULL;
 	current_token = shell->toks;
 	while (current_token)

@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-static t_token	*create_token(t_token_type type, char *value)
+t_token	*create_token(t_token_type type, char *value)
 {
 	t_token	*token;
 
@@ -9,6 +9,8 @@ static t_token	*create_token(t_token_type type, char *value)
 		return (NULL);
 	token->type = type;
 	token->value = value;
+	token->hd_expand = 0;
+	token->wd_split = 0;
 	token->next = NULL;
 	return (token);
 }

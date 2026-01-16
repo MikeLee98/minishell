@@ -1,5 +1,23 @@
 #include "../../../includes/minishell.h"
 
+static int	is_variable_assignment(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !*str)
+		return (0);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (str[i] == '=' && i > 0);
+}
+
 static int	has_quotes(char *str)
 {
 	int	i;
@@ -12,6 +30,49 @@ static int	has_quotes(char *str)
 		i++;
 	}
 	return (0);
+}
+
+static int	has_unquoted_whitespace(char *str)
+{
+	int		i;
+	int		in_quote;
+	char	quote_type;
+
+	i = 0;
+	in_quote = 0;
+	quote_type = 0;
+	while (str[i])
+	{
+		if (!in_quote && (str[i] == '"' || str[i] == '\''))
+		{
+			in_quote = 1;
+			quote_type = str[i];
+		}
+		else if (in_quote && str[i] == quote_type)
+		{
+			in_quote = 0;
+			quote_type = 0;
+		}
+		else if (!in_quote && (str[i] == ' ' || str[i] == '\t'))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	mark_word_split(t_token *tokens)
+{
+	while (tokens)
+	{
+		if (tokens->type == TOKEN_WORD
+			&& !is_variable_assignment(tokens->value)
+			&& !has_quotes(tokens->value)
+			&& has_unquoted_whitespace(tokens->value))
+			tokens->wd_split = 1;
+		else
+			tokens->wd_split = 0;
+		tokens = tokens->next;
+	}
 }
 
 void	mark_heredoc_expansion(t_token *tokens)
@@ -29,19 +90,4 @@ void	mark_heredoc_expansion(t_token *tokens)
 		}
 		tokens = tokens->next;
 	}
-}
-
-void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd)
-{
-	t_cmd	*current;
-
-	if (!*head)
-	{
-		*head = new_cmd;
-		return ;
-	}
-	current = *head;
-	while (current->next)
-		current = current->next;
-	current->next = new_cmd;
 }

@@ -25,6 +25,7 @@ typedef struct s_token
 	t_token_type	type;
 	char			*value;
 	int				hd_expand;
+	int				wd_split;
 	struct s_token	*next;
 }	t_token;
 
@@ -68,6 +69,7 @@ typedef struct s_shell
 // ************************************************************************** //
 
 // Lexer Functions (lexer.c)
+t_token	*create_token(t_token_type type, char *value);
 t_token	*lexer(char *input);
 
 // Lexer Utils Functions (lexer_utils.c)
@@ -81,14 +83,18 @@ int		is_special_char(char c);
 int		check_syntax(t_shell *shell);
 
 // Parser Functions (parser.c)
+void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 int		parser(t_shell *shell);
 
 // Parser Utils Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
 
 // Parser Helpers Functions (parser_helpers.c)
+void	mark_word_split(t_token *tokens);
 void	mark_heredoc_expansion(t_token *tokens);
-void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
+
+// Parser Word Split Functions (parser_word_split.c)
+void	word_split_tokens(t_token **tokens);
 
 // Expansion Functions (expander.c)
 char	*expand_token(t_shell *shell, char *token);
@@ -98,13 +104,14 @@ void	expand_tokens(t_shell *shell);
 char	*expand_variable(t_shell *shell, char *str, int *i);
 
 // Quote Removal Functions (quote_removal.c)
-void	process_quotes(t_shell *shell);
+void	handle_quotes(t_shell *shell);
 
 // Signal Functions (signals.c)
 void	setup_signals(void);
 
 // Free Functions (free.c)
 void	free_tokens(t_token *tokens);
+void	free_split(char **split);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd *cmd_list);
 
@@ -193,11 +200,11 @@ void	process_and_execute(t_shell *shell, char *input);
 
 // Main Debug Functions (main_debug.c)
 void	print_debug_info(t_shell *shell);
+void	print_tokens(t_token *tokens, char *stage);
+void	print_redirections(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list, char *stage);
 
 // Main Debug Utils Functions (main_debug_utils.c)
-void	print_tokens(t_token *tokens, char *stage);
 void	print_tokens_copy(t_shell *shell, char *stage);
-void	print_redirections(t_redir *redir);
 
 #endif

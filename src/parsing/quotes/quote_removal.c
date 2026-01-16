@@ -77,7 +77,7 @@ static char	*remove_quotes(char *str)
 	return (result);
 }
 
-void	process_quotes(t_shell *shell)
+void	handle_quotes(t_shell *shell)
 {
 	t_token	*tokens;
 	char	*unquoted;

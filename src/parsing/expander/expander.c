@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-static char	*process_expansion_char(t_shell *shell, char *str, int *i,
+static char	*handle_expansion_char(t_shell *shell, char *str, int *i,
 	char **result)
 {
 	char	*temp;
@@ -35,7 +35,7 @@ static char	*expand_in_double_quotes(t_shell *shell, char *str, int *i)
 	(*i)++;
 	result = ft_strdup("\"");
 	while (str[*i] && str[*i] != '"')
-		process_expansion_char(shell, str, i, &result);
+		handle_expansion_char(shell, str, i, &result);
 	if (str[*i] == '"')
 	{
 		temp = ft_strjoin(result, "\"");

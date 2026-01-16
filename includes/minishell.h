@@ -64,7 +64,7 @@ typedef struct s_shell
 	int				exit_code;
 }	t_shell;
 
-extern t_shell *g_shell;
+t_shell	*shell(void);
 
 // ************************************************************************** //
 //                                  PARSING                                   //

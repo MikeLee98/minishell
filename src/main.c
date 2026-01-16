@@ -1,10 +1,14 @@
 #include "../includes/minishell.h"
 
-t_shell *g_shell = NULL;
+t_shell	*shell(void)
+{
+	static t_shell data;
+
+	return (&data);
+}
 
 static int	init_shell(t_shell *shell, char **envp)
 {
-	g_shell = shell;
 	shell->env = init_env(envp);
 	if (!shell->env)
 		return (0);

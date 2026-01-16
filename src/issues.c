@@ -27,65 +27,7 @@
 
 
 
-// Regarding Prompt,
-
-// NUMBER 1:
-// CTRL+C signal (130) is being overwritten somewhere in the code.
-
-// minishell$ a^C
-// minishell$ echo $?
-
-// TOKENS:
-// [0] Type: WORD            Value: echo
-// [1] Type: WORD            Value: $?
-
-// TOKENS (after expansion):
-// [0] Type: WORD            Value: echo
-// [1] Type: WORD            Value: 0
-
-// TOKENS (after quote removal):
-// [0] Type: WORD            Value: echo
-// [1] Type: WORD            Value: 0
-
-// COMMANDS:
-// [0] Args:
-//     [0] = echo
-//     [1] = 0
-
-// 0
-// minishell$
-
-
-
-
-
 // Regarding Child Processes, 
-
-// NUMBER 1:
-// When the sleep command is sent, and CTRL+C is pressed, a double shell is being displayed, 
-// instead of only one. That would be the correct behaviour of bash, and ours is doing:
-
-// minishell$ sleep 3
-
-// TOKENS:
-// [0] Type: WORD            Value: sleep
-// [1] Type: WORD            Value: 3
-
-// TOKENS (after expansion):
-// [0] Type: WORD            Value: sleep
-// [1] Type: WORD            Value: 3
-
-// TOKENS (after quote removal):
-// [0] Type: WORD            Value: sleep
-// [1] Type: WORD            Value: 3
-
-// COMMANDS:
-// [0] Args:
-//     [0] = sleep
-//     [1] = 3
-
-// ^C
-// minishell$ minishell$
 
 // NUMBER 2:
 // When the sleep command is sent, and CTRL+\ is pressed, the following error message, "^\Quit (core dumped)", 

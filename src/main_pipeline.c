@@ -33,7 +33,7 @@ void	process_and_execute(t_shell *shell, char *input)
 {
 	if (!tokenize_and_validate(shell, input))
 		return ;
-	print_debug_info(shell);
+	// print_debug_info(shell);
 	if (!parser(shell))
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
@@ -41,7 +41,7 @@ void	process_and_execute(t_shell *shell, char *input)
 		shell->toks = NULL;
 		return ;
 	}
-	print_cmd_list(shell->cmds, "COMMANDS");
+	// print_cmd_list(shell->cmds, "COMMANDS");
 	run_executor(shell);
 	free_tokens(shell->toks);
 	shell->toks = NULL;

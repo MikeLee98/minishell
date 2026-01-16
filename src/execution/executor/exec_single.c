@@ -68,9 +68,16 @@ void execute_single(t_shell *shell, t_cmd *cmd)
         execve_with_path(shell, cmd);
         exit(127);
     }
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
     waitpid(pid, &status, 0);
+	setup_signals();
     if (WIFEXITED(status))
         shell->exit_code = WEXITSTATUS(status);
     else if (WIFSIGNALED(status))
-        shell->exit_code = 128 + WTERMSIG(status);
+	{
+    	shell->exit_code = 128 + WTERMSIG(status);
+    	if (WTERMSIG(status) == SIGINT)
+        	write(1, "\n", 1);
+	}
 }

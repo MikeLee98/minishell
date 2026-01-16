@@ -6,7 +6,58 @@ void	print_debug_info(t_shell *shell)
 		return ;
 	print_tokens(shell->toks, "TOKENS");
 	print_tokens_copy(shell, "TOKENS (after expansion)");
+	print_tokens_copy(shell, "TOKENS (after word splitting)");
 	print_tokens_copy(shell, "TOKENS (after quote removal)");
+}
+
+static char	*token_type_str(t_token_type type)
+{
+	if (type == TOKEN_WORD)
+		return ("WORD");
+	else if (type == TOKEN_PIPE)
+		return ("PIPE");
+	else if (type == TOKEN_REDIR_IN)
+		return ("REDIR_IN");
+	else if (type == TOKEN_REDIR_OUT)
+		return ("REDIR_OUT");
+	else if (type == TOKEN_REDIR_APPEND)
+		return ("REDIR_APPEND");
+	else if (type == TOKEN_REDIR_HEREDOC)
+		return ("REDIR_HEREDOC");
+	return ("UNKNOWN");
+}
+
+void	print_tokens(t_token *tokens, char *stage)
+{
+	int	i;
+	int	show_wd_split;
+
+	i = 0;
+	show_wd_split = (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0);
+	printf("\n%s:\n", stage);
+	while (tokens)
+	{
+		printf("[%d] Type: %-15s Value: %s",
+			i, token_type_str(tokens->type), tokens->value);
+		if (tokens->type == TOKEN_WORD && show_wd_split)
+			printf(" (wd_split: %d)", tokens->wd_split);
+		printf("\n");
+		tokens = tokens->next;
+		i++;
+	}
+}
+
+void	print_redirections(t_redir *redir)
+{
+	while (redir)
+	{
+		printf("        Redir: %s %s",
+			token_type_str(redir->type), redir->file);
+		if (redir->type == TOKEN_REDIR_HEREDOC)
+			printf(" (hd_expand: %d)", redir->hd_expand);
+		printf("\n");
+		redir = redir->next;
+	}
 }
 
 void	print_cmd_list(t_cmd *cmd_list, char *stage)

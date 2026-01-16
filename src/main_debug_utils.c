@@ -1,35 +1,18 @@
 #include "../includes/minishell.h"
 
-static char	*token_type_str(t_token_type type)
+static t_token	*create_token_copy(t_token *current)
 {
-	if (type == TOKEN_WORD)
-		return ("WORD");
-	else if (type == TOKEN_PIPE)
-		return ("PIPE");
-	else if (type == TOKEN_REDIR_IN)
-		return ("REDIR_IN");
-	else if (type == TOKEN_REDIR_OUT)
-		return ("REDIR_OUT");
-	else if (type == TOKEN_REDIR_APPEND)
-		return ("REDIR_APPEND");
-	else if (type == TOKEN_REDIR_HEREDOC)
-		return ("REDIR_HEREDOC");
-	return ("UNKNOWN");
-}
+	t_token	*new_token;
 
-void	print_tokens(t_token *tokens, char *stage)
-{
-	int	i;
-
-	i = 0;
-	printf("\n%s:\n", stage);
-	while (tokens)
-	{
-		printf("[%d] Type: %-15s Value: %s\n",
-			i, token_type_str(tokens->type), tokens->value);
-		tokens = tokens->next;
-		i++;
-	}
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
+	new_token->type = current->type;
+	new_token->value = ft_strdup(current->value);
+	new_token->hd_expand = current->hd_expand;
+	new_token->wd_split = current->wd_split;
+	new_token->next = NULL;
+	return (new_token);
 }
 
 static t_token	*copy_tokens(t_token *tokens)
@@ -44,12 +27,9 @@ static t_token	*copy_tokens(t_token *tokens)
 	current = tokens;
 	while (current)
 	{
-		new_token = malloc(sizeof(t_token));
+		new_token = create_token_copy(current);
 		if (!new_token)
 			return (NULL);
-		new_token->type = current->type;
-		new_token->value = ft_strdup(current->value);
-		new_token->next = NULL;
 		if (!copy)
 			copy = new_token;
 		else
@@ -58,6 +38,19 @@ static t_token	*copy_tokens(t_token *tokens)
 		current = current->next;
 	}
 	return (copy);
+}
+
+static void	handle_stage(t_shell *temp_shell, char *stage)
+{
+	expand_tokens(temp_shell);
+	mark_word_split(temp_shell->toks);
+	if (ft_strncmp(stage, "TOKENS (after word splitting)", 30) == 0)
+		word_split_tokens(&temp_shell->toks);
+	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
+	{
+		word_split_tokens(&temp_shell->toks);
+		handle_quotes(temp_shell);
+	}
 }
 
 void	print_tokens_copy(t_shell *shell, char *stage)
@@ -74,26 +67,7 @@ void	print_tokens_copy(t_shell *shell, char *stage)
 	temp_shell.exit_code = shell->exit_code;
 	temp_shell.toks = copy;
 	temp_shell.cmds = NULL;
-	if (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0)
-		expand_tokens(&temp_shell);
-	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
-	{
-		expand_tokens(&temp_shell);
-		process_quotes(&temp_shell);
-	}
+	handle_stage(&temp_shell, stage);
 	print_tokens(temp_shell.toks, stage);
 	free_tokens(temp_shell.toks);
-}
-
-void	print_redirections(t_redir *redir)
-{
-	while (redir)
-	{
-		printf("        Redir: %s %s",
-			token_type_str(redir->type), redir->file);
-		if (redir->type == TOKEN_REDIR_HEREDOC)
-			printf(" (hd_expand: %d)", redir->hd_expand);
-		printf("\n");
-		redir = redir->next;
-	}
 }

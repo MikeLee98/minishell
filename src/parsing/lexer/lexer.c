@@ -4,9 +4,14 @@ t_token	*create_token(t_token_type type, char *value)
 {
 	t_token	*token;
 
+	if (!value)
+		return (NULL);
 	token = malloc(sizeof(t_token));
 	if (!token)
+	{
+		free(value);
 		return (NULL);
+	}
 	token->type = type;
 	token->value = value;
 	token->hd_expand = 0;
@@ -60,6 +65,7 @@ static int	handle_operator(t_token **head, char *input, int *i)
 static int	handle_token(t_token **head, char *input, int *i)
 {
 	char	*word;
+	t_token	*new_token;
 
 	if (is_special_char(input[*i]))
 	{
@@ -72,7 +78,10 @@ static int	handle_token(t_token **head, char *input, int *i)
 		word = handle_word(input, i);
 		if (!word)
 			return (0);
-		add_token(head, create_token(TOKEN_WORD, word));
+		new_token = create_token(TOKEN_WORD, word);
+		if (!new_token)
+			return (0);
+		add_token(head, new_token);
 	}
 	return (1);
 }

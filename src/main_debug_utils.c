@@ -7,8 +7,13 @@ static t_token	*create_token_copy(t_token *current)
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return (NULL);
-	new_token->type = current->type;
 	new_token->value = ft_strdup(current->value);
+	if (!new_token->value)
+	{
+		free(new_token);
+		return (NULL);
+	}
+	new_token->type = current->type;
 	new_token->hd_expand = current->hd_expand;
 	new_token->wd_split = current->wd_split;
 	new_token->next = NULL;
@@ -29,7 +34,10 @@ static t_token	*copy_tokens(t_token *tokens)
 	{
 		new_token = create_token_copy(current);
 		if (!new_token)
+		{
+			free_tokens(copy);
 			return (NULL);
+		}
 		if (!copy)
 			copy = new_token;
 		else

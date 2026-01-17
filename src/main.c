@@ -2,7 +2,7 @@
 
 t_shell	*shell(void)
 {
-	static t_shell data;
+	static t_shell	data;
 
 	return (&data);
 }
@@ -51,13 +51,14 @@ static void	cleanup_shell(t_shell *shell)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell	shell;
+	t_shell	*sh;
 
 	(void)argc;
 	(void)argv;
-	if (!init_shell(&shell, envp))
+	sh = shell();
+	if (!init_shell(sh, envp))
 		return (1);
-	shell_loop(&shell);
-	cleanup_shell(&shell);
-	return (shell.exit_code);
+	shell_loop(sh);
+	cleanup_shell(sh);
+	return (sh->exit_code);
 }

@@ -12,26 +12,43 @@ static int	count_args(char **args)
 	return (count);
 }
 
-static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
+static char	**allocate_new_args(char **old_args, char *new_arg, int count)
 {
 	char	**new_args;
 	int		i;
+
+	new_args = malloc(sizeof(char *) * (count + 2));
+	if (!new_args)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		new_args[i] = old_args[i];
+		i++;
+	}
+	new_args[i] = new_arg;
+	new_args[i + 1] = NULL;
+	return (new_args);
+}
+
+static void	add_arg_to_cmd(t_cmd *cmd, char *arg)
+{
+	char	**new_args;
+	char	*arg_copy;
 	int		count;
 
 	if (!arg)
 		return ;
 	count = count_args(cmd->args);
-	new_args = malloc(sizeof(char *) * (count + 2));
-	if (!new_args)
+	arg_copy = ft_strdup(arg);
+	if (!arg_copy)
 		return ;
-	i = 0;
-	while (i < count)
+	new_args = allocate_new_args(cmd->args, arg_copy, count);
+	if (!new_args)
 	{
-		new_args[i] = cmd->args[i];
-		i++;
+		free(arg_copy);
+		return ;
 	}
-	new_args[i] = ft_strdup(arg);
-	new_args[i + 1] = NULL;
 	free(cmd->args);
 	cmd->args = new_args;
 }
@@ -45,20 +62,25 @@ static void	add_redir_to_cmd(t_cmd *cmd, t_token_type type, char *file,
 	new_redir = malloc(sizeof(t_redir));
 	if (!new_redir)
 		return ;
-	new_redir->type = type;
 	new_redir->file = ft_strdup(file);
+	if (!new_redir->file)
+	{
+		free(new_redir);
+		return ;
+	}
+	new_redir->type = type;
 	new_redir->fd = -1;
 	new_redir->hd_expand = hd_expand;
 	new_redir->next = NULL;
 	if (!cmd->redirections)
-	{
 		cmd->redirections = new_redir;
-		return ;
+	else
+	{
+		current = cmd->redirections;
+		while (current->next)
+			current = current->next;
+		current->next = new_redir;
 	}
-	current = cmd->redirections;
-	while (current->next)
-		current = current->next;
-	current->next = new_redir;
 }
 
 t_token	*parse_cmd(t_cmd *cmd, t_token *current)

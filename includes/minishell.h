@@ -102,11 +102,23 @@ void	word_split_tokens(t_token **tokens);
 char	*expand_token(t_shell *shell, char *token);
 void	expand_tokens(t_shell *shell);
 
-// Expansion Utils Functions (expander_utils.c)
+// Expansion Quote Functions (expander_quotes.c)
+char	*expand_double_quotes(t_shell *shell, char *str, int *i);
+char	*expand_single_quotes(char *str, int *i);
+
+// Expansion Utils (expander_utils.c)
 char	*expand_variable(t_shell *shell, char *str, int *i);
+
+// Expansion Helpers (expander_helpers.c)
+char	*append_string(char *result, char *to_add, int free_add);
+char	*append_char(char *result, char c);
 
 // Quote Removal Functions (quote_removal.c)
 void	handle_quotes(t_shell *shell);
+
+// Quote Removal Utils Functions (quote_removal_utils.c)
+int		count_unquoted_len(char *str);
+void	copy_unquoted(char *dest, char *src);
 
 // Signal Functions (signals.c)
 void	setup_signals(void);

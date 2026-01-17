@@ -1,29 +1,49 @@
 #include "../../../includes/minishell.h"
 
-static void	insert_split_tokens(t_token *current, char **words)
+static int	replace_first_word(t_token *current, char *new_value)
+{
+	char	*first_word;
+
+	first_word = ft_strdup(new_value);
+	if (!first_word)
+		return (0);
+	free(current->value);
+	current->value = first_word;
+	current->wd_split = 0;
+	return (1);
+}
+
+static void	insert_remaining_words(t_token *prev, char **words)
 {
 	t_token	*new_token;
-	t_token	*prev;
+	char	*word_copy;
 	int		i;
 
-	if (!words || !words[0])
-		return ;
-	free(current->value);
-	current->value = ft_strdup(words[0]);
-	current->wd_split = 0;
-	prev = current;
 	i = 1;
 	while (words[i])
 	{
-		new_token = create_token(TOKEN_WORD, ft_strdup(words[i]));
-		if (new_token)
+		word_copy = ft_strdup(words[i]);
+		if (word_copy)
 		{
-			new_token->next = prev->next;
-			prev->next = new_token;
-			prev = new_token;
+			new_token = create_token(TOKEN_WORD, word_copy);
+			if (new_token)
+			{
+				new_token->next = prev->next;
+				prev->next = new_token;
+				prev = new_token;
+			}
 		}
 		i++;
 	}
+}
+
+static void	insert_split_tokens(t_token *current, char **words)
+{
+	if (!words || !words[0])
+		return ;
+	if (!replace_first_word(current, words[0]))
+		return ;
+	insert_remaining_words(current, words);
 }
 
 void	word_split_tokens(t_token **tokens)

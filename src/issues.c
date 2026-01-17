@@ -2,9 +2,6 @@
 
 
 
-
-// exit code for too many arguments
-
 // close all file descriptors
 
 // segfault in heredoc <<oi | <<ola | <<hello

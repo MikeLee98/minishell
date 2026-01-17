@@ -33,7 +33,7 @@ void	process_and_execute(char *input)
 {
 	if (!tokenize_and_validate(input))
 		return ;
-	print_debug_info();
+	// print_debug_info();
 	if (!parser())
 	{
 		printf("\nError: Failed to parse tokens.\n\n");
@@ -41,7 +41,7 @@ void	process_and_execute(char *input)
 		shell()->toks = NULL;
 		return ;
 	}
-	print_cmd_list(shell()->cmds, "COMMANDS");
+	// print_cmd_list(shell()->cmds, "COMMANDS");
 	run_executor();
 	free_tokens(shell()->toks);
 	shell()->toks = NULL;

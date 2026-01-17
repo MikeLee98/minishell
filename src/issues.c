@@ -10,7 +10,7 @@
 
 // close all file descriptors
 
-// segfault no heredoc
+// segfault no heredoc <<oi | <<ola | <<hello
 
 
 

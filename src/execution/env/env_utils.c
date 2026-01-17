@@ -69,3 +69,20 @@ char    **env_to_array(t_env *env)
     envp[i] = NULL;
     return (envp);
 }
+
+void update_shlvl(void)
+{
+    char *shlvl_str = ft_getenv(shell()->env, "SHLVL");
+    int shlvl = 1;
+
+    if (shlvl_str)
+    {
+        shlvl = ft_atoi(shlvl_str) + 1;
+        if (shlvl < 0)
+            shlvl = 0;
+    }
+
+    char buffer[16];
+    ft_itoa_buffer(shlvl, buffer);
+    env_set(&shell()->env, "SHLVL", buffer, 0);
+}

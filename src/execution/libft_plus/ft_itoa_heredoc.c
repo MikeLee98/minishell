@@ -15,7 +15,7 @@ static int intlen(long n)
     return (len);
 }
 
-void ft_itoa_heredoc(int n, char *buffer)
+void ft_itoa_buffer(int n, char *buffer)
 {
     long nb;
     int len;

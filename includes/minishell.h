@@ -135,7 +135,7 @@ void	free_cmd_list(t_cmd *cmd_list);
 
 // libft_plus
 int		ft_strcmp(char *s1, char *s2);
-void	ft_itoa_heredoc(int n, char *buffer);
+void	ft_itoa_buffer(int n, char *buffer);
 
 // env_init
 t_env	*init_env(char **envp);
@@ -151,6 +151,7 @@ void	env_unset(t_env **env, char *key);
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
 char	**env_to_array(t_env *env);
+void 	update_shlvl(void);
 
 // free_env
 void	env_free_all(t_env *env);
@@ -177,7 +178,6 @@ int	ft_pwd(void);
 
 // builtin_echo
 int	ft_echo(char **args);
-
 
 // builtin_exit
 int	ft_exit(char **args);

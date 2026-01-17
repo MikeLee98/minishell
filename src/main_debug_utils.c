@@ -48,34 +48,34 @@ static t_token	*copy_tokens(t_token *tokens)
 	return (copy);
 }
 
-static void	handle_stage(t_shell *temp_shell, char *stage)
+static void	handle_stage(t_token *copy, char *stage)
 {
-	expand_tokens(temp_shell);
-	mark_word_split(temp_shell->toks);
+	t_token	*original;
+
+	original = shell()->toks;
+	shell()->toks = copy;
+	expand_tokens();
+	mark_word_split(shell()->toks);
 	if (ft_strncmp(stage, "TOKENS (after word splitting)", 30) == 0)
-		word_split_tokens(&temp_shell->toks);
+		word_split_tokens(&shell()->toks);
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
-		word_split_tokens(&temp_shell->toks);
-		handle_quotes(temp_shell);
+		word_split_tokens(&shell()->toks);
+		handle_quotes();
 	}
+	shell()->toks = original;
 }
 
-void	print_tokens_copy(t_shell *shell, char *stage)
+void	print_tokens_copy(char *stage)
 {
-	t_shell	temp_shell;
 	t_token	*copy;
 
-	if (!shell || !shell->toks)
+	if (!shell() || !shell()->toks)
 		return ;
-	copy = copy_tokens(shell->toks);
+	copy = copy_tokens(shell()->toks);
 	if (!copy)
 		return ;
-	temp_shell.env = shell->env;
-	temp_shell.exit_code = shell->exit_code;
-	temp_shell.toks = copy;
-	temp_shell.cmds = NULL;
-	handle_stage(&temp_shell, stage);
-	print_tokens(temp_shell.toks, stage);
-	free_tokens(temp_shell.toks);
+	handle_stage(copy, stage);
+	print_tokens(copy, stage);
+	free_tokens(copy);
 }

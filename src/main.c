@@ -7,19 +7,19 @@ t_shell	*shell(void)
 	return (&data);
 }
 
-static int	init_shell(t_shell *shell, char **envp)
+static int	init_shell(char **envp)
 {
-	shell->env = init_env(envp);
-	if (!shell->env)
+	shell()->env = init_env(envp);
+	if (!shell()->env)
 		return (0);
-	shell->cmds = NULL;
-	shell->toks = NULL;
-	shell->exit_code = 0;
+	shell()->cmds = NULL;
+	shell()->toks = NULL;
+	shell()->exit_code = 0;
 	setup_signals();
 	return (1);
 }
 
-static void	shell_loop(t_shell *shell)
+static void	shell_loop(void)
 {
 	char	*input;
 	int		validation_result;
@@ -38,27 +38,24 @@ static void	shell_loop(t_shell *shell)
 			continue ;
 		}
 		add_history(input);
-		process_and_execute(shell, input);
+		process_and_execute(shell(), input);
 		free(input);
 	}
 }
 
-static void	cleanup_shell(t_shell *shell)
+static void	cleanup_shell(void)
 {
 	rl_clear_history();
-	env_free_all(shell->env);
+	env_free_all(shell()->env);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell	*sh;
-
 	(void)argc;
 	(void)argv;
-	sh = shell();
-	if (!init_shell(sh, envp))
+	if (!init_shell(envp))
 		return (1);
-	shell_loop(sh);
-	cleanup_shell(sh);
-	return (sh->exit_code);
+	shell_loop();
+	cleanup_shell();
+	return (shell()->exit_code);
 }

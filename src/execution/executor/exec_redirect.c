@@ -14,7 +14,6 @@ int apply_redirections(t_cmd *cmd)
             fd = open(r->file, O_RDONLY);
         else if (r->type == TOKEN_REDIR_OUT)
 			{
-				// printf("redir type: %d, file: '%s'\n", r->type, r->file);
 				fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			}
         else if (r->type == TOKEN_REDIR_APPEND)

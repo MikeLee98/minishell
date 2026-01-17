@@ -1,13 +1,13 @@
 #include "../includes/minishell.h"
 
-void	print_debug_info(t_shell *shell)
+void	print_debug_info(void)
 {
-	if (!shell || !shell->toks)
+	if (!shell() || !shell()->toks)
 		return ;
-	print_tokens(shell->toks, "TOKENS");
-	print_tokens_copy(shell, "TOKENS (after expansion)");
-	print_tokens_copy(shell, "TOKENS (after word splitting)");
-	print_tokens_copy(shell, "TOKENS (after quote removal)");
+	print_tokens(shell()->toks, "TOKENS");
+	print_tokens_copy(shell(), "TOKENS (after expansion)");
+	print_tokens_copy(shell(), "TOKENS (after word splitting)");
+	print_tokens_copy(shell(), "TOKENS (after quote removal)");
 }
 
 static char	*token_type_str(t_token_type type)

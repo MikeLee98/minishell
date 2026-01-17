@@ -2,12 +2,13 @@
 
 
 
-
 // SHLVL
 
 // Shell without env variables: env -i
 
 // exit code para too many arguments
+
+// close all file descriptors
 
 // segfault no heredoc
 

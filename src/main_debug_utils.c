@@ -61,18 +61,18 @@ static void	handle_stage(t_shell *temp_shell, char *stage)
 	}
 }
 
-void	print_tokens_copy(t_shell *shell, char *stage)
+void	print_tokens_copy(char *stage)
 {
 	t_shell	temp_shell;
 	t_token	*copy;
 
-	if (!shell || !shell->toks)
+	if (!shell() || !shell()->toks)
 		return ;
-	copy = copy_tokens(shell->toks);
+	copy = copy_tokens(shell()->toks);
 	if (!copy)
 		return ;
-	temp_shell.env = shell->env;
-	temp_shell.exit_code = shell->exit_code;
+	temp_shell.env = shell()->env;
+	temp_shell.exit_code = shell()->exit_code;
 	temp_shell.toks = copy;
 	temp_shell.cmds = NULL;
 	handle_stage(&temp_shell, stage);

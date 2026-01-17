@@ -50,22 +50,22 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 	return (current_token);
 }
 
-int	parser(t_shell *shell)
+int	parser(void)
 {
 	t_token	*current_token;
 
-	if (!shell || !shell->toks)
+	if (!shell() || !shell()->toks)
 		return (0);
-	expand_tokens(shell);
-	mark_word_split(shell->toks);
-	word_split_tokens(&shell->toks);
-	mark_heredoc_expansion(shell->toks);
-	handle_quotes(shell);
-	shell->cmds = NULL;
-	current_token = shell->toks;
+	expand_tokens();
+	mark_word_split(shell()->toks);
+	word_split_tokens(&shell()->toks);
+	mark_heredoc_expansion(shell()->toks);
+	handle_quotes();
+	shell()->cmds = NULL;
+	current_token = shell()->toks;
 	while (current_token)
-		current_token = build_cmd(&shell->cmds, current_token);
-	if (!shell->cmds)
+		current_token = build_cmd(&shell()->cmds, current_token);
+	if (!shell()->cmds)
 		return (0);
 	return (1);
 }

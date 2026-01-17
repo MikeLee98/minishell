@@ -1,13 +1,13 @@
 #include "../../../includes/minishell.h"
 
-static char	*handle_expansion_char(t_shell *shell, char *str, int *i,
+static char	*handle_expansion_char(char *str, int *i,
 	char **result)
 {
 	char	*expansion;
 
 	if (str[*i] == '$')
 	{
-		expansion = expand_variable(shell, str, i);
+		expansion = expand_variable(str, i);
 		*result = append_string(*result, expansion, 1);
 	}
 	else
@@ -18,7 +18,7 @@ static char	*handle_expansion_char(t_shell *shell, char *str, int *i,
 	return (*result);
 }
 
-char	*expand_double_quotes(t_shell *shell, char *str, int *i)
+char	*expand_double_quotes(char *str, int *i)
 {
 	char	*result;
 
@@ -28,7 +28,7 @@ char	*expand_double_quotes(t_shell *shell, char *str, int *i)
 		return (NULL);
 	while (str[*i] && str[*i] != '"')
 	{
-		if (!handle_expansion_char(shell, str, i, &result))
+		if (!handle_expansion_char(str, i, &result))
 			return (NULL);
 	}
 	if (str[*i] == '"')

@@ -48,7 +48,7 @@ void execute_single(t_cmd *cmd)
 			shell()->exit_code = 1;
 			return ;
 		}
-		shell()->exit_code = run_builtin(cmd->args, shell());
+		shell()->exit_code = run_builtin(cmd->args);
 		restore_fds(saved_fds);
 		return ;
 	}

@@ -27,13 +27,13 @@ static void	try_remove_quotes(t_token *token)
 	}
 }
 
-void	handle_quotes(t_shell *shell)
+void	handle_quotes(void)
 {
 	t_token	*tokens;
 
-	if (!shell || !shell->toks)
+	if (!shell() || !shell()->toks)
 		return ;
-	tokens = shell->toks;
+	tokens = shell()->toks;
 	while (tokens)
 	{
 		if (tokens->type == TOKEN_WORD)

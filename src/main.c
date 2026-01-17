@@ -38,7 +38,7 @@ static void	shell_loop(void)
 			continue ;
 		}
 		add_history(input);
-		process_and_execute(shell(), input);
+		process_and_execute(input);
 		free(input);
 	}
 }

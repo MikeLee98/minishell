@@ -38,7 +38,7 @@ void execute_pipeline(t_cmd *cmd)
 			if (apply_redirections(current) != 0)
 				exit(1);
 			if (is_builtin(current->args[0]))
-				exit(run_builtin(current->args, shell()));
+				exit(run_builtin(current->args));
 			execve_with_path(current);
 			exit(127);
 		}

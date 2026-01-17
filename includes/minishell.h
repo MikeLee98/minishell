@@ -82,11 +82,11 @@ int		is_whitespace(char c);
 int		is_special_char(char c);
 
 // Syntax Checker Functions (syntax_checker.c)
-int		check_syntax(t_shell *shell);
+int		check_syntax(void);
 
 // Parser Functions (parser.c)
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
-int		parser(t_shell *shell);
+int		parser(void);
 
 // Parser Utils Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
@@ -99,22 +99,22 @@ void	mark_heredoc_expansion(t_token *tokens);
 void	word_split_tokens(t_token **tokens);
 
 // Expansion Functions (expander.c)
-char	*expand_token(t_shell *shell, char *token);
-void	expand_tokens(t_shell *shell);
+char	*expand_token(char *token);
+void	expand_tokens(void);
 
 // Expansion Quote Functions (expander_quotes.c)
-char	*expand_double_quotes(t_shell *shell, char *str, int *i);
+char	*expand_double_quotes(char *str, int *i);
 char	*expand_single_quotes(char *str, int *i);
 
 // Expansion Utils (expander_utils.c)
-char	*expand_variable(t_shell *shell, char *str, int *i);
+char	*expand_variable(char *str, int *i);
 
 // Expansion Helpers (expander_helpers.c)
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);
 
 // Quote Removal Functions (quote_removal.c)
-void	handle_quotes(t_shell *shell);
+void	handle_quotes(void);
 
 // Quote Removal Utils Functions (quote_removal_utils.c)
 int		count_unquoted_len(char *str);
@@ -183,8 +183,8 @@ int	ft_echo(char **args);
 int	ft_exit(char **args);
 
 // exec_main
-void	executor(t_shell *shell);
-void	execve_with_path(t_shell *shell, t_cmd *cmd);
+void	executor(void);
+void	execve_with_path(t_cmd *cmd);
 
 // exec_single
 void	execute_single(t_cmd *cmd);

@@ -6,9 +6,9 @@ void executor(void)
 		return ;
 
 	if (!shell()->cmds->next)
-		execute_single(shell(), shell()->cmds);
+		execute_single(shell()->cmds);
 	else
-		execute_pipeline(shell(), shell()->cmds);
+		execute_pipeline(shell()->cmds);
 }
 
 void execve_with_path(t_cmd *cmd)

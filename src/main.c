@@ -11,7 +11,18 @@ static int	init_shell(char **envp)
 {
 	shell()->env = init_env(envp);
 	if (!shell()->env)
-		return (0);
+	{
+		shell()->env = NULL;
+		env_set(&shell()->env, "SHLVL", "1", 0);
+		char *cwd = getcwd(NULL, 0);
+		if (cwd)
+		{
+			env_set(&shell()->env, "PWD", cwd, 0);
+			free(cwd);
+		}
+		env_set(&shell()->env, "PATH", "/usr/local/bin:/usr/bin:/bin", 0);
+        env_set(&shell()->env, "_", "/usr/bin/env", 0);
+	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;
 	shell()->exit_code = 0;

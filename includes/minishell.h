@@ -190,7 +190,7 @@ void	execve_with_path(t_cmd *cmd);
 void	execute_single(t_cmd *cmd);
 
 // exec_pipeline
-void	execute_pipeline(t_shell *shell, t_cmd *cmd);
+void	execute_pipeline(t_cmd *cmd);
 
 // exec_redirect
 int		apply_redirections(t_cmd *cmd);

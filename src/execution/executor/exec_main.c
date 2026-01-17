@@ -1,17 +1,17 @@
 #include "../../../includes/minishell.h"
 
-void executor(t_shell *shell)
+void executor(void)
 {
-    if (!shell->cmds)
-        return;
+	if (!shell()->cmds)
+		return ;
 
-    if (!shell->cmds->next)
-        execute_single(shell, shell->cmds);
-    else
-        execute_pipeline(shell, shell->cmds);
+	if (!shell()->cmds->next)
+		execute_single(shell(), shell()->cmds);
+	else
+		execute_pipeline(shell(), shell()->cmds);
 }
 
-void	execve_with_path(t_shell *shell, t_cmd *cmd)
+void execve_with_path(t_cmd *cmd)
 {
 	char	**paths;
 	char	*full_path;
@@ -20,7 +20,7 @@ void	execve_with_path(t_shell *shell, t_cmd *cmd)
 	int		i;
 	char	*tmp;
 
-	envp = env_to_array(shell->env);
+	envp = env_to_array(shell()->env);
 	if (has_slash(cmd->args[0]))
 	{
 		execve(cmd->args[0], cmd->args, envp);
@@ -33,7 +33,7 @@ void	execve_with_path(t_shell *shell, t_cmd *cmd)
 			exit(126);
 		exit(127);
 	}
-	path_env = ft_getenv(shell->env, "PATH");
+	path_env = ft_getenv(shell()->env, "PATH");
 	if (!path_env)
 	{
 		execve(cmd->args[0], cmd->args, envp);

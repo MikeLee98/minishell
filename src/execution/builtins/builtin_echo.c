@@ -1,8 +1,8 @@
 #include "../../../includes/minishell.h"
 
-static int is_flag_n(char *s)
+static int	is_flag_n(char *s)
 {
-	int i;
+	int	i;
 
 	if (!s || s[0] != '-' || s[1] == '\0' || s[1] != 'n')
 		return (0);
@@ -16,10 +16,10 @@ static int is_flag_n(char *s)
 	return (1);
 }
 
-int	ft_echo(t_shell *shell, char **args)
+int	ft_echo(char **args)
 {
-	int i;
-	int newline;
+	int	i;
+	int	newline;
 
 	i = 1;
 	newline = 1;
@@ -37,7 +37,6 @@ int	ft_echo(t_shell *shell, char **args)
 	}
 	if (newline)
 		ft_printf("\n");
-
-	shell->exit_code = 0;
+	shell()->exit_code = 0;
 	return (0);
 }

@@ -158,35 +158,36 @@ void	free_env_array_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env
-int	ft_env(t_shell *shell);
+int	ft_env(void);
 
 // builtin_export
-int	ft_export(t_shell *shell, char **args);
+int	ft_export(char **args);
 
 // builtin_print_export
 void	print_export(t_env *env);
 
 // builtin_unset
-int	ft_unset(t_shell *shell, char **args);
+int	ft_unset(char **args);
 
 // builtin_cd
-int	ft_cd(t_shell *shell, char **args);
+int	ft_cd(char **args);
 
 // builtin_pwd
-int	ft_pwd(t_shell *shell);
+int	ft_pwd(void);
 
 // builtin_echo
-int	ft_echo(t_shell *shell, char **args);
+int	ft_echo(char **args);
+
 
 // builtin_exit
-int	ft_exit(t_shell *shell, char **args);
+int	ft_exit(char **args);
 
 // exec_main
 void	executor(t_shell *shell);
 void	execve_with_path(t_shell *shell, t_cmd *cmd);
 
 // exec_single
-void	execute_single(t_shell *shell, t_cmd *cmd);
+void	execute_single(t_cmd *cmd);
 
 // exec_pipeline
 void	execute_pipeline(t_shell *shell, t_cmd *cmd);
@@ -196,11 +197,11 @@ int		apply_redirections(t_cmd *cmd);
 
 // exec_utils
 int		is_builtin(char *cmd);
-int		run_builtin(t_shell *shell, char **args);
+int		run_builtin(char **args);
 int		has_slash(char *s);
 
 // heredoc
-int		prepare_heredocs(t_shell *shell);
+int		prepare_heredocs(void);
 
 // ************************************************************************** //
 //                                   MAIN                                     //
@@ -210,15 +211,15 @@ int		prepare_heredocs(t_shell *shell);
 int		validate_input(char *input);
 
 // Main Pipeline Functions (main_pipeline.c)
-void	process_and_execute(t_shell *shell, char *input);
+void	process_and_execute(char *input);
 
 // Main Debug Functions (main_debug.c)
-void	print_debug_info(t_shell *shell);
+void	print_debug_info(void);
 void	print_tokens(t_token *tokens, char *stage);
 void	print_redirections(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list, char *stage);
 
 // Main Debug Utils Functions (main_debug_utils.c)
-void	print_tokens_copy(t_shell *shell, char *stage);
+void	print_tokens_copy(char *stage);
 
 #endif

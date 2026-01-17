@@ -1,21 +1,21 @@
 #include "../../../includes/minishell.h"
 
-static int plus_equal_pos(char *arg)
+static int	plus_equal_pos(char *arg)
 {
-    int i = 0;
+	int	i = 0;
 
-    while (arg[i] && arg[i] != '=')
-    {
-        if (arg[i] == '+' && arg[i + 1] == '=')
-            return i;
-        i++;
-    }
-    return -1;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (arg[i] == '+' && arg[i + 1] == '=')
+			return i;
+		i++;
+	}
+	return -1;
 }
 
-static void split_key_value(char *arg, char **key, char **value, int *append)
+static void	split_key_value(char *arg, char **key, char **value, int *append)
 {
-    int pos;
+	int	pos;
 
 	*append = 0;
 	pos = plus_equal_pos(arg);
@@ -30,69 +30,69 @@ static void split_key_value(char *arg, char **key, char **value, int *append)
 			return ;
 		return ;
 	}
-    pos = 0;
-    while (arg[pos] && arg[pos] != '=')
-        pos++;
-    *key = ft_substr(arg, 0, pos);
+	pos = 0;
+	while (arg[pos] && arg[pos] != '=')
+		pos++;
+	*key = ft_substr(arg, 0, pos);
 	if (!*key)
-		return;
-    if (arg[pos] == '=')
+		return ;
+	if (arg[pos] == '=')
 	{
-        *value = ft_strdup(arg + pos + 1);
+		*value = ft_strdup(arg + pos + 1);
 		if (!*value)
 			return ;
 	}
-    else
-        *value = NULL;
+	else
+		*value = NULL;
 }
 
-static void export_assign(t_env **env, char *arg)
+static void	export_assign(t_env **env, char *arg)
 {
-    char	*key;
-    char	*value;
-	int 	append;
+	char	*key;
+	char	*value;
+	int		append;
 
-    split_key_value(arg, &key, &value, &append);
-    if (!key)
+	split_key_value(arg, &key, &value, &append);
+	if (!key)
 		return ;
 	if (value == NULL)
 	{
-        if (!env_find(*env, key))
-            env_set(env, key, NULL, 0);
-    }
+		if (!env_find(*env, key))
+			env_set(env, key, NULL, 0);
+	}
 	else
 		env_set(env, key, value, append);
-    free(key);
-    free(value);
+	free(key);
+	free(value);
 }
 
-static int is_valid_identifier(char *s)
-{
-    int i;
-
-    if (!s || (!ft_isalpha(s[0]) && s[0] != '_'))
-        return (0);
-    i = 1;
-    while (s[i] && s[i] != '=')
-    {
-		if (s[i] == '+' && s[i + 1] == '=')
-			break ;
-        if (!ft_isalnum(s[i]) && s[i] != '_')
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-int ft_export(t_shell *shell, char **args)
+static int	is_valid_identifier(char *s)
 {
 	int	i;
-	int had_error = 0;
+
+	if (!s || (!ft_isalpha(s[0]) && s[0] != '_'))
+		return (0);
+	i = 1;
+	while (s[i] && s[i] != '=')
+	{
+		if (s[i] == '+' && s[i + 1] == '=')
+			break ;
+		if (!ft_isalnum(s[i]) && s[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	ft_export(char **args)
+{
+	int	i;
+	int	had_error = 0;
 
 	if (!args[1])
 	{
-		print_export(shell->env);
-		shell->exit_code = 0;
+		print_export(shell()->env);
+		shell()->exit_code = 0;
 		return (0);
 	}
 	i = 1;
@@ -106,9 +106,9 @@ int ft_export(t_shell *shell, char **args)
 			had_error = 1;
 		}
 		else
-			export_assign(&shell->env, args[i]);
+			export_assign(&shell()->env, args[i]);
 		i++;
 	}
-	shell->exit_code = had_error ? 1 : 0;
-	return (shell->exit_code);
+	shell()->exit_code = had_error ? 1 : 0;
+	return (shell()->exit_code);
 }

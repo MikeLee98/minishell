@@ -50,6 +50,34 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 	return (current_token);
 }
 
+static void	remove_empty_word_tokens(void)
+{
+	t_token	*current;
+	t_token	*prev;
+	t_token	*temp;
+
+	prev = NULL;
+	current = shell()->toks;
+	while (current)
+	{
+		if (current->type == TOKEN_WORD
+			&& current->value && current->value[0] == '\0')
+		{
+			temp = current;
+			if (prev)
+				prev->next = current->next;
+			else
+				shell()->toks = current->next;
+			current = current->next;
+			free(temp->value);
+			free(temp);
+			continue ;
+		}
+		prev = current;
+		current = current->next;
+	}
+}
+
 int	parser(void)
 {
 	t_token	*current_token;
@@ -57,6 +85,12 @@ int	parser(void)
 	if (!shell() || !shell()->toks)
 		return (0);
 	expand_tokens();
+	remove_empty_word_tokens();
+	if (!shell()->toks)
+	{
+		shell()->cmds = NULL;
+		return (1);
+	}
 	mark_word_split(shell()->toks);
 	word_split_tokens(&shell()->toks);
 	mark_heredoc_expansion(shell()->toks);

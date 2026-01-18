@@ -54,7 +54,7 @@ static int	should_expand_redir(t_token *token)
 		&& token->next->type == TOKEN_WORD);
 }
 
-void	expand_tokens()
+void	expand_tokens(void)
 {
 	t_token	*tokens;
 

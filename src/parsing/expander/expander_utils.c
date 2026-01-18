@@ -4,11 +4,12 @@ static char	*get_env_value(char *var_name)
 {
 	char	*value;
 
-	if (!var_name)
+	if (!var_name || !var_name[0])
 		return (ft_strdup(""));
 	else if (ft_strncmp(var_name, "?", 2) == 0)
 		return (ft_itoa(shell()->exit_code));
-	else if (ft_strlen(var_name) == 1 && !ft_isalnum(var_name[0]))
+	else if (ft_strlen(var_name) == 1 && !ft_isalnum(var_name[0])
+		&& var_name[0] != '_')
 		return (ft_strdup(""));
 	value = ft_getenv(shell()->env, var_name);
 	if (value)
@@ -34,22 +35,27 @@ static char	*extract_regular_var_name(char *str, int *i)
 
 static char	*extract_var_name(char *str, int *i)
 {
-	int		start;
 	char	special[2];
 
 	(*i)++;
-	if (str[*i] && !ft_isalnum(str[*i]) && str[*i] != '_')
+	if (str[*i] == '?')
+	{
+		(*i)++;
+		return (ft_strdup("?"));
+	}
+	if (ft_isdigit(str[*i]))
 	{
 		special[0] = str[*i];
 		special[1] = '\0';
 		(*i)++;
 		return (ft_strdup(special));
 	}
-	if (ft_isdigit(str[*i]))
+	if (str[*i] && !ft_isalnum(str[*i]) && str[*i] != '_')
 	{
-		start = *i;
+		special[0] = str[*i];
+		special[1] = '\0';
 		(*i)++;
-		return (ft_substr(str, start, 1));
+		return (ft_strdup(special));
 	}
 	return (extract_regular_var_name(str, i));
 }
@@ -60,6 +66,11 @@ static char	*expand_dollar_var(char *str, int *i)
 	char	*var_value;
 
 	var_name = extract_var_name(str, i);
+	if (!var_name || !var_name[0])
+	{
+		free(var_name);
+		return (ft_strdup("$"));
+	}
 	var_value = get_env_value(var_name);
 	free(var_name);
 	return (var_value);
@@ -71,7 +82,8 @@ char	*expand_variable(char *str, int *i)
 
 	if (str[*i] == '$')
 	{
-		if (str[*i + 1])
+		if (str[*i + 1] && (ft_isalnum(str[*i + 1])
+				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
 			return (expand_dollar_var(str, i));
 		else
 		{

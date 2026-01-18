@@ -78,7 +78,7 @@ t_env   *init_env(char **envp)
         new_node = env_new(envp[i]);
         if (!new_node)
         {
-            free_env_array_nodes(env);
+            free_env_nodes(env);
             return (NULL);
         }
         env_add_back(&env, new_node);

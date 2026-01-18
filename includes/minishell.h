@@ -154,8 +154,7 @@ char	**env_to_array(t_env *env);
 void 	update_shlvl(void);
 
 // free_env
-void	env_free_all(t_env *env);
-void	free_env_array_nodes(t_env *env);
+void	free_env_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env

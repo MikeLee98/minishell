@@ -60,7 +60,7 @@ static void	shell_loop(void)
 static void	cleanup_shell(void)
 {
 	rl_clear_history();
-	env_free_all(shell()->env);
+	free_env_nodes(shell()->env);
 }
 
 int	main(int argc, char **argv, char **envp)

@@ -4,10 +4,7 @@ static int	tokenize_and_validate(char *input)
 {
 	shell()->toks = lexer(input);
 	if (!shell()->toks)
-	{
-		printf("Error: Failed to tokenize input.\n");
 		return (0);
-	}
 	if (!check_syntax())
 	{
 		free_tokens(shell()->toks);
@@ -36,13 +33,13 @@ void	process_and_execute(char *input)
 	// print_debug_info();
 	if (!parser())
 	{
-		printf("\nError: Failed to parse tokens.\n\n");
 		free_tokens(shell()->toks);
 		shell()->toks = NULL;
 		return ;
 	}
 	// print_cmd_list(shell()->cmds, "COMMANDS");
-	run_executor();
+	if (shell()->cmds)
+		run_executor();
 	free_tokens(shell()->toks);
 	shell()->toks = NULL;
 	free_cmd_list(shell()->cmds);

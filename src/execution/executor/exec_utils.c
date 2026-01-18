@@ -50,3 +50,21 @@ int has_slash(char *s)
 	}
 	return (0);
 }
+
+void save_fds(int saved[3])
+{
+	saved[0] = dup(STDIN_FILENO);
+	saved[1] = dup(STDOUT_FILENO);
+	saved[2] = dup(STDERR_FILENO);
+}
+
+void restore_fds(int saved[3])
+{
+	dup2(saved[0], STDIN_FILENO);
+	dup2(saved[1], STDOUT_FILENO);
+	dup2(saved[2], STDERR_FILENO);
+
+	close(saved[0]);
+	close(saved[1]);
+	close(saved[2]);
+}

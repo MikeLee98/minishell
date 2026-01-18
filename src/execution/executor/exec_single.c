@@ -1,23 +1,5 @@
 #include "../../../includes/minishell.h"
 
-static void save_fds(int saved[3])
-{
-	saved[0] = dup(STDIN_FILENO);
-	saved[1] = dup(STDOUT_FILENO);
-	saved[2] = dup(STDERR_FILENO);
-}
-
-static void restore_fds(int saved[3])
-{
-	dup2(saved[0], STDIN_FILENO);
-	dup2(saved[1], STDOUT_FILENO);
-	dup2(saved[2], STDERR_FILENO);
-
-	close(saved[0]);
-	close(saved[1]);
-	close(saved[2]);
-}
-
 void execute_single(t_cmd *cmd)
 {
 	int		saved_fds[3];

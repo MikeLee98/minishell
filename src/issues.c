@@ -3,6 +3,49 @@
 
 
 
+
+// Clone the repo inside your minishell folder and run ./tester:
+// cd minishell
+// git clone https://github.com/LucasKuhn/minishell_tester.git
+// cd minishell_tester
+// ./tester
+
+// ———————————— builtins ————————————
+
+// Test  40: ❌ cd $PWD hi 
+// mini exit code = 0
+// bash exit code = 1
+// mini error = ()
+// bash error = ( too many arguments)
+
+// ———————————— redirects ————————————
+
+// Test  73: ❌ cat <"./test_files/infile" | echo hi 
+// mini exit code = 141
+// bash exit code = 0
+
+// Test  75: ❌ cat <"./test_files/infile_big" | echo hi 
+// mini exit code = 141
+// bash exit code = 0
+
+// Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
+// mini exit code = 1
+// bash exit code = 0
+
+// ———————————— extras ————————————
+
+// Test 133: ✅⚠️  $PWD 
+// mini error = ( Permission denied)
+// bash error = ( Is a directory)
+
+// Test 141: ✅⚠️  ./test_files 
+// mini error = ( Permission denied)
+// bash error = ( Is a directory)
+
+
+
+
+
 // Regarding Child Processes, 
 
 // NUMBER 2:

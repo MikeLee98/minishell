@@ -2,11 +2,6 @@
 
 
 
-// close all file descriptors
-
-// segfault in heredoc <<oi | <<ola | <<hello
-
-
 
 // Regarding Child Processes, 
 

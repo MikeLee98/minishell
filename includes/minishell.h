@@ -199,6 +199,8 @@ int		apply_redirections(t_cmd *cmd);
 int		is_builtin(char *cmd);
 int		run_builtin(char **args);
 int		has_slash(char *s);
+void	save_fds(int saved_fds[3]);
+void	restore_fds(int saved_fds[3]);
 
 // heredoc
 int		prepare_heredocs(void);

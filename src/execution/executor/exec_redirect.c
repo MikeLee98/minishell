@@ -30,16 +30,21 @@ int apply_redirections(t_cmd *cmd)
         if (r->type == TOKEN_REDIR_IN || r->type == TOKEN_REDIR_HEREDOC)
         {
             if (dup2(fd, STDIN_FILENO) < 0)
+            {
+                if (r->type == TOKEN_REDIR_HEREDOC)
+                    r->fd = -1;
                 return (-1);
+            }
+            close(fd);
+            if (r->type == TOKEN_REDIR_HEREDOC)
+                r->fd = -1;
         }
         else
         {
             if (dup2(fd, STDOUT_FILENO) < 0)
                 return (-1);
-        }
-        if (r->type != TOKEN_REDIR_HEREDOC)
             close(fd);
-
+        }
         r = r->next;
     }
     return (0);

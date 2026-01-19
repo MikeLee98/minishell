@@ -71,6 +71,8 @@ void execute_pipeline(t_cmd *cmd)
         }
         current = current->next;
     }
+    if (prev_fd != -1)
+        close(prev_fd);
     while (wait(&status) > 0)
     {
         if (WIFEXITED(status))

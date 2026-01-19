@@ -1,7 +1,0 @@
-<<oi | <<ola
-hello
-oi
-world
-ola
-exit
-

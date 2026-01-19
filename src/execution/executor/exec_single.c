@@ -57,8 +57,6 @@ void execute_single(t_cmd *cmd)
 		execve_with_path(cmd);
 		exit(127);
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	setup_signals();
 	if (WIFEXITED(status))

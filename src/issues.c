@@ -3,638 +3,611 @@
 
 
 
+// Ctrl+\ during child process behaviour definition
 
-/*
-Regarding Child Processes, 
 
-NUMBER 2:
-When the sleep command is sent, and CTRL+\ is pressed, the following error message, "^\Quit (core dumped)", 
-is not being displyed before a new prompt appears. Also, the new prompt should appear after that message in 
-a new line. That would be the correct behaviour of bash, and ours is doing:
 
-minishell$ sleep 3
 
-TOKENS:
-[0] Type: WORD            Value: sleep
-[1] Type: WORD            Value: 3
 
-TOKENS (after expansion):
-[0] Type: WORD            Value: sleep
-[1] Type: WORD            Value: 3
+// Regarding Child Processes, 
 
-TOKENS (after quote removal):
-[0] Type: WORD            Value: sleep
-[1] Type: WORD            Value: 3
 
-COMMANDS:
-[0] Args:
-    [0] = sleep
-    [1] = 3
 
-^\minishell$
-*/
+// Regarding Heredoc, 
 
+// NUMBER 1:
+// When the cat << command is sent, and CTRL+C is pressed, the following characters should be 
+// printed in the previour line, before the new prompt, ">^C", and the new prompt should not 
+// have any adittional new characters, even though they appear to be in INSERT mode and if you 
+// just start writing they disappear. Also, sometimes two "minishell$ " prompts appear instead 
+// of just once. That would be the correct behaviour of bash, and ours is doing:
 
+// minishell$ cat << EOF
 
+// TOKENS:
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: EOF
 
+// TOKENS (after expansion):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: EOF
 
-/*
-Regarding Heredoc, 
+// TOKENS (after quote removal):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: EOF
 
-NUMBER 1:
-When the cat << command is sent, and CTRL+C is pressed, the following characters should be 
-printed in the previour line, before the new prompt, ">^C", and the new prompt should not 
-have any adittional new characters, even though they appear to be in INSERT mode and if you 
-just start writing they disappear. Also, sometimes two "minishell$ " prompts appear instead 
-of just once. That would be the correct behaviour of bash, and ours is doing:
+// COMMANDS:
+// [0] Args:
+//     [0] = cat
+//         Redir: REDIR_HEREDOC EOF (hd_expand: 1)
 
-minishell$ cat << EOF
+// > a
+// > b
+// > c
+// > 
+// minishell$ ^C
 
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
+// Note: In the example above, the "^C" should appear after the last '>' character, 
+// and the string "minishell$ " should have nothing after it.
 
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
+// Here's another example:
 
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
+// minishell$ cat << heredoc
 
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC EOF (hd_expand: 1)
+// TOKENS:
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-> a
-> b
-> c
-> 
-minishell$ ^C
+// TOKENS (after expansion):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-Note: In the example above, the "^C" should appear after the last '>' character, 
-and the string "minishell$ " should have nothing after it.
+// TOKENS (after quote removal):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-Here's another example:
+// COMMANDS:
+// [0] Args:
+//     [0] = cat
+//         Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
 
-minishell$ cat << heredoc
+// > a
+// minishell$ ^C
 
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
+// Note: In the example above, the "^C" should appear after the character 'a', in 
+// the string "> a", and the string "minishell$ " should have nothing after it.
 
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
+// Here's the last case:
 
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
+// minishell$ minishell$ cat << heredoc
 
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
+// TOKENS:
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-> a
-minishell$ ^C
-
-Note: In the example above, the "^C" should appear after the character 'a', in 
-the string "> a", and the string "minishell$ " should have nothing after it.
-
-Here's the last case:
-
-minishell$ minishell$ cat << heredoc
-
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
+// TOKENS (after expansion):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
-
-> 
-minishell$ minishell$
+// TOKENS (after quote removal):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: heredoc
 
-Note: In the example above, the "^C" should appear after the last '>' character, 
-and the string "minishell$ " should only appear once.
+// COMMANDS:
+// [0] Args:
+//     [0] = cat
+//         Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
 
-NUMBER 2:
-When the cat << command is sent, and CTRL+D is pressed, the following error message, 
-"bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')", 
-where NUMBER changes according to the current heredoc line in that instance, and DELIMITER 
-changes according to the current heredoc delimiter, is not being displyed before a new prompt 
-appears. Also, the new prompt should appear after that message in a new line. That would be the 
-correct behaviour of bash, and ours is doing:
+// > 
+// minishell$ minishell$
 
-minishell$ cat << current_delimiter
+// Note: In the example above, the "^C" should appear after the last '>' character, 
+// and the string "minishell$ " should only appear once.
 
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
+// NUMBER 2:
+// When the cat << command is sent, and CTRL+D is pressed, the following error message, 
+// "bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')", 
+// where NUMBER changes according to the current heredoc line in that instance, and DELIMITER 
+// changes according to the current heredoc delimiter, is not being displyed before a new prompt 
+// appears. Also, the new prompt should appear after that message in a new line. That would be the 
+// correct behaviour of bash, and ours is doing:
 
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
+// minishell$ cat << current_delimiter
 
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
+// TOKENS:
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: current_delimiter
 
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC current_delimiter (hd_expand: 1)
-
-> a
-> b
-> c
-> 
-a
-b
-c
-minishell$
-
-Note: The warning should appear in the next line right after the last '>' character 
-that was displayed. In this case, something like this:
-
-(...)
-> b
-> c
-> 
-bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')
-a
-b
-(...)
-*/
-
-
-
-
-
-/*
-For minishell_tester_LucasKuhn:
-cd minishell
-git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_LucasKuhn
-cd minishell_tester_LucasKuhn
-./tester
-
-———————————— builtins ————————————
-
-Test  40: ❌ cd $PWD hi 
-mini exit code = 0
-bash exit code = 1
-mini error = ()
-bash error = ( too many arguments)
-
-———————————— redirects ————————————
-
-Test  73: ❌ cat <"./test_files/infile" | echo hi 
-mini exit code = 141
-bash exit code = 0
-
-Test  75: ❌ cat <"./test_files/infile_big" | echo hi 
-mini exit code = 141
-bash exit code = 0
-
-Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
-mini exit code = 1
-bash exit code = 0
-
-———————————— extras ————————————
-
-Test 133: ✅⚠️  $PWD 
-mini error = ( Permission denied)
-bash error = ( Is a directory)
-
-Test 141: ✅⚠️  ./test_files 
-mini error = ( Permission denied)
-bash error = ( Is a directory)
-*/
-
-
-
-
-
-/*
-For minishell_tester_zstenger93:
-cd minishell
-git clone https://github.com/zstenger93/42_minishell_tester.git minishell_tester_zstenger93
-cd minishell_tester_zstenger93
-vim tester.sh
-	# Change if you store the tester in another PATH
-	export MINISHELL_PATH=../
-	export EXECUTABLE=minishell
-	RUNDIR=/home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93
-
-# Change the shell_loop() function to respect the GitHub Repository Instructions from
-
-static void	shell_loop(void)
-{
-	char	*input;
-	int		validation_result;
-
-	while (1)
-	{
-		input = readline("minishell$ ");
-		validation_result = validate_input(input);
-		if (validation_result == 1)
-			break ;
-		else if (validation_result == 2)
-			continue ;
-		if (!*input)
-		{
-			free(input);
-			continue ;
-		}
-		add_history(input);
-		process_and_execute(input);
-		free(input);
-	}
-}
-
-to
-
-static void	shell_loop(void)
-{
-	char	*input;
-	char	*tmp;
-	int		validation_result;
-
-	while (1)
-	{
-		if (isatty(STDIN_FILENO))
-			input = readline("minishell$ ");
-		else
-		{
-			input = get_next_line(STDIN_FILENO);
-			if (input)
-			{
-				tmp = input;
-				input = ft_strtrim(tmp, "\n");
-				free(tmp);
-			}
-		}
-		if (!input)
-			break ;
-		validation_result = validate_input(input);
-		if (validation_result == 1)
-		{
-			free(input);
-			break ;
-		}
-		else if (validation_result == 2)
-		{
-			free(input);
-			continue ;
-		}
-		if (!*input)
-		{
-			free(input);
-			continue ;
-		}
-		if (isatty(STDIN_FILENO))
-			add_history(input);
-		process_and_execute(input);
-		free(input);
-	}
-}
-
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                                MANDATORY                                    🚀
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-
-# **************************************************************************** #
-#                                COMPARE PARSING                               #
-# **************************************************************************** #
-(...)
-11:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:26
-12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:28
-(...)
-14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:32
-15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:34
-(...)
-24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:52
-25:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:54
-26:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:56
-27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:58
-28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:60
-29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:62
-30:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:64
-(...)
-
-# **************************************************************************** #
-#                                PARSING HELL                                  #
-# **************************************************************************** #
-(...)
-12:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:32
-(...)
-14:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:40
-15:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:45
-(...)
-18:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:58
-(...)
-112:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:297
-113:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:299
-114:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:301
-(...)
-120:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:313
-121:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:315
-(...)
-123:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(2)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:319
-124:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:321
-
-# **************************************************************************** #
-#                                   BUILTINS                                   #
-# **************************************************************************** #
-1:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:7
-(...)
-13:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:31
-14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:33
-(...)
-16:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:37
-17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:39
-(...)
-{?!}20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:45
-{?!}21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:47
-(...)
-27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:59
-28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:61
-29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:63
-30:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:65
-31:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:67
-32:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:69
-33:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:71
-(...)
-105:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
-(...)
-107:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
-(...)
-122:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
-(...)
-128:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:314
-(...)
-131:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
-132:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
-133:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:337
-(...)
-135:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:347
-(...)
-140:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
-(...)
-150:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
-(...)
-165:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
-(...)
-170:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
-(...)
-185:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
-(...)
-224:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
-(...)
-231:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
-(...)
-256:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:631
-257:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:633
-258:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:635
-259:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:637
-260:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:639
-261:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:641
-262:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:643
-263:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:645
-264:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:647
-265:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:649
-266:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:651
-267:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:653
-268:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:655
-269:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:657
-270:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:659
-271:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:661
-272:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:663
-273:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:665
-274:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:667
-275:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:669
-276:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:671
-277:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:673
-278:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:675
-279:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:677
-280:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:679
-281:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:681
-282:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:683
-283:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:685
-284:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:687
-285:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:689
-286:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:691
-287:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:693
-288:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:695
-289:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:697
-290:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:699
-291:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:701
-292:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:703
-293:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:705
-294:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:707
-295:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:709
-296:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:711
-297:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:713
-298:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:715
-299:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:717
-
-# **************************************************************************** #
-#                                  PIPELINES                                   #
-# **************************************************************************** #
-1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
-{?!}2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
-(...)
-15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:32
-(...)
-17:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:36
-(...)
-24:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:53
-25:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:55
-26:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
-27:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
-28:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:84
-29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
-30:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:110
-(...)
-{?!}35:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:142
-(...)
-38:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:151
-39:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:156
-40:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:161
-(...)
-
-# **************************************************************************** #
-#                                    REDIRS                                    #
-# **************************************************************************** #
-(...)
-{?!}12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:26
-(...)
-{?!}14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:30
-(...)
-19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:40
-(...)
-{?!}30:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:62
-31:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:64
-(...)
-55:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:112
-(...)
-80:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:186
-81:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:195
-82:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:204
-83:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:208
-84:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:217
-85:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:223
-86:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:229
-87:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:235
-88:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:241
-(...)
-
-# **************************************************************************** #
-#                                     SCMD                                     #
-# **************************************************************************** #
-(...)
-7:	tester.sh: line 217: 301447 Done                    echo -n "$INPUT"
-     301448 Aborted                 (core dumped) | $MINISHELL_PATH/$EXECUTABLE 2> tmp_err_minishell > tmp_out_minishell
-STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
-(...)
-
-# **************************************************************************** #
-#                                  VARIABLES                                   #
-# **************************************************************************** #
-(...)
-15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:40
-16:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:42
-17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:44
-18:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:46
-19:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:48
-20:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:50
-(...)
-25:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:60
-26:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:62
-(...)
-28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:66
-(...)
-45:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
-46:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:133
-47:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:136
-48:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:139
-49:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:142
-50:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:145
-51:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:148
-52:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:151
-53:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:154
-(...)
-56:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:163
-57:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:166
-58:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:169
-(...)
-
-# **************************************************************************** #
-#                                  CORRECTION                                  #
-# **************************************************************************** #
-(...)
-17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:39
-18:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:41
-19:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:43
-20:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:45
-21:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:47
-22:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:49
-23:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:51
-24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:53
-(...)
-60:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:129
-61:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:131
-(...)
-65:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:139
-66:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:141
-67:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:143
-68:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:145
-69:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:147
-70:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:149
-(...)
-75:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:159
-76:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:161
-(...)
-78:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:165
-(...)
-
-# **************************************************************************** #
-#                                  PATH FAILS                                  #
-# **************************************************************************** #
-1:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:5
-(...)
-5:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
-(...)
-7:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:30
-8:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:32
-(...)
-11:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
-12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
-(...)
-
-# **************************************************************************** #
-#                                SYNTAX ERRORS                                 #
-# **************************************************************************** #
-(...)
-8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:19
-(...)
-20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:43
-21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:46
-22:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:49
-(...)
-
-# **************************************************************************** #
-#                                     WILD                                     #
-# **************************************************************************** #
-(...)
-4:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
-(...)
-10:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
-(...)
-13:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
-14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
-15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
-(...)
-
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-🏁                                    RESULT                                     🏁
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 762  LEAKING: 0 
-                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 47  
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 234   
-                                     ✅ 2589  
-
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-🏁                                    RESULT                                     🏁
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 765  LEAKING: 0 
-                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 44  
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 231   
-                                     ✅ 2592
-*/
+// TOKENS (after expansion):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: current_delimiter
+
+// TOKENS (after quote removal):
+// [0] Type: WORD            Value: cat
+// [1] Type: REDIR_HEREDOC   Value: <<
+// [2] Type: WORD            Value: current_delimiter
+
+// COMMANDS:
+// [0] Args:
+//     [0] = cat
+//         Redir: REDIR_HEREDOC current_delimiter (hd_expand: 1)
+
+// > a
+// > b
+// > c
+// > 
+// a
+// b
+// c
+// minishell$
+
+// Note: The warning should appear in the next line right after the last '>' character 
+// that was displayed. In this case, something like this:
+
+// (...)
+// > b
+// > c
+// > 
+// bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')
+// a
+// b
+// (...)
+
+
+
+
+
+
+
+// For minishell_tester_LucasKuhn:
+// cd minishell
+// git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_LucasKuhn
+// cd minishell_tester_LucasKuhn
+// ./tester
+
+// ———————————— builtins ————————————
+
+// Test  40: ❌ cd $PWD hi 
+// mini exit code = 0
+// bash exit code = 1
+// mini error = ()
+// bash error = ( too many arguments)
+
+// ———————————— redirects ————————————
+
+// Test  73: ❌ cat <"./test_files/infile" | echo hi 
+// mini exit code = 141
+// bash exit code = 0
+
+// Test  75: ❌ cat <"./test_files/infile_big" | echo hi 
+// mini exit code = 141
+// bash exit code = 0
+
+// Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
+// mini exit code = 1
+// bash exit code = 0
+
+// ———————————— extras ————————————
+
+// Test 133: ✅⚠️  $PWD 
+// mini error = ( Permission denied)
+// bash error = ( Is a directory)
+
+// Test 141: ✅⚠️  ./test_files 
+// mini error = ( Permission denied)
+// bash error = ( Is a directory)
+
+
+
+
+
+
+
+// For minishell_tester_zstenger93:
+// cd minishell
+// git clone https://github.com/zstenger93/42_minishell_tester.git minishell_tester_zstenger93
+// cd minishell_tester_zstenger93
+// vim tester.sh
+// 	# Change if you store the tester in another PATH
+// 	export MINISHELL_PATH=../
+// 	export EXECUTABLE=minishell
+// 	RUNDIR=/home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93
+
+// # Change the shell_loop() function to respect the GitHub Repository Instructions from
+
+// static void	shell_loop(void)
+// {
+// 	char	*input;
+// 	int		validation_result;
+
+// 	while (1)
+// 	{
+// 		input = readline("minishell$ ");
+// 		validation_result = validate_input(input);
+// 		if (validation_result == 1)
+// 			break ;
+// 		else if (validation_result == 2)
+// 			continue ;
+// 		if (!*input)
+// 		{
+// 			free(input);
+// 			continue ;
+// 		}
+// 		add_history(input);
+// 		process_and_execute(input);
+// 		free(input);
+// 	}
+// }
+
+// to
+
+// static void	shell_loop(void)
+// {
+// 	char	*input;
+// 	char	*tmp;
+// 	int		validation_result;
+
+// 	while (1)
+// 	{
+// 		if (isatty(STDIN_FILENO))
+// 			input = readline("minishell$ ");
+// 		else
+// 		{
+// 			input = get_next_line(STDIN_FILENO);
+// 			if (input)
+// 			{
+// 				tmp = input;
+// 				input = ft_strtrim(tmp, "\n");
+// 				free(tmp);
+// 			}
+// 		}
+// 		if (!input)
+// 			break ;
+// 		validation_result = validate_input(input);
+// 		if (validation_result == 1)
+// 		{
+// 			free(input);
+// 			break ;
+// 		}
+// 		else if (validation_result == 2)
+// 		{
+// 			free(input);
+// 			continue ;
+// 		}
+// 		if (!*input)
+// 		{
+// 			free(input);
+// 			continue ;
+// 		}
+// 		if (isatty(STDIN_FILENO))
+// 			add_history(input);
+// 		process_and_execute(input);
+// 		free(input);
+// 	}
+// }
+
+// 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+// 🚀                                MANDATORY                                    🚀
+// 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+// # **************************************************************************** #
+// #                                COMPARE PARSING                               #
+// # **************************************************************************** #
+// (...)
+// 11:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:26
+// 12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:28
+// (...)
+// 14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:32
+// 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:34
+// (...)
+// 24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:52
+// 25:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:54
+// 26:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:56
+// 27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:58
+// 28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:60
+// 29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:62
+// 30:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:64
+// (...)
+
+// # **************************************************************************** #
+// #                                PARSING HELL                                  #
+// # **************************************************************************** #
+// (...)
+// 12:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:32
+// (...)
+// 14:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:40
+// 15:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:45
+// (...)
+// 18:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:58
+// (...)
+// 112:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:297
+// 113:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:299
+// 114:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:301
+// (...)
+// 120:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:313
+// 121:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:315
+// (...)
+// 123:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(2)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:319
+// 124:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:321
+
+// # **************************************************************************** #
+// #                                   BUILTINS                                   #
+// # **************************************************************************** #
+// 1:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:7
+// (...)
+// 13:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:31
+// 14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:33
+// (...)
+// 16:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:37
+// 17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:39
+// (...)
+// {?!}20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:45
+// {?!}21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:47
+// (...)
+// 27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:59
+// 28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:61
+// 29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:63
+// 30:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:65
+// 31:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:67
+// 32:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:69
+// 33:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:71
+// (...)
+// 105:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
+// (...)
+// 107:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
+// (...)
+// 122:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
+// (...)
+// 128:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:314
+// (...)
+// 131:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
+// 132:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
+// 133:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:337
+// (...)
+// 135:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:347
+// (...)
+// 140:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
+// (...)
+// 150:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
+// (...)
+// 165:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
+// (...)
+// 170:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
+// (...)
+// 185:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
+// (...)
+// 224:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
+// (...)
+// 231:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
+// (...)
+// 256:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:631
+// 257:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:633
+// 258:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:635
+// 259:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:637
+// 260:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:639
+// 261:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:641
+// 262:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:643
+// 263:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:645
+// 264:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:647
+// 265:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:649
+// 266:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:651
+// 267:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:653
+// 268:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:655
+// 269:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:657
+// 270:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:659
+// 271:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:661
+// 272:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:663
+// 273:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:665
+// 274:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:667
+// 275:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:669
+// 276:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:671
+// 277:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:673
+// 278:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:675
+// 279:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:677
+// 280:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:679
+// 281:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:681
+// 282:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:683
+// 283:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:685
+// 284:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:687
+// 285:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:689
+// 286:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:691
+// 287:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:693
+// 288:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:695
+// 289:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:697
+// 290:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:699
+// 291:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:701
+// 292:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:703
+// 293:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:705
+// 294:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:707
+// 295:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:709
+// 296:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:711
+// 297:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:713
+// 298:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:715
+// 299:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_builtins.sh:717
+
+// # **************************************************************************** #
+// #                                  PIPELINES                                   #
+// # **************************************************************************** #
+// 1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
+// {?!}2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
+// (...)
+// 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:32
+// (...)
+// 17:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:36
+// (...)
+// 24:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:53
+// 25:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:55
+// 26:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
+// 27:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
+// 28:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:84
+// 29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
+// 30:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:110
+// (...)
+// {?!}35:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:142
+// (...)
+// 38:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:151
+// 39:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:156
+// 40:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:161
+// (...)
+
+// # **************************************************************************** #
+// #                                    REDIRS                                    #
+// # **************************************************************************** #
+// (...)
+// {?!}12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:26
+// (...)
+// {?!}14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:30
+// (...)
+// 19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:40
+// (...)
+// {?!}30:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:62
+// 31:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:64
+// (...)
+// 55:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:112
+// (...)
+// 80:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:186
+// 81:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:195
+// 82:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:204
+// 83:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:208
+// 84:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:217
+// 85:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:223
+// 86:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:229
+// 87:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:235
+// 88:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:241
+// (...)
+
+// # **************************************************************************** #
+// #                                     SCMD                                     #
+// # **************************************************************************** #
+// (...)
+// 7:	tester.sh: line 217: 301447 Done                    echo -n "$INPUT"
+//      301448 Aborted                 (core dumped) | $MINISHELL_PATH/$EXECUTABLE 2> tmp_err_minishell > tmp_out_minishell
+// STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
+// (...)
+
+// # **************************************************************************** #
+// #                                  VARIABLES                                   #
+// # **************************************************************************** #
+// (...)
+// 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:40
+// 16:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:42
+// 17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:44
+// 18:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:46
+// 19:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:48
+// 20:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:50
+// (...)
+// 25:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:60
+// 26:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:62
+// (...)
+// 28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:66
+// (...)
+// 45:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
+// 46:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:133
+// 47:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:136
+// 48:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:139
+// 49:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:142
+// 50:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:145
+// 51:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:148
+// 52:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:151
+// 53:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:154
+// (...)
+// 56:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:163
+// 57:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:166
+// 58:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_variables.sh:169
+// (...)
+
+// # **************************************************************************** #
+// #                                  CORRECTION                                  #
+// # **************************************************************************** #
+// (...)
+// 17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:39
+// 18:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:41
+// 19:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:43
+// 20:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:45
+// 21:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:47
+// 22:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:49
+// 23:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:51
+// 24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:53
+// (...)
+// 60:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:129
+// 61:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:131
+// (...)
+// 65:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:139
+// 66:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:141
+// 67:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:143
+// 68:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:145
+// 69:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:147
+// 70:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:149
+// (...)
+// 75:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:159
+// 76:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:161
+// (...)
+// 78:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_correction.sh:165
+// (...)
+
+// # **************************************************************************** #
+// #                                  PATH FAILS                                  #
+// # **************************************************************************** #
+// 1:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:5
+// (...)
+// 5:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
+// (...)
+// 7:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:30
+// 8:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:32
+// (...)
+// 11:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
+// 12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
+// (...)
+
+// # **************************************************************************** #
+// #                                SYNTAX ERRORS                                 #
+// # **************************************************************************** #
+// (...)
+// 8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:19
+// (...)
+// 20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:43
+// 21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:46
+// 22:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:49
+// (...)
+
+// # **************************************************************************** #
+// #                                     WILD                                     #
+// # **************************************************************************** #
+// (...)
+// 4:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
+// (...)
+// 10:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
+// (...)
+// 13:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
+// 14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
+// 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
+// (...)
+
+// 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+// 🏁                                    RESULT                                     🏁
+// 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+//              TOTAL TEST COUNT: 941  TESTS PASSED: 762  LEAKING: 0 
+//                      STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 47  
+//                          TOTAL FAILED AND PASSED CASES:
+//                                      ❌ 234   
+//                                      ✅ 2589  
+
+// 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+// 🏁                                    RESULT                                     🏁
+// 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+//              TOTAL TEST COUNT: 941  TESTS PASSED: 765  LEAKING: 0 
+//                      STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 44  
+//                          TOTAL FAILED AND PASSED CASES:
+//                                      ❌ 231   
+//                                      ✅ 2592

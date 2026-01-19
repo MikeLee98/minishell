@@ -62,9 +62,12 @@ typedef struct s_shell
 	t_cmd			*cmds;
 	t_token			*toks;
 	int				exit_code;
+	int				should_exit;
 }	t_shell;
 
 t_shell	*shell(void);
+
+void	cleanup_shell(void);
 
 // ************************************************************************** //
 //                                  PARSING                                   //

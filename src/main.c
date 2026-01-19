@@ -59,7 +59,7 @@ static void	shell_loop(void)
 
 static void	cleanup_shell(void)
 {
-	printf("DEBUG: Cleaning up shell...\n");
+	// printf("DEBUG: Cleaning up shell...\n");
 	rl_clear_history();
 	if (shell()->toks)
 		free_tokens(shell()->toks);

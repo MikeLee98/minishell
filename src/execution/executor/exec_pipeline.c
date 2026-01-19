@@ -33,8 +33,8 @@ void execute_pipeline(t_cmd *cmd)
             }
             if (current->next)
             {
+                close(pipefd[0]);
                 close(pipefd[1]);
-                prev_fd = pipefd[0];
             }
             current = current->next;
             continue;

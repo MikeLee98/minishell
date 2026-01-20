@@ -30,7 +30,14 @@ void execute_single(t_cmd *cmd)
 			shell()->exit_code = 1;
 			return ;
 		}
-		shell()->exit_code = run_builtin(cmd->args);
+		int ret = run_builtin(cmd->args);
+		if (shell()->should_exit)
+		{
+			cleanup_shell();
+			restore_fds(saved_fds);
+			exit(shell()->exit_code);
+		}
+		shell()->exit_code = ret;
 		restore_fds(saved_fds);
 		return ;
 	}
@@ -50,8 +57,6 @@ void execute_single(t_cmd *cmd)
 		execve_with_path(cmd);
 		exit(127);
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	setup_signals();
 	if (WIFEXITED(status))

@@ -28,6 +28,7 @@ static int	init_shell(char **envp)
 	shell()->cmds = NULL;
 	shell()->toks = NULL;
 	shell()->exit_code = 0;
+	shell()->should_exit = 0;
 	update_shlvl();
 	setup_signals();
 	return (1);
@@ -57,7 +58,7 @@ static void	shell_loop(void)
 	}
 }
 
-static void	cleanup_shell(void)
+void	cleanup_shell(void)
 {
 	// printf("DEBUG: Cleaning up shell...\n");
 	rl_clear_history();

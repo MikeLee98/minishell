@@ -62,9 +62,8 @@ typedef struct s_shell
 	t_cmd			*cmds;
 	t_token			*toks;
 	int				exit_code;
+	int				should_exit;
 }	t_shell;
-
-t_shell	*shell(void);
 
 // ************************************************************************** //
 //                                  PARSING                                   //
@@ -207,6 +206,10 @@ int		prepare_heredocs(void);
 // ************************************************************************** //
 //                                   MAIN                                     //
 // ************************************************************************** //
+
+// Main Functions (main.c)
+t_shell	*shell(void);
+void	cleanup_shell(void);
 
 // Main Utils Functions (main_utils.c)
 int		validate_input(char *input);

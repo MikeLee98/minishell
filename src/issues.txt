@@ -8,11 +8,6 @@ Ctrl+\ during child process behaviour definition
 
 
 
-
-Regarding Child Processes, 
-
-
-
 Regarding Heredoc, 
 
 NUMBER 1:

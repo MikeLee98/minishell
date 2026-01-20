@@ -291,7 +291,7 @@ static void	shell_loop(void)
 }
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                                MANDATORY                                    🚀
+🚀                        MANDATORY (WITHOUT VALGRIND)                         🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
@@ -586,6 +586,8 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/ms
 #                                     WILD                                     #
 # **************************************************************************** #
 (...)
+{?!}2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:7
+(...)
 4:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
 (...)
 {?!}8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:26
@@ -650,3 +652,12 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/ms
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 230   
                                      ✅ 2593
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 767  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 42  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 229   
+                                     ✅ 2594

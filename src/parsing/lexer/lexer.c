@@ -55,7 +55,11 @@ static int	handle_operator(t_token **head, char *input, int *i)
 		(*i)++;
 	}
 	else if (input[*i] == '>')
+	{
+		if (input[*i + 1] == '|')
+			(*i)++;
 		new_token = create_token(TOKEN_REDIR_OUT, ft_strdup(">"));
+	}
 	if (!new_token)
 		return (0);
 	add_token(head, new_token);

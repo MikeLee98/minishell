@@ -14,7 +14,6 @@ static int	init_shell(char **envp)
 	shell()->env = init_env(envp);
 	if (!shell()->env)
 	{
-		shell()->env = NULL;
 		cwd = getcwd(NULL, 0);
 		if (cwd)
 		{
@@ -22,7 +21,6 @@ static int	init_shell(char **envp)
 			free(cwd);
 		}
 		env_set(&shell()->env, "PATH", "/usr/local/bin:/usr/bin:/bin", 0);
-		env_set(&shell()->env, "_", "/usr/bin/env", 0);
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;

@@ -1,69 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:56:17 by mario             #+#    #+#             */
+/*   Updated: 2026/01/21 22:44:27 by mario            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 static int	plus_equal_pos(char *arg)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	while (arg[i] && arg[i] != '=')
 	{
 		if (arg[i] == '+' && arg[i + 1] == '=')
-			return i;
+			return (i);
 		i++;
 	}
-	return -1;
+	return (-1);
 }
 
-static void	split_key_value(char *arg, char **key, char **value, int *append)
+static void	split_key_value(char *arg, t_env *tmp, int *append)
 {
 	int	pos;
 
+	tmp->key = NULL;
+	tmp->value = NULL;
 	*append = 0;
 	pos = plus_equal_pos(arg);
 	if (pos >= 0)
 	{
 		*append = 1;
-		*key = ft_substr(arg, 0, pos);
-		if (!*key)
+		tmp->key = ft_substr(arg, 0, pos);
+		if (!tmp->key)
 			return ;
-		*value = ft_strdup(arg + pos + 2);
-		if (!*value)
+		tmp->value = ft_strdup(arg + pos + 2);
+		if (!tmp->value)
 			return ;
 		return ;
 	}
 	pos = 0;
 	while (arg[pos] && arg[pos] != '=')
 		pos++;
-	*key = ft_substr(arg, 0, pos);
-	if (!*key)
+	tmp->key = ft_substr(arg, 0, pos);
+	if (!tmp->key)
 		return ;
 	if (arg[pos] == '=')
-	{
-		*value = ft_strdup(arg + pos + 1);
-		if (!*value)
-			return ;
-	}
-	else
-		*value = NULL;
+		tmp->value = ft_strdup(arg + pos + 1);
 }
 
 static void	export_assign(t_env **env, char *arg)
 {
-	char	*key;
-	char	*value;
+	t_env	tmp;
 	int		append;
 
-	split_key_value(arg, &key, &value, &append);
-	if (!key)
+	split_key_value(arg, &tmp, &append);
+	if (!tmp.key)
 		return ;
-	if (value == NULL)
+	if (!tmp.value)
 	{
-		if (!env_find(*env, key))
-			env_set(env, key, NULL, 0);
+		if (!env_find(*env, tmp.key))
+			env_set(env, tmp.key, NULL, 0);
 	}
 	else
-		env_set(env, key, value, append);
-	free(key);
-	free(value);
+		env_set(env, tmp.key, tmp.value, append);
+	free(tmp.key);
+	free(tmp.value);
 }
 
 static int	is_valid_identifier(char *s)
@@ -87,13 +95,14 @@ static int	is_valid_identifier(char *s)
 int	ft_export(char **args)
 {
 	int	i;
-	int	had_error = 0;
+	int	had_error;
 
+	had_error = 0;
 	if (!args[1])
 	{
 		print_export(shell()->env);
 		shell()->exit_code = 0;
-		return (0);
+		return (shell()->exit_code);
 	}
 	i = 1;
 	while (args[i])
@@ -109,6 +118,9 @@ int	ft_export(char **args)
 			export_assign(&shell()->env, args[i]);
 		i++;
 	}
-	shell()->exit_code = had_error ? 1 : 0;
+	if (had_error)
+		shell()->exit_code = 1;
+	else
+		shell()->exit_code = 0;
 	return (shell()->exit_code);
 }

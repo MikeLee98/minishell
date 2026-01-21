@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
+/*   Updated: 2026/01/21 19:53:46 by mario            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -150,35 +162,35 @@ void	env_unset(t_env **env, char *key);
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
 char	**env_to_array(t_env *env);
-void 	update_shlvl(void);
+void	update_shlvl(void);
 
 // free_env
 void	free_env_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env
-int	ft_env(void);
+int		ft_env(void);
 
 // builtin_export
-int	ft_export(char **args);
+int		ft_export(char **args);
 
 // builtin_print_export
 void	print_export(t_env *env);
 
 // builtin_unset
-int	ft_unset(char **args);
+int		ft_unset(char **args);
 
 // builtin_cd
-int	ft_cd(char **args);
+int		ft_cd(char **args);
 
 // builtin_pwd
-int	ft_pwd(void);
+int		ft_pwd(void);
 
 // builtin_echo
-int	ft_echo(char **args);
+int		ft_echo(char **args);
 
 // builtin_exit
-int	ft_exit(char **args);
+int		ft_exit(char **args);
 
 // exec_main
 void	executor(void);

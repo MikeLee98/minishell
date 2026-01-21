@@ -3,11 +3,6 @@ ISSUES
 
 
 
-Ctrl+\ during child process behaviour definition
-
-
-
-
 Regarding Heredoc, 
 
 NUMBER 1:
@@ -163,8 +158,6 @@ b
 
 
 
-
-
 For minishell_tester_LucasKuhn:
 cd minishell
 git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_LucasKuhn
@@ -202,8 +195,6 @@ bash error = ( Is a directory)
 Test 141: ✅⚠️  ./test_files 
 mini error = ( Permission denied)
 bash error = ( Is a directory)
-
-
 
 
 
@@ -293,7 +284,7 @@ static void	shell_loop(void)
 }
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                                MANDATORY                                    🚀
+🚀                        MANDATORY (WITHOUT VALGRIND)                         🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
@@ -434,7 +425,7 @@ static void	shell_loop(void)
 # **************************************************************************** #
 #                                  PIPELINES                                   #
 # **************************************************************************** #
-1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
+{?!}1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
 {?!}2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
 (...)
 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:32
@@ -449,6 +440,7 @@ static void	shell_loop(void)
 29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
 30:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:110
 (...)
+{?!}34:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:14
 {?!}35:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:142
 (...)
 38:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:151
@@ -464,12 +456,19 @@ static void	shell_loop(void)
 (...)
 {?!}14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:30
 (...)
-19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:40
+{?!}17:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:36
 (...)
+{?!}19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:40
+(...)
+{?!}29:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:60
 {?!}30:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:62
-31:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:64
+{?!}31:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:64
+{?!}32:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:66
 (...)
-55:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:112
+{?!}53:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:108
+{?!}54:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:110
+{?!}55:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:112
+{?!}56:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:114
 (...)
 80:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:186
 81:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/1_redirs.sh:195
@@ -580,7 +579,11 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/ms
 #                                     WILD                                     #
 # **************************************************************************** #
 (...)
+{?!}2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:7
+(...)
 4:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
+(...)
+{?!}8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:26
 (...)
 10:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
 (...)
@@ -588,6 +591,15 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/ms
 14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
 15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
 (...)
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                     🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 761  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 48  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 235   
+                                     ✅ 2588
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                     🏁
@@ -601,8 +613,44 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  /home/ms
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                     🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 763  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 46  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 233   
+                                     ✅ 2590
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 764  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 45  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 232   
+                                     ✅ 2591
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                     🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
              TOTAL TEST COUNT: 941  TESTS PASSED: 765  LEAKING: 0 
                      STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 44  
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 231   
                                      ✅ 2592
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                     🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 766  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 43  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 230   
+                                     ✅ 2593
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 767  LEAKING: 0 
+                     STD_OUT: 152  STD_ERR: 35  EXIT_CODE: 42  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 229   
+                                     ✅ 2594

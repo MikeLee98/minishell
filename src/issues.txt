@@ -210,7 +210,61 @@ vim tester.sh
 	export EXECUTABLE=minishell
 	RUNDIR=/home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93
 
-# Change the shell_loop() function to respect the GitHub Repository Instructions from
+# Add two static functions before shell_loop() in main.c file to respect the GitHub Repository Instructions
+
+static char	*ft_strjoin_char(char *s, char c)
+{
+	char	*result;
+	size_t	len;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	result = malloc(len + 2);
+	if (!result)
+		return (free(s), NULL);
+	i = 0;
+	while (i < len)
+	{
+		result[i] = s[i];
+		i++;
+	}
+	result[i] = c;
+	result[i + 1] = '\0';
+	return (result);
+}
+
+static char	*read_line_no_buffer(int fd)
+{
+	char	buffer[1];
+	char	*line;
+	char	*tmp;
+	int		ret;
+
+	line = ft_strdup("");
+	if (!line)
+		return (NULL);
+	while (1)
+	{
+		ret = read(fd, buffer, 1);
+		if (ret <= 0)
+		{
+			if (ft_strlen(line) == 0)
+				return (free(line), NULL);
+			return (line);
+		}
+		if (buffer[0] == '\n')
+			return (line);
+		tmp = line;
+		line = ft_strjoin_char(tmp, buffer[0]);
+		free(tmp);
+		if (! line)
+			return (NULL);
+	}
+}
+
+# Change the shell_loop() function in main.c file to respect the GitHub Repository Instructions from
 
 static void	shell_loop(void)
 {
@@ -241,7 +295,6 @@ to
 static void	shell_loop(void)
 {
 	char	*input;
-	char	*tmp;
 	int		validation_result;
 
 	while (1)
@@ -249,15 +302,7 @@ static void	shell_loop(void)
 		if (isatty(STDIN_FILENO))
 			input = readline("minishell$ ");
 		else
-		{
-			input = get_next_line(STDIN_FILENO);
-			if (input)
-			{
-				tmp = input;
-				input = ft_strtrim(tmp, "\n");
-				free(tmp);
-			}
-		}
+			input = read_line_no_buffer(STDIN_FILENO);
 		if (!input)
 			break ;
 		validation_result = validate_input(input);
@@ -271,7 +316,7 @@ static void	shell_loop(void)
 			free(input);
 			continue ;
 		}
-		if (!*input)
+		if (! *input)
 		{
 			free(input);
 			continue ;
@@ -280,7 +325,219 @@ static void	shell_loop(void)
 			add_history(input);
 		process_and_execute(input);
 		free(input);
+		if (shell()->should_exit)
+			break;
 	}
+}
+
+# Add three static functions before create_heredoc() in heredoc.c file to respect the GitHub Repository Instructions
+
+static char	*ft_strjoin_char(char *s, char c)
+{
+	char	*result;
+	size_t	len;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	result = malloc(len + 2);
+	if (!result)
+		return (free(s), NULL);
+	i = 0;
+	while (i < len)
+	{
+		result[i] = s[i];
+		i++;
+	}
+	result[i] = c;
+	result[i + 1] = '\0';
+	return (result);
+}
+
+static char	*read_line_no_buffer(int fd)
+{
+	char	buffer[1];
+	char	*line;
+	char	*tmp;
+	int		ret;
+
+	line = ft_strdup("");
+	if (!line)
+		return (NULL);
+	while (1)
+	{
+		ret = read(fd, buffer, 1);
+		if (ret <= 0)
+		{
+			if (ft_strlen(line) == 0)
+				return (free(line), NULL);
+			return (line);
+		}
+		if (buffer[0] == '\n')
+			return (line);
+		tmp = line;
+		line = ft_strjoin_char(tmp, buffer[0]);
+		free(tmp);
+		if (! line)
+			return (NULL);
+	}
+}
+
+static char	*read_heredoc_line(void)
+{
+	if (isatty(STDIN_FILENO))
+		return (readline("> "));
+	return (read_line_no_buffer(STDIN_FILENO));
+}
+
+# Change one line from the static create_heredoc() function in heredoc.c file to respect the GitHub Repository Instructions from
+
+static int create_heredoc(int hd_expand, char *delimiter)
+{
+	int		pipefd[2];
+	pid_t	pid;
+	int		status;
+	char	*line;
+
+	if (pipe(pipefd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+		close(pipefd[0]);
+		while (1)
+		{
+			line = readline("> ");							<------------ This line!
+			if (!line || ft_strcmp(line, delimiter) == 0)
+			{
+				free(line);
+				break;
+			}
+			write_heredoc_line(hd_expand, pipefd[1], line);
+			free(line);
+		}
+		close(pipefd[1]);
+		exit(0);
+	}
+	close(pipefd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		close(pipefd[0]);
+		return (-1);
+	}
+	return (pipefd[0]);
+}
+
+to
+
+static int create_heredoc(int hd_expand, char *delimiter)
+{
+	int		pipefd[2];
+	pid_t	pid;
+	int		status;
+	char	*line;
+
+	if (pipe(pipefd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+		close(pipefd[0]);
+		while (1)
+		{
+			line = read_heredoc_line();
+			if (!line || ft_strcmp(line, delimiter) == 0)
+			{
+				free(line);
+				break;
+			}
+			write_heredoc_line(hd_expand, pipefd[1], line);
+			free(line);
+		}
+		close(pipefd[1]);
+		exit(0);
+	}
+	close(pipefd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		close(pipefd[0]);
+		return (-1);
+	}
+	return (pipefd[0]);
+}
+
+# Change one condition line from the int ft_exit function in builtin_exit.c file to respect the GitHub Repository Instructions from
+
+int	ft_exit(char **args)
+{
+	long	code;
+
+	ft_putstr_fd("exit\n", 1);
+	if (!args[1])
+	{
+		shell()->should_exit = 1;
+		return (shell()->exit_code);
+	}
+
+	if (!parse_exit_code(args[1], &code))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		shell()->should_exit = 1;
+		shell()->exit_code = 2;
+		return (2);
+	}
+	if (args[2])
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell()->exit_code = 1;
+		return (1);
+	}
+	shell()->should_exit = 1;
+	shell()->exit_code = (unsigned char)code;
+	return ((unsigned char)code);
+}
+
+to
+
+int	ft_exit(char **args)
+{
+	long	code;
+
+	if (isatty(STDIN_FILENO))		<------------ Add this condition!
+		ft_putstr_fd("exit\n", 1);
+	if (!args[1])
+	{
+		shell()->should_exit = 1;
+		return (shell()->exit_code);
+	}
+
+	if (!parse_exit_code(args[1], &code))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		shell()->should_exit = 1;
+		shell()->exit_code = 2;
+		return (2);
+	}
+	if (args[2])
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell()->exit_code = 1;
+		return (1);
+	}
+	shell()->should_exit = 1;
+	shell()->exit_code = (unsigned char)code;
+	return ((unsigned char)code);
 }
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -291,41 +548,65 @@ static void	shell_loop(void)
 #                                COMPARE PARSING                               #
 # **************************************************************************** #
 (...)
-11:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:26
-12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:28
+11:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo $"HOME"$USER
+12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo $"HOM"E$USER
 (...)
-14:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:32
-15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:34
+14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo $"HOME"
+15:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo $"42$"
 (...)
-24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:52
-25:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:54
-26:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:56
-27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:58
-28:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:60
-29:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:62
-30:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/0_compare_parsing.sh:64
+24:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \$USER
+25:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\$USER
+26:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\\$USER
+27:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\\\$USER
+28:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\\\\$USER
+29:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\\\\\\\\$USER
+30:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /bin/echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
 (...)
 
 # **************************************************************************** #
 #                                PARSING HELL                                  #
 # **************************************************************************** #
 (...)
-12:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:32
+12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:32
+cat << $USER
+why
+not
+$USER
 (...)
-14:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:40
-15:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:45
+14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅ [ minishell(127)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:40
+cat << "$USER"
+why
+not
+$USER
+15:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:45
+cat << "$US"E"R"
+because
+we
+love
+bash
+$USER
 (...)
-18:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:58
+18:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:58
+>> "$USER'$USER'"
+cat "$USER'$USER'"
+/bin/rm -f "$USER'$USER'"
 (...)
-112:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:297
-113:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:299
-114:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:301
+112:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:297
+echo '$'$'$'$'$'
+113:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:299
+echo '$'$'$'$'$'$'$'
+114:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:301
+echo "$"$'$'$"$"$"$"$'$'
 (...)
-120:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:313
-121:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:315
+120:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:313
+exit 9223372036854775805
+121:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:315
+exit 123"123"
 (...)
-123:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(2)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:319
-124:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:321
+123:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅ [ minishell(2)  bash(127) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:319
+>| echo sure
+124:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅ [ minishell(1)  bash(0) ]  /home/msdmrf/Documents/42lisboa/migusant/common/minishell/minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:321
+cd --
 
 # **************************************************************************** #
 #                                   BUILTINS                                   #

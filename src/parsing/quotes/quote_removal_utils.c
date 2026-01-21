@@ -1,18 +1,33 @@
 #include "../../../includes/minishell.h"
 
-static int	skip_quotes(char *str, int *i)
+static int	skip_single_quotes(char *str, int *i)
 {
-	char	quote;
-	int		len;
+	int	len;
 
-	quote = str[(*i)++];
+	(*i)++;
 	len = 0;
-	while (str[*i] && str[*i] != quote)
+	while (str[*i] && str[*i] != '\'')
 	{
 		len++;
 		(*i)++;
 	}
-	if (str[*i] == quote)
+	if (str[*i] == '\'')
+		(*i)++;
+	return (len);
+}
+
+static int	skip_double_quotes(char *str, int *i)
+{
+	int	len;
+
+	(*i)++;
+	len = 0;
+	while (str[*i] && str[*i] != '"')
+	{
+		len++;
+		(*i)++;
+	}
+	if (str[*i] == '"')
 		(*i)++;
 	return (len);
 }
@@ -26,8 +41,10 @@ int	count_unquoted_len(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
-			len += skip_quotes(str, &i);
+		if (str[i] == '\'')
+			len += skip_single_quotes(str, &i);
+		else if (str[i] == '"')
+			len += skip_double_quotes(str, &i);
 		else
 		{
 			len++;
@@ -37,24 +54,37 @@ int	count_unquoted_len(char *str)
 	return (len);
 }
 
+static void	copy_single_quoted(char *dest, char *src, int *j, int *i)
+{
+	(*i)++;
+	while (src[*i] && src[*i] != '\'')
+		dest[(*j)++] = src[(*i)++];
+	if (src[*i] == '\'')
+		(*i)++;
+}
+
+static void	copy_double_quoted(char *dest, char *src, int *j, int *i)
+{
+	(*i)++;
+	while (src[*i] && src[*i] != '"')
+		dest[(*j)++] = src[(*i)++];
+	if (src[*i] == '"')
+		(*i)++;
+}
+
 void	copy_unquoted(char *dest, char *src)
 {
-	int		i;
-	int		j;
-	char	quote;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
 	while (src[i])
 	{
-		if (src[i] == '\'' || src[i] == '"')
-		{
-			quote = src[i++];
-			while (src[i] && src[i] != quote)
-				dest[j++] = src[i++];
-			if (src[i] == quote)
-				i++;
-		}
+		if (src[i] == '\'')
+			copy_single_quoted(dest, src, &j, &i);
+		else if (src[i] == '"')
+			copy_double_quoted(dest, src, &j, &i);
 		else
 			dest[j++] = src[i++];
 	}

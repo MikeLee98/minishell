@@ -42,7 +42,10 @@ void	handle_quotes(void)
 			&& tokens->type <= TOKEN_REDIR_APPEND
 			&& tokens->next
 			&& tokens->next->type == TOKEN_WORD)
+		{
 			try_remove_quotes(tokens->next);
+			tokens = tokens->next;
+		}
 		tokens = tokens->next;
 	}
 }

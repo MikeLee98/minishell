@@ -76,14 +76,25 @@ static char	*expand_dollar_var(char *str, int *i)
 	return (var_value);
 }
 
+static int	is_valid_var_start(char c)
+{
+	return (ft_isalnum(c) || c == '_' || c == '?');
+}
+
 char	*expand_variable(char *str, int *i)
 {
 	char	char_str[2];
 
+	if (str[*i] == '\\' && str[*i + 1])
+	{
+		char_str[0] = str[*i + 1];
+		char_str[1] = '\0';
+		(*i) += 2;
+		return (ft_strdup(char_str));
+	}
 	if (str[*i] == '$')
 	{
-		if (str[*i + 1] && (ft_isalnum(str[*i + 1])
-				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
+		if (str[*i + 1] && is_valid_var_start(str[*i + 1]))
 			return (expand_dollar_var(str, i));
 		else
 		{

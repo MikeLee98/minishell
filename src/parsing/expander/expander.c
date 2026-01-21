@@ -1,11 +1,31 @@
 #include "../../../includes/minishell.h"
 
+static char	*expand_ansi_c_quotes(char *str, int *i)
+{
+	int	start;
+
+	(*i) += 2;
+	start = *i;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	if (str[*i] == '\'')
+		(*i)++;
+	return (ft_substr(str, start, *i - start - 1));
+}
+
 static char	*get_next_segment(char *token, int *i)
 {
 	if (token[*i] == '\'')
 		return (expand_single_quotes(token, i));
 	else if (token[*i] == '"')
 		return (expand_double_quotes(token, i));
+	else if (token[*i] == '$' && token[*i + 1] == '\'')
+		return (expand_ansi_c_quotes(token, i));
+	else if (token[*i] == '$' && token[*i + 1] == '"')
+	{
+		(*i)++;
+		return (expand_double_quotes(token, i));
+	}
 	else
 		return (expand_variable(token, i));
 }
@@ -65,6 +85,13 @@ void	expand_tokens(void)
 	{
 		if (tokens->type == TOKEN_WORD)
 			try_expand_token(tokens);
+		else if (tokens->type == TOKEN_REDIR_HEREDOC)
+		{
+			tokens = tokens->next;
+			if (tokens && tokens->type == TOKEN_WORD)
+				tokens = tokens->next;
+			continue ;
+		}
 		else if (should_expand_redir(tokens))
 			try_expand_token(tokens->next);
 		tokens = tokens->next;

@@ -15,7 +15,6 @@ static int	init_shell(char **envp)
 	if (!shell()->env)
 	{
 		shell()->env = NULL;
-		env_set(&shell()->env, "SHLVL", "1", 0);
 		cwd = getcwd(NULL, 0);
 		if (cwd)
 		{

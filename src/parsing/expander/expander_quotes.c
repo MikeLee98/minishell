@@ -5,7 +5,13 @@ static char	*handle_expansion_char(char *str, int *i,
 {
 	char	*expansion;
 
-	if (str[*i] == '$')
+	if (str[*i] == '\\' && str[*i + 1] && (str[*i + 1] == '$'
+		|| str[*i + 1] == '"' || str[*i + 1] == '\\'))
+	{
+		*result = append_char(*result, str[*i + 1]);
+		(*i) += 2;
+	}
+	else if (str[*i] == '$')
 	{
 		expansion = expand_variable(str, i);
 		*result = append_string(*result, expansion, 1);

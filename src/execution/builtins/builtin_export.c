@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 22:44:27 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/22 18:14:00 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,7 @@ static int	is_valid_identifier(char *s)
 int	ft_export(char **args)
 {
 	int	i;
-	int	had_error;
 
-	had_error = 0;
 	if (!args[1])
 	{
 		print_export(shell()->env);
@@ -112,15 +110,13 @@ int	ft_export(char **args)
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(args[i], 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
-			had_error = 1;
+			shell()->exit_code = 1;
 		}
 		else
 			export_assign(&shell()->env, args[i]);
 		i++;
 	}
-	if (had_error)
-		shell()->exit_code = 1;
-	else
+	if (shell()->exit_code != 1)
 		shell()->exit_code = 0;
 	return (shell()->exit_code);
 }

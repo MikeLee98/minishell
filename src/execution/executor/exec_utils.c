@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/21 19:55:20 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 19:55:21 by mario            ###   ########.fr       */
-/*                                                                            */
+/*																			  */
+/*														  :::	   ::::::::	  */
+/*	 exec_utils.c										:+:		 :+:	:+:	  */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: mario <mario@student.42.fr>				+#+	 +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2026/01/21 19:55:20 by mario			   #+#	  #+#			  */
+/*	 Updated: 2026/01/21 19:55:21 by mario			  ###	########.fr		  */
+/*																			  */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
@@ -31,25 +31,6 @@ int is_builtin(char *cmd)
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);
-}
-
-int run_builtin(char **args)
-{
-	if (ft_strcmp(args[0], "echo") == 0)
-		return (ft_echo(args));
-	if (ft_strcmp(args[0], "cd") == 0)
-		return (ft_cd(args));
-	if (ft_strcmp(args[0], "pwd") == 0)
-		return (ft_pwd());
-	if (ft_strcmp(args[0], "export") == 0)
-		return (ft_export(args));
-	if (ft_strcmp(args[0], "unset") == 0)
-		return (ft_unset(args));
-	if (ft_strcmp(args[0], "env") == 0)
-		return (ft_env());
-	if (ft_strcmp(args[0], "exit") == 0)
-		return (ft_exit(args));
-	return (1);
 }
 
 int has_slash(char *s)
@@ -79,4 +60,16 @@ void restore_fds(int saved[3])
 	close(saved[0]);
 	close(saved[1]);
 	close(saved[2]);
+}
+
+void	handle_child_status(int status)
+{
+	if (WIFEXITED(status))
+		shell()->exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		shell()->exit_code = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGINT)
+			write(1, "\n", 1);
+	}
 }

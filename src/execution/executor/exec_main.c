@@ -6,55 +6,47 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:54:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 19:55:00 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/22 19:44:25 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void executor(void)
+void	executor(void)
 {
 	if (!shell()->cmds)
 		return ;
-
 	if (!shell()->cmds->next)
 		execute_single(shell()->cmds);
 	else
 		execute_pipeline(shell()->cmds);
 }
 
-void execve_with_path(t_cmd *cmd)
+int	run_builtin(char **args)
 {
-	char	**paths;
-	char	*full_path;
-	char	*path_env;
-	char	**envp;
+	if (ft_strcmp(args[0], "echo") == 0)
+		return (ft_echo(args));
+	if (ft_strcmp(args[0], "cd") == 0)
+		return (ft_cd(args));
+	if (ft_strcmp(args[0], "pwd") == 0)
+		return (ft_pwd());
+	if (ft_strcmp(args[0], "export") == 0)
+		return (ft_export(args));
+	if (ft_strcmp(args[0], "unset") == 0)
+		return (ft_unset(args));
+	if (ft_strcmp(args[0], "env") == 0)
+		return (ft_env());
+	if (ft_strcmp(args[0], "exit") == 0)
+		return (ft_exit(args));
+	return (1);
+}
+
+static void	try_paths(char **paths, t_cmd *cmd, char **envp)
+{
 	int		i;
 	char	*tmp;
+	char	*full_path;
 
-	envp = env_to_array(shell()->env);
-	if (has_slash(cmd->args[0]))
-	{
-		execve(cmd->args[0], cmd->args, envp);
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		if (errno == EACCES)
-			exit(126);
-		exit(127);
-	}
-	path_env = ft_getenv(shell()->env, "PATH");
-	if (!path_env)
-	{
-		execve(cmd->args[0], cmd->args, envp);
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-		exit(127);
-	}
-	paths = ft_split(path_env, ':');
 	i = 0;
 	while (paths[i])
 	{
@@ -69,8 +61,35 @@ void execve_with_path(t_cmd *cmd)
 		free(full_path);
 		i++;
 	}
+}
+
+static void	print_command_error(char *cmd_name, const char *msg, int code)
+{
 	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd->args[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	exit(127);
+	ft_putstr_fd(cmd_name, 2);
+	ft_putstr_fd(msg, 2);
+	ft_putstr_fd("\n", 2);
+	exit(code);
+}
+
+void	execve_with_path(t_cmd *cmd)
+{
+	char	**paths;
+	char	*path_env;
+	char	**envp;
+
+	envp = env_to_array(shell()->env);
+	if (has_slash(cmd->args[0]))
+	{
+		execve(cmd->args[0], cmd->args, envp);
+		if (errno == EACCES)
+			print_command_error(cmd->args[0], ": Permission denied", 126);
+		print_command_error(cmd->args[0], ": command not found", 127);
+	}
+	path_env = ft_getenv(shell()->env, "PATH");
+	if (!path_env)
+		print_command_error(cmd->args[0], ": command not found", 127);
+	paths = ft_split(path_env, ':');
+	try_paths(paths, cmd, envp);
+	print_command_error(cmd->args[0], ": command not found", 127);
 }

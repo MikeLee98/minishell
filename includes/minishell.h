@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 19:53:46 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/22 19:28:30 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,16 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }	t_env;
+
+// Pipeline Structure
+typedef struct s_pipeline
+{
+	int		pipefd[2];
+	int		prev_fd;
+	pid_t	pid;
+	int		status;
+	t_cmd	*current;
+}	t_pipeline;
 
 // Shell Structure
 typedef struct s_shell
@@ -194,6 +204,7 @@ int		ft_exit(char **args);
 
 // exec_main
 void	executor(void);
+int		run_builtin(char **args);
 void	execve_with_path(t_cmd *cmd);
 
 // exec_single
@@ -207,10 +218,10 @@ int		apply_redirections(t_cmd *cmd);
 
 // exec_utils
 int		is_builtin(char *cmd);
-int		run_builtin(char **args);
 int		has_slash(char *s);
 void	save_fds(int saved_fds[3]);
 void	restore_fds(int saved_fds[3]);
+void	handle_child_status(int status);
 
 // heredoc
 int		prepare_heredocs(void);

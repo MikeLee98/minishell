@@ -1,20 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 10:51:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/22 22:43:53 by mario            ###   ########.fr       */
+/*   Created: 2026/01/21 19:56:25 by mario             #+#    #+#             */
+/*   Updated: 2026/01/21 19:56:26 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../../includes/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int	ft_pwd(void)
 {
-	if (!s)
-		return ;
-	write(fd, s, ft_strlen(s));
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		ft_putstr_fd("minishell: pwd: error retrieving current directory\n", 2);
+		shell()->exit_code = 1;
+		return (1);
+	}
+	ft_printf("%s\n", cwd);
+	free(cwd);
+	shell()->exit_code = 0;
+	return (0);
 }

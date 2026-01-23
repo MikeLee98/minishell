@@ -1,20 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   env_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 10:51:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/22 22:43:53 by mario            ###   ########.fr       */
+/*   Created: 2026/01/21 19:55:42 by mario             #+#    #+#             */
+/*   Updated: 2026/01/22 18:59:05 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../../includes/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	env_unset(t_env **env, char *key)
 {
-	if (!s)
-		return ;
-	write(fd, s, ft_strlen(s));
+	t_env	*tmp;
+	t_env	*prev;
+
+	tmp = *env;
+	prev = NULL;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0)
+		{
+			if (prev)
+				prev->next = tmp->next;
+			else
+				*env = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+			return ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }

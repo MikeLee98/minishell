@@ -1,20 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 10:51:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/22 22:43:53 by mario            ###   ########.fr       */
+/*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
+/*   Updated: 2026/01/21 19:56:07 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../../includes/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int	ft_env(void)
 {
-	if (!s)
-		return ;
-	write(fd, s, ft_strlen(s));
+	t_env	*tmp;
+
+	tmp = shell()->env;
+	while (tmp)
+	{
+		if (tmp->value)
+			ft_printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
+	shell()->exit_code = 0;
+	return (0);
 }

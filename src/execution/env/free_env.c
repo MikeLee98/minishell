@@ -1,20 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   free_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 10:51:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/22 22:43:53 by mario            ###   ########.fr       */
+/*   Created: 2026/01/21 19:55:50 by mario             #+#    #+#             */
+/*   Updated: 2026/01/22 18:59:36 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../../includes/minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	free_env_array(char **array)
 {
-	if (!s)
+	int	i;
+
+	if (!array)
 		return ;
-	write(fd, s, ft_strlen(s));
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void	free_env_nodes(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = tmp;
+	}
 }

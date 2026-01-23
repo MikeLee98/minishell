@@ -1045,3 +1045,12 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 	echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 	echo $?
 (...)
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 887  LEAKING: 48 
+                     STD_OUT: 34  STD_ERR: 11  EXIT_CODE: 20  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 65   
+                                     ✅ 2758

@@ -12,20 +12,6 @@
 
 #include "../../../includes/minishell.h"
 
-static int	handle_redirections(t_cmd *cmd)
-{
-	int	saved_fds[3];
-
-	save_fds(saved_fds);
-	if (apply_redirections(cmd) != 0)
-	{
-		restore_fds(saved_fds);
-		return (1);
-	}
-	restore_fds(saved_fds);
-	return (0);
-}
-
 static void	execute_builtin(t_cmd *cmd)
 {
 	int	saved_fds[3];

@@ -12,7 +12,7 @@
 
 #include "../../../includes/minishell.h"
 
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -33,30 +33,18 @@ int is_builtin(char *cmd)
 	return (0);
 }
 
-int has_slash(char *s)
-{
-	while (*s)
-	{
-		if (*s == '/')
-			return (1);
-		s++;
-	}
-	return (0);
-}
-
-void save_fds(int saved[3])
+void	save_fds(int saved[3])
 {
 	saved[0] = dup(STDIN_FILENO);
 	saved[1] = dup(STDOUT_FILENO);
 	saved[2] = dup(STDERR_FILENO);
 }
 
-void restore_fds(int saved[3])
+void	restore_fds(int saved[3])
 {
 	dup2(saved[0], STDIN_FILENO);
 	dup2(saved[1], STDOUT_FILENO);
 	dup2(saved[2], STDERR_FILENO);
-
 	close(saved[0]);
 	close(saved[1]);
 	close(saved[2]);
@@ -72,4 +60,18 @@ void	handle_child_status(int status)
 		if (WTERMSIG(status) == SIGINT)
 			write(1, "\n", 1);
 	}
+}
+
+int	handle_redirections(t_cmd *cmd)
+{
+	int	saved_fds[3];
+
+	save_fds(saved_fds);
+	if (apply_redirections(cmd) != 0)
+	{
+		restore_fds(saved_fds);
+		return (1);
+	}
+	restore_fds(saved_fds);
+	return (0);
 }

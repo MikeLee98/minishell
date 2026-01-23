@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:54:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 19:44:25 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/22 22:45:34 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	print_command_error(char *cmd_name, const char *msg, int code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd(msg, 2);
+	ft_putstr_fd((char *)msg, 2);
 	ft_putstr_fd("\n", 2);
 	exit(code);
 }
@@ -77,14 +77,20 @@ void	execve_with_path(t_cmd *cmd)
 	char	**paths;
 	char	*path_env;
 	char	**envp;
+	char	*s;
 
 	envp = env_to_array(shell()->env);
-	if (has_slash(cmd->args[0]))
+	s = cmd->args[0];
+	while (*s)
 	{
-		execve(cmd->args[0], cmd->args, envp);
-		if (errno == EACCES)
-			print_command_error(cmd->args[0], ": Permission denied", 126);
-		print_command_error(cmd->args[0], ": command not found", 127);
+		if (*s == '/')
+		{
+			execve(cmd->args[0], cmd->args, envp);
+			if (errno == EACCES)
+				print_command_error(cmd->args[0], ": Permission denied", 126);
+			print_command_error(cmd->args[0], ": command not found", 127);
+		}
+		s++;
 	}
 	path_env = ft_getenv(shell()->env, "PATH");
 	if (!path_env)

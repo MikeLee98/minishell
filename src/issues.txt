@@ -271,7 +271,7 @@ static char	*read_line_no_buffer(int fd)
 		tmp = line;
 		line = ft_strjoin_char(tmp, buffer[0]);
 		free(tmp);
-		if (! line)
+		if (!line)
 			return (NULL);
 	}
 }
@@ -328,7 +328,7 @@ static void	shell_loop(void)
 			free(input);
 			continue ;
 		}
-		if (! *input)
+		if (!*input)
 		{
 			free(input);
 			continue ;
@@ -338,7 +338,7 @@ static void	shell_loop(void)
 		process_and_execute(input);
 		free(input);
 		if (shell()->should_exit)
-			break;
+			break ;
 	}
 }
 
@@ -391,7 +391,7 @@ static char	*read_line_no_buffer(int fd)
 		tmp = line;
 		line = ft_strjoin_char(tmp, buffer[0]);
 		free(tmp);
-		if (! line)
+		if (!line)
 			return (NULL);
 	}
 }

@@ -526,20 +526,6 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
-#                                PARSING HELL                                  #
-# **************************************************************************** #
-(...)
-20: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:66
-	cd $HOME/Desktop/
-	pwd
-21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:69
-	cd "$HOME"/Desktop/
-	pwd
-(...)
-124: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/10_parsing_hell.sh:321
-	cd --
-
-# **************************************************************************** #
 #                                   BUILTINS                                   #
 # **************************************************************************** #
 1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:7
@@ -549,80 +535,17 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 	echo hi >./outfiles/outfile01 | echo bye
 {?!}21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:47
 	echo <123 <456 hi | echo 42
-(...)
-91: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:190
-	pwd
-	cd
-	pwd
-92: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:194
-	pwd
-	cd ..
-	pwd
-93: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:198
-	cd ..
-	cd $OLDPWD
-94: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:201
-	pwd
-	cd .
-	pwd
-95: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:205
-	pwd
-	cd "."
-	pwd
-(...)
-97: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:213
-	pwd
-	cd //////
-	pwd
-98: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:217
-	pwd
-	cd ./././
-	pwd
-99: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:221
-	pwd
-	cd /
-	pwd
-100: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:225
-	pwd
-	cd '/////'
-	pwd
-(...)
-102: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
-	cd '/////' 2>/dev/null
-103: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:235
-	cd '/etc' 
-104: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:237
-	cd '/var' 
+(...) 
 105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
 	cd "doesntexist" 2>/dev/null 
-106: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:241
-	cd ../../..
+(...)
 107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
 	cd "wtf" 2>/dev/null 
-(...)
-113: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:255
-	cd '/' 
-(...)
-116: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:265
-	pwd
-	cd ../../..
-	pwd
-(...)
-118: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:273
-	pwd
-	cd ..
-	cd ..
-	pwd
 (...)
 122: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
 	cd ../../
 	cd -
 	cd -
-(...)
-125: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:302
-	pwd
-	cd '/'
-	pwd
 (...)
 128: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:314
 	pwd
@@ -643,15 +566,7 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 	pwd
 	cd -
 	pwd
-133: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:337
-	pwd
-	cd ~
-	pwd
-134: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:342
-	(might need to change the directory by yourself, that supposed to be valid)
-	pwd
-	cd ../libft
-	pwd
+(...)
 135: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:347
 	(might need to change the directory by yourself, that supposed to be valid)
 	pwd
@@ -813,29 +728,6 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 #                                  VARIABLES                                   #
 # **************************************************************************** #
 (...)
-37: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:84
-	mkdir test
-	cd $PWD/test
-	cd..
-	rm -rf test
-(...)
-41: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:103
-	mkdir "tmp_test_folder"
-	/bin/echo $PWD
-	cd "tmp_test_folder"
-	/bin/echo $PWD
-	cd ..
-	/bin/echo $PWD
-	rm -rf "tmp_test_folder"
-42: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:111
-	mkdir "tmp_test folder"
-	/bin/echo $PWD
-	cd "tmp_test folder"
-	/bin/echo $PWD
-	cd ..
-	/bin/echo $PWD
-	rm -rf "tmp_test folder"
-(...)
 45: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
 	export X="  A  B  "
 	/bin/echo "1"$X'2'
@@ -879,30 +771,6 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 #                                  CORRECTION                                  #
 # **************************************************************************** #
 (...)
-97: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:222
-	cd .
-	/bin/ls
-98: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:225
-	cd ..
-	/bin/ls
-(...)
-100: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:231
-	cd /////
-	/bin/ls
-101: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:234
-	cd "cmds/"
-	/bin/ls
-102: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:237
-	cd cmds/
-	/bin/ls
-103: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:240
-	cd ./cmds/
-	/bin/ls
-(...)
-106: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:251
-	cd $HOME
-	pwd
-(...)
 110: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:261
 	unset PATH
 	cd /bin
@@ -911,10 +779,7 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 	unset PATH
 	cd /bin/../bin/
 	ls
-112: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:269
-	unset PATH
-	cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
-	../bin/../bin/ls
+(...)
 113: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:273
 	unset PATH
 	cd /bin/
@@ -934,10 +799,7 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 (...)
 5: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
 	cd -
-6: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:28
-	cd .
-7: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:30
-	cd ~
+(...)
 8: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:32
 	cd ~/Desktop/
 	pwd
@@ -1021,7 +883,7 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 (...)
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-🏁                                    RESULT                                    🏁
+🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
              TOTAL TEST COUNT: 941  TESTS PASSED: 880  LEAKING: 0 
                      STD_OUT: 36  STD_ERR: 14  EXIT_CODE: 27  

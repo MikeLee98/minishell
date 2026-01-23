@@ -1,24 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 22:17:32 by migusant          #+#    #+#             */
+/*   Updated: 2026/01/23 19:49:50 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
-
-t_token	*create_token(t_token_type type, char *value)
-{
-	t_token	*token;
-
-	if (!value)
-		return (NULL);
-	token = malloc(sizeof(t_token));
-	if (!token)
-	{
-		free(value);
-		return (NULL);
-	}
-	token->type = type;
-	token->value = value;
-	token->hd_expand = 0;
-	token->wd_split = 0;
-	token->next = NULL;
-	return (token);
-}
 
 static void	add_token(t_token **head, t_token *new_token)
 {
@@ -35,31 +27,36 @@ static void	add_token(t_token **head, t_token *new_token)
 	current->next = new_token;
 }
 
-static int	handle_operator(t_token **head, char *input, int *i)
+static t_token	*create_operator_token(char *input, int *i)
 {
-	t_token	*new_token;
-
-	new_token = NULL;
 	if (input[*i] == '|')
-		new_token = create_token(TOKEN_PIPE, ft_strdup("|"));
+		return (create_token(TOKEN_PIPE, ft_strdup("|")));
 	else if (input[*i] == '<' && input[*i + 1] == '<')
 	{
-		new_token = create_token(TOKEN_REDIR_HEREDOC, ft_strdup("<<"));
 		(*i)++;
+		return (create_token(TOKEN_REDIR_HEREDOC, ft_strdup("<<")));
 	}
 	else if (input[*i] == '<')
-		new_token = create_token(TOKEN_REDIR_IN, ft_strdup("<"));
+		return (create_token(TOKEN_REDIR_IN, ft_strdup("<")));
 	else if (input[*i] == '>' && input[*i + 1] == '>')
 	{
-		new_token = create_token(TOKEN_REDIR_APPEND, ft_strdup(">>"));
 		(*i)++;
+		return (create_token(TOKEN_REDIR_APPEND, ft_strdup(">>")));
 	}
 	else if (input[*i] == '>')
 	{
 		if (input[*i + 1] == '|')
 			(*i)++;
-		new_token = create_token(TOKEN_REDIR_OUT, ft_strdup(">"));
+		return (create_token(TOKEN_REDIR_OUT, ft_strdup(">")));
 	}
+	return (NULL);
+}
+
+static int	handle_operator(t_token **head, char *input, int *i)
+{
+	t_token	*new_token;
+
+	new_token = create_operator_token(input, i);
 	if (!new_token)
 		return (0);
 	add_token(head, new_token);

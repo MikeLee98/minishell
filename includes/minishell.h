@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/23 00:47:54 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/23 20:18:07 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,13 @@ typedef struct s_shell
 // ************************************************************************** //
 
 // Lexer Functions (lexer.c)
-t_token	*create_token(t_token_type type, char *value);
 t_token	*lexer(char *input);
 
 // Lexer Utils Functions (lexer_utils.c)
 char	*handle_word(char *input, int *i);
 
 // Lexer Helpers Functions (lexer_helpers.c)
+t_token	*create_token(t_token_type type, char *value);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
@@ -124,13 +124,15 @@ char	*expand_token(char *token);
 void	expand_tokens(void);
 
 // Expansion Quote Functions (expander_quotes.c)
-char	*expand_double_quotes(char *str, int *i);
 char	*expand_single_quotes(char *str, int *i);
+char	*expand_double_quotes(char *str, int *i);
+char	*expand_ansi_c_quotes(char *str, int *i);
 
 // Expansion Utils (expander_utils.c)
 char	*expand_variable(char *str, int *i);
 
 // Expansion Helpers (expander_helpers.c)
+char	*get_env_value(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);
 

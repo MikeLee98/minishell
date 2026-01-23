@@ -160,6 +160,7 @@ b
 
 For minishell_tester_LucasKuhn:
 cd minishell
+make
 git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_LucasKuhn
 cd minishell_tester_LucasKuhn
 ./tester
@@ -539,6 +540,11 @@ int	ft_exit(char **args)
 	shell()->exit_code = (unsigned char)code;
 	return ((unsigned char)code);
 }
+
+To run mandatory tests: bash tester.sh m
+To run mandatory tests with valgrind: bash tester.sh vm
+To run tests without environment: bash tester.sh ne
+To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 🚀                             MANDATORY (WITH VALGRIND)                         🚀
@@ -1038,3 +1044,12 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 	echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 	echo $?
 (...)
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 887  LEAKING: 48 
+                     STD_OUT: 34  STD_ERR: 11  EXIT_CODE: 20  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 65   
+                                     ✅ 2758

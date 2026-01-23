@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_quotes.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/13 09:54:52 by migusant          #+#    #+#             */
+/*   Updated: 2026/01/23 19:53:50 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
 static char	*handle_expansion_char(char *str, int *i,
@@ -6,7 +18,7 @@ static char	*handle_expansion_char(char *str, int *i,
 	char	*expansion;
 
 	if (str[*i] == '\\' && str[*i + 1] && (str[*i + 1] == '$'
-		|| str[*i + 1] == '"' || str[*i + 1] == '\\'))
+			|| str[*i + 1] == '"' || str[*i + 1] == '\\'))
 	{
 		*result = append_char(*result, str[*i + 1]);
 		(*i) += 2;
@@ -22,6 +34,19 @@ static char	*handle_expansion_char(char *str, int *i,
 		(*i)++;
 	}
 	return (*result);
+}
+
+char	*expand_single_quotes(char *str, int *i)
+{
+	int	start;
+
+	start = *i;
+	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	if (str[*i] == '\'')
+		(*i)++;
+	return (ft_substr(str, start, *i - start));
 }
 
 char	*expand_double_quotes(char *str, int *i)
@@ -47,15 +72,15 @@ char	*expand_double_quotes(char *str, int *i)
 	return (result);
 }
 
-char	*expand_single_quotes(char *str, int *i)
+char	*expand_ansi_c_quotes(char *str, int *i)
 {
 	int	start;
 
+	(*i) += 2;
 	start = *i;
-	(*i)++;
 	while (str[*i] && str[*i] != '\'')
 		(*i)++;
 	if (str[*i] == '\'')
 		(*i)++;
-	return (ft_substr(str, start, *i - start));
+	return (ft_substr(str, start, *i - start - 1));
 }

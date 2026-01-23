@@ -1,17 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 09:09:57 by migusant          #+#    #+#             */
+/*   Updated: 2026/01/23 19:53:27 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
-
-static char	*expand_ansi_c_quotes(char *str, int *i)
-{
-	int	start;
-
-	(*i) += 2;
-	start = *i;
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-	if (str[*i] == '\'')
-		(*i)++;
-	return (ft_substr(str, start, *i - start - 1));
-}
 
 static char	*get_next_segment(char *token, int *i)
 {

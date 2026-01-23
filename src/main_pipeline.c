@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_pipeline.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/02 19:18:36 by migusant          #+#    #+#             */
+/*   Updated: 2026/01/23 19:47:55 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 static int	tokenize_and_validate(char *input)
@@ -30,14 +42,12 @@ void	process_and_execute(char *input)
 {
 	if (!tokenize_and_validate(input))
 		return ;
-	// print_debug_info();
 	if (!parser())
 	{
 		free_tokens(shell()->toks);
 		shell()->toks = NULL;
 		return ;
 	}
-	// print_cmd_list(shell()->cmds, "COMMANDS");
 	if (shell()->cmds)
 		run_executor();
 	free_tokens(shell()->toks);

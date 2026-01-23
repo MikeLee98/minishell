@@ -190,19 +190,23 @@ Test  75: ❌ cat <"./test_files/infile_big" | echo hi
 mini exit code = 141
 bash exit code = 0
 
-Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
-mini exit code = 1
-bash exit code = 0
-
 ———————————— extras ————————————
 
 Test 133: ✅⚠️  $PWD 
 mini error = ( Permission denied)
 bash error = ( Is a directory)
 
+Test 137: ✅⚠️  ./missing.out 
+mini error = ( command not found)
+bash error = ( No such file or directory)
+
 Test 141: ✅⚠️  ./test_files 
 mini error = ( Permission denied)
 bash error = ( Is a directory)
+
+Test 142: ✅⚠️  /test_files 
+mini error = ( command not found)
+bash error = ( No such file or directory)
 
 
 
@@ -338,7 +342,7 @@ static void	shell_loop(void)
 	}
 }
 
-# Add three static functions before create_heredoc() in heredoc.c file to respect the GitHub Repository Instructions
+# Add three static functions before heredoc_child() in heredoc.c file to respect the GitHub Repository Instructions
 
 static char	*ft_strjoin_char(char *s, char c)
 {
@@ -399,86 +403,50 @@ static char	*read_heredoc_line(void)
 	return (read_line_no_buffer(STDIN_FILENO));
 }
 
-# Change one line from the static create_heredoc() function in heredoc.c file to respect the GitHub Repository Instructions from
+# Change one line from the static heredoc_child() function in heredoc.c file to respect the GitHub Repository Instructions from
 
-static int create_heredoc(int hd_expand, char *delimiter)
+static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 {
-	int		pipefd[2];
-	pid_t	pid;
-	int		status;
 	char	*line;
 
-	if (pipe(pipefd) == -1)
-		return (-1);
-	pid = fork();
-	if (pid == 0)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		close(pipefd[0]);
-		while (1)
+		line = readline("> ");							<------------ This line!
+		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
-			line = readline("> ");							<------------ This line!
-			if (!line || ft_strcmp(line, delimiter) == 0)
-			{
-				free(line);
-				break;
-			}
-			write_heredoc_line(hd_expand, pipefd[1], line);
 			free(line);
+			break ;
 		}
-		close(pipefd[1]);
-		exit(0);
+		write_heredoc_line(hd_expand, write_fd, line);
+		free(line);
 	}
-	close(pipefd[1]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		close(pipefd[0]);
-		return (-1);
-	}
-	return (pipefd[0]);
+	close(write_fd);
+	exit(0);
 }
 
 to
 
-static int create_heredoc(int hd_expand, char *delimiter)
+static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 {
-	int		pipefd[2];
-	pid_t	pid;
-	int		status;
 	char	*line;
 
-	if (pipe(pipefd) == -1)
-		return (-1);
-	pid = fork();
-	if (pid == 0)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		close(pipefd[0]);
-		while (1)
+		line = read_heredoc_line();						<------------ To this line!
+		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
-			line = read_heredoc_line();
-			if (!line || ft_strcmp(line, delimiter) == 0)
-			{
-				free(line);
-				break;
-			}
-			write_heredoc_line(hd_expand, pipefd[1], line);
 			free(line);
+			break ;
 		}
-		close(pipefd[1]);
-		exit(0);
+		write_heredoc_line(hd_expand, write_fd, line);
+		free(line);
 	}
-	close(pipefd[1]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		close(pipefd[0]);
-		return (-1);
-	}
-	return (pipefd[0]);
+	close(write_fd);
+	exit(0);
 }
 
 # Change one condition line from the int ft_exit function in builtin_exit.c file to respect the GitHub Repository Instructions from
@@ -935,11 +903,11 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 	cd $HOME
 	pwd
 (...)
-110: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:261
+110: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:261
 	unset PATH
 	cd /bin
 	ls
-111: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:265
+111: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:265
 	unset PATH
 	cd /bin/../bin/
 	ls
@@ -947,7 +915,7 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 	unset PATH
 	cd /bin/../bin/../bin/../bin/../bin/../bin/../bin/../bin/
 	../bin/../bin/ls
-113: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:273
+113: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/2_correction.sh:273
 	unset PATH
 	cd /bin/
 	sleep 2
@@ -1060,3 +1028,13 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 65   
                                      ✅ 2758
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                    🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 941  TESTS PASSED: 882  LEAKING: 48 
+                     STD_OUT: 36  STD_ERR: 14  EXIT_CODE: 25  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 75   
+                                     ✅ 2748
+

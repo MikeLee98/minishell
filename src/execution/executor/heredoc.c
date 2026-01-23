@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::	  */
+/*	 heredoc.c											:+:		 :+:	:+:	  */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: mario <mario@student.42.fr>				+#+	 +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2026/01/21 19:55:26 by mario			   #+#	  #+#			  */
+/*	 Updated: 2026/01/21 19:55:27 by mario			  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../../../includes/minishell.h"
 
-static void write_heredoc_line(int hd_expand, int fd, char *line)
+static void	write_heredoc_line(int hd_expand, int fd, char *line)
 {
-	char *expanded;
+	char	*expanded;
 
 	if (hd_expand)
 	{
@@ -15,34 +27,40 @@ static void write_heredoc_line(int hd_expand, int fd, char *line)
 	write(fd, "\n", 1);
 }
 
-static int create_heredoc(int hd_expand, char *delimiter)
+static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
+{
+	char	*line;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write_heredoc_line(hd_expand, write_fd, line);
+		free(line);
+	}
+	close(write_fd);
+	exit(0);
+}
+
+static int	create_heredoc(int hd_expand, char *delimiter)
 {
 	int		pipefd[2];
 	pid_t	pid;
 	int		status;
-	char	*line;
 
 	if (pipe(pipefd) == -1)
 		return (-1);
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
 		close(pipefd[0]);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line || ft_strcmp(line, delimiter) == 0)
-			{
-				free(line);
-				break;
-			}
-			write_heredoc_line(hd_expand, pipefd[1], line);
-			free(line);
-		}
-		close(pipefd[1]);
-		exit(0);
+		heredoc_child(hd_expand, delimiter, pipefd[1]);
 	}
 	close(pipefd[1]);
 	waitpid(pid, &status, 0);
@@ -54,7 +72,7 @@ static int create_heredoc(int hd_expand, char *delimiter)
 	return (pipefd[0]);
 }
 
-int prepare_heredocs(void)
+int	prepare_heredocs(void)
 {
 	t_cmd	*cmd;
 	t_redir	*r;

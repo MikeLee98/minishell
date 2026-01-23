@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
+/*   Updated: 2026/01/23 19:44:37 by migusant         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 t_shell	*shell(void)
@@ -57,7 +69,6 @@ static void	shell_loop(void)
 
 void	cleanup_shell(void)
 {
-	// printf("DEBUG: Cleaning up shell...\n");
 	rl_clear_history();
 	if (shell()->toks)
 		free_tokens(shell()->toks);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
+/*   Updated: 2026/01/22 22:38:44 by mario            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -55,6 +67,16 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+// Pipeline Structure
+typedef struct s_pipeline
+{
+	int		pipefd[2];
+	int		prev_fd;
+	pid_t	pid;
+	int		status;
+	t_cmd	*current;
+}	t_pipeline;
+
 // Shell Structure
 typedef struct s_shell
 {
@@ -70,13 +92,13 @@ typedef struct s_shell
 // ************************************************************************** //
 
 // Lexer Functions (lexer.c)
+t_token	*create_token(t_token_type type, char *value);
 t_token	*lexer(char *input);
 
 // Lexer Utils Functions (lexer_utils.c)
 char	*handle_word(char *input, int *i);
 
 // Lexer Helpers Functions (lexer_helpers.c)
-t_token	*create_token(t_token_type type, char *value);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 
@@ -102,15 +124,13 @@ char	*expand_token(char *token);
 void	expand_tokens(void);
 
 // Expansion Quote Functions (expander_quotes.c)
-char	*expand_single_quotes(char *str, int *i);
 char	*expand_double_quotes(char *str, int *i);
-char	*expand_ansi_c_quotes(char *str, int *i);
+char	*expand_single_quotes(char *str, int *i);
 
 // Expansion Utils (expander_utils.c)
 char	*expand_variable(char *str, int *i);
 
 // Expansion Helpers (expander_helpers.c)
-char	*get_env_value(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);
 
@@ -152,38 +172,39 @@ void	env_unset(t_env **env, char *key);
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
 char	**env_to_array(t_env *env);
-void 	update_shlvl(void);
+void	update_shlvl(void);
 
 // free_env
 void	free_env_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env
-int	ft_env(void);
+int		ft_env(void);
 
 // builtin_export
-int	ft_export(char **args);
+int		ft_export(char **args);
 
 // builtin_print_export
 void	print_export(t_env *env);
 
 // builtin_unset
-int	ft_unset(char **args);
+int		ft_unset(char **args);
 
 // builtin_cd
-int	ft_cd(char **args);
+int		ft_cd(char **args);
 
 // builtin_pwd
-int	ft_pwd(void);
+int		ft_pwd(void);
 
 // builtin_echo
-int	ft_echo(char **args);
+int		ft_echo(char **args);
 
 // builtin_exit
-int	ft_exit(char **args);
+int		ft_exit(char **args);
 
 // exec_main
 void	executor(void);
+int		run_builtin(char **args);
 void	execve_with_path(t_cmd *cmd);
 
 // exec_single
@@ -197,10 +218,10 @@ int		apply_redirections(t_cmd *cmd);
 
 // exec_utils
 int		is_builtin(char *cmd);
-int		run_builtin(char **args);
-int		has_slash(char *s);
 void	save_fds(int saved_fds[3]);
 void	restore_fds(int saved_fds[3]);
+void	handle_child_status(int status);
+int		handle_redirections(t_cmd *cmd);
 
 // heredoc
 int		prepare_heredocs(void);

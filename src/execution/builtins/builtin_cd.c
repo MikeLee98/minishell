@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 19:56:00 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/23 22:00:14 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,12 @@ static void	cd_update_env(char *oldpwd)
 
 	env_set(&shell()->env, "OLDPWD", oldpwd, 0);
 	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
-		return ;
-	env_set(&shell()->env, "PWD", newpwd, 0);
-	free(newpwd);
+	if (newpwd)
+	{
+		env_set(&shell()->env, "PWD", newpwd, 0);
+		free(newpwd);
+	}
+	free(oldpwd);
 }
 
 int	ft_cd(char **args)

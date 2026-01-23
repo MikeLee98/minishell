@@ -1,18 +1,5 @@
 #include "../../../includes/minishell.h"
 
-static char	*expand_ansi_c_quotes(char *str, int *i)
-{
-	int	start;
-
-	(*i) += 2;
-	start = *i;
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-	if (str[*i] == '\'')
-		(*i)++;
-	return (ft_substr(str, start, *i - start - 1));
-}
-
 static char	*get_next_segment(char *token, int *i)
 {
 	if (token[*i] == '\'')

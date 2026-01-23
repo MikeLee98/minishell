@@ -1,5 +1,22 @@
 #include "../../../includes/minishell.h"
 
+char	*get_env_value(char *var_name)
+{
+	char	*value;
+
+	if (!var_name || !var_name[0])
+		return (ft_strdup(""));
+	else if (ft_strncmp(var_name, "?", 2) == 0)
+		return (ft_itoa(shell()->exit_code));
+	else if (ft_strlen(var_name) == 1 && !ft_isalnum(var_name[0])
+		&& var_name[0] != '_')
+		return (ft_strdup(""));
+	value = ft_getenv(shell()->env, var_name);
+	if (value)
+		return (ft_strdup(value));
+	return (ft_strdup(""));
+}
+
 char	*append_string(char *result, char *to_add, int free_add)
 {
 	char	*temp;

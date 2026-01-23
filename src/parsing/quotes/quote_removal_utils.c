@@ -1,33 +1,17 @@
 #include "../../../includes/minishell.h"
 
-static int	skip_single_quotes(char *str, int *i)
+static int	skip_quotes(char *str, int *i, char quote_char)
 {
 	int	len;
 
 	(*i)++;
 	len = 0;
-	while (str[*i] && str[*i] != '\'')
+	while (str[*i] && str[*i] != quote_char)
 	{
 		len++;
 		(*i)++;
 	}
-	if (str[*i] == '\'')
-		(*i)++;
-	return (len);
-}
-
-static int	skip_double_quotes(char *str, int *i)
-{
-	int	len;
-
-	(*i)++;
-	len = 0;
-	while (str[*i] && str[*i] != '"')
-	{
-		len++;
-		(*i)++;
-	}
-	if (str[*i] == '"')
+	if (str[*i] == quote_char)
 		(*i)++;
 	return (len);
 }
@@ -42,9 +26,9 @@ int	count_unquoted_len(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\'')
-			len += skip_single_quotes(str, &i);
+			len += skip_quotes(str, &i, '\'');
 		else if (str[i] == '"')
-			len += skip_double_quotes(str, &i);
+			len += skip_quotes(str, &i, '"');
 		else
 		{
 			len++;

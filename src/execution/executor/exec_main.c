@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:54:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 22:45:34 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/24 14:39:44 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,23 +74,23 @@ static void	print_command_error(char *cmd_name, const char *msg, int code)
 
 void	execve_with_path(t_cmd *cmd)
 {
-	char	**paths;
-	char	*path_env;
-	char	**envp;
-	char	*s;
+	char		**paths;
+	char		*path_env;
+	char		**envp;
+	struct stat	st;
 
 	envp = env_to_array(shell()->env);
-	s = cmd->args[0];
-	while (*s)
+	if (ft_strchr(cmd->args[0], '/'))
 	{
-		if (*s == '/')
-		{
-			execve(cmd->args[0], cmd->args, envp);
-			if (errno == EACCES)
-				print_command_error(cmd->args[0], ": Permission denied", 126);
-			print_command_error(cmd->args[0], ": command not found", 127);
-		}
-		s++;
+		if (stat(cmd->args[0], &st) != 0)
+			print_command_error(cmd->args[0],
+				": No such file or directory", 127);
+		if (S_ISDIR(st.st_mode))
+			print_command_error(cmd->args[0], ": Is a directory", 126);
+		if (access(cmd->args[0], X_OK) != 0)
+			print_command_error(cmd->args[0], ": Permission denied", 126);
+		execve(cmd->args[0], cmd->args, envp);
+		print_command_error(cmd->args[0], ": No such file or directory", 127);
 	}
 	path_env = ft_getenv(shell()->env, "PATH");
 	if (!path_env)

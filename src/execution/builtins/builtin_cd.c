@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/23 22:00:14 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/24 13:56:07 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ static char	*cd_get_target(char **args, int *should_free)
 	*should_free = 0;
 	if (!parse_cd_flags(args, &i))
 		return (NULL);
+	if (args[i] && args[i + 1])
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		return (shell()->exit_code = 1, NULL);
+	}
 	if (args[i] && ft_strcmp(args[i], "-") == 0)
 		return (get_env_var("OLDPWD"));
 	if (!args[i] || !args[i][0])

@@ -172,16 +172,6 @@ git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_Luc
 cd minishell_tester_LucasKuhn
 ./tester
 
-———————————— builtins ————————————
-
-Test  40: ❌ cd $PWD hi 
-mini exit code = 0
-bash exit code = 1
-mini error = ()
-bash error = ( too many arguments)
-
-———————————— redirects ————————————
-
 Test  73: ❌ cat <"./test_files/infile" | echo hi 
 mini exit code = 141
 bash exit code = 0
@@ -190,23 +180,12 @@ Test  75: ❌ cat <"./test_files/infile_big" | echo hi
 mini exit code = 141
 bash exit code = 0
 
-———————————— extras ————————————
+{?!}Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
+mini exit code = 1
+bash exit code = 0
 
-Test 133: ✅⚠️  $PWD 
-mini error = ( Permission denied)
-bash error = ( Is a directory)
-
-Test 137: ✅⚠️  ./missing.out 
-mini error = ( command not found)
-bash error = ( No such file or directory)
-
-Test 141: ✅⚠️  ./test_files 
-mini error = ( Permission denied)
-bash error = ( Is a directory)
-
-Test 142: ✅⚠️  /test_files 
-mini error = ( command not found)
-bash error = ( No such file or directory)
+143 - 144/146
+😭 😭 😭
 
 
 
@@ -535,6 +514,9 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 	echo hi >./outfiles/outfile01 | echo bye
 {?!}21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:47
 	echo <123 <456 hi | echo 42
+(...)
+102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅ minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
+	cd '/////' 2>/dev/null
 (...) 
 105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
 	cd "doesntexist" 2>/dev/null 
@@ -547,16 +529,6 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 	cd -
 	cd -
 (...)
-128: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:314
-	pwd
-	cd ~
-	cd - ananas dot jpeg
-	pwd
-(...)
-130: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:324
-	pwd
-	cd ~ asd w dd q asd
-	pwd
 131: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
 	pwd
 	cd ~
@@ -565,12 +537,6 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 132: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
 	pwd
 	cd -
-	pwd
-(...)
-135: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:347
-	(might need to change the directory by yourself, that supposed to be valid)
-	pwd
-	cd ../libft ojid iowjiojwoid joijd owjoid jwojd 
 	pwd
 (...)
 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
@@ -609,13 +575,9 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 17: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:36
 	/bin/echo 1 | kaka
 (...)
-{?!}24: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:53
+24: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:53
 	ls | cat asd
-{?!}25: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:55
-	ls | cat << stop | grep "asd"
-	is this good
-	stop
-{?!}26: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
+26: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
 	ls | cat << stop | ls -la | cat << stop1
 	12
 	32232
@@ -624,7 +586,7 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 	awdaw
 	daswd
 	stop1
-{?!}27: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
+27: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
 	ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la | cat << stop3
 	$USER
 	ad
@@ -717,11 +679,6 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
      2137823 Aborted                 (core dumped) | $MINISHELL_PATH/$EXECUTABLE 2> tmp_err_minishell > tmp_out_minishell
 STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
 	/bin/echo test1
-(...)
-22: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ❌  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:65
-	asd
-	cd ..
-	echo $?
 (...)
 
 # **************************************************************************** #
@@ -885,8 +842,8 @@ STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: �
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 880  LEAKING: 0 
-                     STD_OUT: 36  STD_ERR: 14  EXIT_CODE: 27  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 885  LEAKING: 0 
+                     STD_OUT: 33  STD_ERR: 12  EXIT_CODE: 20 - 40
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 77   
-                                     ✅ 2746
+                                     ❌ 65 - 85
+                                     ✅ 2751 - 2745

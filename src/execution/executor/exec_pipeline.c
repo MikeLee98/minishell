@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 19:36:12 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/27 19:12:24 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,27 +23,6 @@ static void	update_prev_fd(t_pipeline *p)
 	}
 	else
 		p->prev_fd = -1;
-}
-
-static void	pipeline_child_exec(t_pipeline *p)
-{
-	if (p->prev_fd != -1)
-	{
-		dup2(p->prev_fd, STDIN_FILENO);
-		close(p->prev_fd);
-	}
-	if (p->current->next)
-	{
-		close(p->pipefd[0]);
-		dup2(p->pipefd[1], STDOUT_FILENO);
-		close(p->pipefd[1]);
-	}
-	if (apply_redirections(p->current) != 0)
-		exit(1);
-	if (is_builtin(p->current->args[0]))
-		exit(run_builtin(p->current->args));
-	execve_with_path(p->current);
-	exit(127);
 }
 
 static void	handle_empty_command_pipeline(t_cmd *current, int pipefd[2])
@@ -69,30 +48,37 @@ static int	create_pipe_safe(int pipefd[2])
 	return (0);
 }
 
+static void	exec_pipeline_loop(t_pipeline *p, pid_t *last_pid)
+{
+	while (p->current)
+	{
+		if (p->current->next && create_pipe_safe(p->pipefd))
+			return ;
+		if (!p->current->args || !p->current->args[0])
+		{
+			handle_empty_command_pipeline(p->current, p->pipefd);
+			p->current = p->current->next;
+			continue ;
+		}
+		p->pid = fork();
+		if (p->pid == 0)
+			pipeline_child_exec(p);
+		*last_pid = p->pid;
+		update_prev_fd(p);
+		p->current = p->current->next;
+	}
+}
+
 void	execute_pipeline(t_cmd *cmd)
 {
 	t_pipeline	p;
+	pid_t		last_pid;
 
 	p.prev_fd = -1;
 	p.current = cmd;
-	while (p.current)
-	{
-		if (p.current->next && create_pipe_safe(p.pipefd))
-			return ;
-		if (!p.current->args || !p.current->args[0])
-		{
-			handle_empty_command_pipeline(p.current, p.pipefd);
-			p.current = p.current->next;
-			continue ;
-		}
-		p.pid = fork();
-		if (p.pid == 0)
-			pipeline_child_exec(&p);
-		update_prev_fd(&p);
-		p.current = p.current->next;
-	}
+	last_pid = -1;
+	exec_pipeline_loop(&p, &last_pid);
 	if (p.prev_fd != -1)
 		close(p.prev_fd);
-	while (wait(&p.status) > 0)
-		handle_child_status(p.status);
+	wait_all_pipeline(last_pid, &p);
 }

@@ -172,20 +172,10 @@ git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_Luc
 cd minishell_tester_LucasKuhn
 ./tester
 
-Test  73: ❌ cat <"./test_files/infile" | echo hi 
-mini exit code = 141
-bash exit code = 0
-
-Test  75: ❌ cat <"./test_files/infile_big" | echo hi 
-mini exit code = 141
-bash exit code = 0
-
-{?!}Test  96: ❌ echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye 
-mini exit code = 1
-bash exit code = 0
-
-143 - 144/146
-😭 😭 😭
+146/146
+🎊 🎊 🎊
+😎 😎 😎
+🎉 🎉 🎉
 
 
 

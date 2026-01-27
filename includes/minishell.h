@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/24 17:59:45 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/27 19:23:10 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,10 @@ void	execute_single(t_cmd *cmd);
 
 // exec_pipeline
 void	execute_pipeline(t_cmd *cmd);
+
+// exec_pipeline_utils
+void	pipeline_child_exec(t_pipeline *p);
+void	wait_all_pipeline(pid_t last_pid, t_pipeline *p);
 
 // exec_redirect
 int		apply_redirections(t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 19:10:24 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/27 23:54:31 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <signal.h>
+
+// Signal Modes
+# define SIG_INTERACTIVE	0
+# define SIG_IGNORE			1
+# define SIG_DEFAULT		2
+# define SIG_HEREDOC		3
 
 // Token Types
 typedef enum e_token_type
@@ -145,7 +151,7 @@ int		count_unquoted_len(char *str);
 void	copy_unquoted(char *dest, char *src);
 
 // Signal Functions (signals.c)
-void	setup_signals(void);
+void	setup_signals(int mode);
 
 // Free Functions (free.c)
 void	free_tokens(t_token *tokens);

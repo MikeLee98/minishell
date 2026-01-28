@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::	  */
-/*	 heredoc.c											:+:		 :+:	:+:	  */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: mario <mario@student.42.fr>				+#+	 +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2026/01/21 19:55:26 by mario			   #+#	  #+#			  */
-/*	 Updated: 2026/01/21 19:55:27 by mario			  ###	########.fr		  */
-/*																			  */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:55:26 by mario             #+#    #+#             */
+/*   Updated: 2026/01/27 23:52:55 by migusant         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
@@ -31,21 +31,32 @@ static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 {
 	char	*line;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
+	setup_signals(SIG_HEREDOC);
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
+		if (!line)
+		{
+			close(write_fd);
+			exit(1);
+		}
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
-			break ;
+			close(write_fd);
+			exit(0);
 		}
 		write_heredoc_line(hd_expand, write_fd, line);
 		free(line);
 	}
-	close(write_fd);
-	exit(0);
+}
+
+static void	print_heredoc_warning(char *delimiter)
+{
+	ft_putstr_fd("minishell: warning: here-document at line N ", 2);
+	ft_putstr_fd("delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(delimiter, 2);
+	ft_putstr_fd("')\n", 2);
 }
 
 static int	create_heredoc(int hd_expand, char *delimiter)
@@ -63,12 +74,17 @@ static int	create_heredoc(int hd_expand, char *delimiter)
 		heredoc_child(hd_expand, delimiter, pipefd[1]);
 	}
 	close(pipefd[1]);
+	setup_signals(SIG_IGNORE);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	setup_signals(SIG_INTERACTIVE);
+	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
 	{
 		close(pipefd[0]);
-		return (-1);
+		return (shell()->exit_code = 130, -1);
 	}
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		print_heredoc_warning(delimiter);
 	return (pipefd[0]);
 }
 

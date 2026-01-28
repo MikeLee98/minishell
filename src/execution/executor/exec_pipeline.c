@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 19:12:24 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/27 23:51:55 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ void	execute_pipeline(t_cmd *cmd)
 	exec_pipeline_loop(&p, &last_pid);
 	if (p.prev_fd != -1)
 		close(p.prev_fd);
+	setup_signals(SIG_IGNORE);
 	wait_all_pipeline(last_pid, &p);
+	setup_signals(SIG_INTERACTIVE);
 }

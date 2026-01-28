@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::	  */
-/*	 exec_single.c										:+:		 :+:	:+:	  */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: mario <mario@student.42.fr>				+#+	 +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2026/01/21 19:55:14 by mario			   #+#	  #+#			  */
-/*	 Updated: 2026/01/21 19:55:15 by mario			  ###	########.fr		  */
-/*																			  */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_single.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:55:14 by mario             #+#    #+#             */
+/*   Updated: 2026/01/27 23:51:25 by migusant         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
@@ -49,15 +49,15 @@ static void	execute_external(t_cmd *cmd)
 	}
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
+		setup_signals(SIG_DEFAULT);
 		if (apply_redirections(cmd) != 0)
 			exit(1);
 		execve_with_path(cmd);
 		exit(127);
 	}
+	setup_signals(SIG_IGNORE);
 	waitpid(pid, &status, 0);
-	setup_signals();
+	setup_signals(SIG_INTERACTIVE);
 	handle_child_status(status);
 }
 

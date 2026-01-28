@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::	  */
-/*	 exec_utils.c										:+:		 :+:	:+:	  */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: mario <mario@student.42.fr>				+#+	 +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2026/01/21 19:55:20 by mario			   #+#	  #+#			  */
-/*	 Updated: 2026/01/21 19:55:21 by mario			  ###	########.fr		  */
-/*																			  */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/21 19:55:20 by mario             #+#    #+#             */
+/*   Updated: 2026/01/27 23:12:24 by migusant         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
@@ -52,14 +52,23 @@ void	restore_fds(int saved[3])
 
 void	handle_child_status(int status)
 {
-	if (WIFEXITED(status))
-		shell()->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
+	int	sig;
+
+	if (WIFSIGNALED(status))
 	{
-		shell()->exit_code = 128 + WTERMSIG(status);
-		if (WTERMSIG(status) == SIGINT)
-			write(1, "\n", 1);
+		sig = WTERMSIG(status);
+		if (sig == SIGINT)
+			shell()->exit_code = 130;
+		else if (sig == SIGQUIT)
+		{
+			ft_putstr_fd("Quit (core dumped)\n", 2);
+			shell()->exit_code = 131;
+		}
+		else
+			shell()->exit_code = 128 + sig;
 	}
+	else if (WIFEXITED(status))
+		shell()->exit_code = WEXITSTATUS(status);
 }
 
 int	handle_redirections(t_cmd *cmd)

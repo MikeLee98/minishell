@@ -2,3 +2,4 @@
 *.out
 .vscode
 minishell_tester_*
+test_*.sh

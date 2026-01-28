@@ -4,183 +4,6 @@ ISSUES
 
 
 
-Ctrl+\ during child process behaviour definition
-
-
-
-
-
-Regarding Heredoc, 
-
-NUMBER 1:
-When the cat << command is sent, and CTRL+C is pressed, the following characters should be 
-printed in the previour line, before the new prompt, ">^C", and the new prompt should not 
-have any adittional new characters, even though they appear to be in INSERT mode and if you 
-just start writing they disappear. Also, sometimes two "minishell$ " prompts appear instead 
-of just once. That would be the correct behaviour of bash, and ours is doing:
-
-minishell$ cat << EOF
-
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
-
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
-
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: EOF
-
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC EOF (hd_expand: 1)
-
-> a
-> b
-> c
-> 
-minishell$ ^C
-
-Note: In the example above, the "^C" should appear after the last '>' character, 
-and the string "minishell$ " should have nothing after it.
-
-Here's another example:
-
-minishell$ cat << heredoc
-
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
-
-> a
-minishell$ ^C
-
-Note: In the example above, the "^C" should appear after the character 'a', in 
-the string "> a", and the string "minishell$ " should have nothing after it.
-
-Here's the last case:
-
-minishell$ minishell$ cat << heredoc
-
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: heredoc
-
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC heredoc (hd_expand: 1)
-
-> 
-minishell$ minishell$
-
-Note: In the example above, the "^C" should appear after the last '>' character, 
-and the string "minishell$ " should only appear once.
-
-NUMBER 2:
-When the cat << command is sent, and CTRL+D is pressed, the following error message, 
-"bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')", 
-where NUMBER changes according to the current heredoc line in that instance, and DELIMITER 
-changes according to the current heredoc delimiter, is not being displyed before a new prompt 
-appears. Also, the new prompt should appear after that message in a new line. That would be the 
-correct behaviour of bash, and ours is doing:
-
-minishell$ cat << current_delimiter
-
-TOKENS:
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
-
-TOKENS (after expansion):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
-
-TOKENS (after quote removal):
-[0] Type: WORD            Value: cat
-[1] Type: REDIR_HEREDOC   Value: <<
-[2] Type: WORD            Value: current_delimiter
-
-COMMANDS:
-[0] Args:
-    [0] = cat
-        Redir: REDIR_HEREDOC current_delimiter (hd_expand: 1)
-
-> a
-> b
-> c
-> 
-a
-b
-c
-minishell$
-
-Note: The warning should appear in the next line right after the last '>' character 
-that was displayed. In this case, something like this:
-
-(...)
-> b
-> c
-> 
-bash: warning: here-document at line NUMBER delimited by end-of-file (wanted `DELIMITER')
-a
-b
-(...)
-
-
-
-
-
-For minishell_tester_LucasKuhn:
-cd minishell
-make
-git clone https://github.com/LucasKuhn/minishell_tester.git minishell_tester_LucasKuhn
-cd minishell_tester_LucasKuhn
-./tester
-
-146/146
-🎊 🎊 🎊
-😎 😎 😎
-🎉 🎉 🎉
-
-
-
-
-
 For minishell_tester_zstenger93:
 cd minishell
 git clone https://github.com/zstenger93/42_minishell_tester.git minishell_tester_zstenger93
@@ -372,30 +195,7 @@ static char	*read_heredoc_line(void)
 	return (read_line_no_buffer(STDIN_FILENO));
 }
 
-# Change one line from the static heredoc_child() function in heredoc.c file to respect the GitHub Repository Instructions from
-
-static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
-{
-	char	*line;
-
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
-	while (1)
-	{
-		line = readline("> ");							<------------ This line!
-		if (!line || ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write_heredoc_line(hd_expand, write_fd, line);
-		free(line);
-	}
-	close(write_fd);
-	exit(0);
-}
-
-to
+# Change one line from the static heredoc_child() function in heredoc.c file to respect the GitHub Repository Instructions:
 
 static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 {
@@ -418,40 +218,7 @@ static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 	exit(0);
 }
 
-# Change one condition line from the int ft_exit function in builtin_exit.c file to respect the GitHub Repository Instructions from
-
-int	ft_exit(char **args)
-{
-	long	code;
-
-	ft_putstr_fd("exit\n", 1);
-	if (!args[1])
-	{
-		shell()->should_exit = 1;
-		return (shell()->exit_code);
-	}
-
-	if (!parse_exit_code(args[1], &code))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		shell()->should_exit = 1;
-		shell()->exit_code = 2;
-		return (2);
-	}
-	if (args[2])
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		shell()->exit_code = 1;
-		return (1);
-	}
-	shell()->should_exit = 1;
-	shell()->exit_code = (unsigned char)code;
-	return ((unsigned char)code);
-}
-
-to
+# Change one condition line from the int ft_exit function in builtin_exit.c file to respect the GitHub Repository Instructions:
 
 int	ft_exit(char **args)
 {
@@ -497,343 +264,341 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 # **************************************************************************** #
 #                                   BUILTINS                                   #
 # **************************************************************************** #
+
 1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:7
-	echo cd ~
-(...)
-{?!}20: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:45
-	echo hi >./outfiles/outfile01 | echo bye
-{?!}21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:47
-	echo <123 <456 hi | echo 42
-(...)
+echo cd ~
+
 102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅ minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
-	cd '/////' 2>/dev/null
-(...) 
+cd '/////' 2>/dev/null
+ 
 105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
-	cd "doesntexist" 2>/dev/null 
-(...)
+cd "doesntexist" 2>/dev/null 
+
 107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
-	cd "wtf" 2>/dev/null 
-(...)
+cd "wtf" 2>/dev/null 
+
 122: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
-	cd ../../
-	cd -
-	cd -
-(...)
+cd ../../
+cd -
+cd -
+
 131: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
-	pwd
-	cd ~
-	cd -
-	pwd
+pwd
+cd ~
+cd -
+pwd
+
 132: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
-	pwd
-	cd -
-	pwd
-(...)
+pwd
+cd -
+pwd
+
 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
-	env what
-(...)
+env what
+
 150: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
-	export
-(...)
+export
+
 165: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
-	export --TEST=123
-(...)
+export --TEST=123
+
 170: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
-	export -TEST=100
-(...)
+export -TEST=100
+
 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
-	export -TEST=123
-(...)
+export -TEST=123
+
 224: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
-	unset TES;T
-(...)
+unset TES;T
+
 231: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
-	unset -TEST
-(...)
+unset -TEST
 
 # **************************************************************************** #
 #                                  PIPELINES                                   #
 # **************************************************************************** #
-{?!}1: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
-	ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
-{?!}2: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
-	ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
-(...)
+
+1: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
+ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+
+2: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
+ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+
 15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:32
-	/bin/env | grep "_="
-(...)
-17: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:36
-	/bin/echo 1 | kaka
-(...)
-24: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:53
-	ls | cat asd
-26: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
-	ls | cat << stop | ls -la | cat << stop1
-	12
-	32232
-	23
-	stop
-	awdaw
-	daswd
-	stop1
-27: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
-	ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la | cat << stop3
-	$USER
-	ad
-	as $HOME
-	stop
-	awd
-	wf$PWDdqwdwqd
-	stop1
-	das
-	das
-	stop2
-	dsq
-	wd
-	wf$PWDdqwdwqd
-	stop3
-(...)
+/bin/env | grep "_="
+
+25:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:55
+ls | cat << stop | grep "asd"
+is this good
+stop
+
+26: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
+ls | cat << stop | ls -la | cat << stop1
+12
+32232
+23
+stop
+awdaw
+daswd
+stop1
+
+27: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
+ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la | cat << stop3
+$USER
+ad
+as $HOME
+stop
+awd
+wf$PWDdqwdwqd
+stop1
+das
+das
+stop2
+dsq
+wd
+wf$PWDdqwdwqd
+stop3
+
+28:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:84
+ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > out | cat << 'stop3'
+$USER
+ad
+stop
+dsa
+stop1
+sad
+stop2
+as $HOME
+stop3
+/bin/rm -f out
+
 29: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
-	ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
-	fe
-	wf
-	fwe
-	f
-	stop
-	dw
-	stop1
-	dwasd
-	stop2
-	cat Makefile | ls > out
-	cat out
-	/bin/rm -f out
-(...)
-{?!}34: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:140
-	ls|cat Makefile|ls
-{?!}35: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(1) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:142
-	ls|cat Makefile|<wc -l
-(...)
+ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
+fe
+wf
+fwe
+f
+stop
+dw
+stop1
+dwasd
+stop2
+cat Makefile | ls > out
+cat out
+/bin/rm -f out
+
+30:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:110
+ls | cat << stop | ls -la > out0| cat << stop1 | ls | cat << stop2 | ls -la >> out | cat << stop3
+fe
+wf
+fwe
+f
+stop
+dw
+stop1
+dw
+stop2
+e
+wf
+stop3
+/bin/rm -f out
+/bin/rm -f out0
 
 # **************************************************************************** #
 #                                    REDIRS                                    #
 # **************************************************************************** #
-(...)
-{?!}12: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:26
-	cat <"./test_files/infile" | echo hi
-(...)
-{?!}14: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:30
-	cat <"./test_files/infile_big" | echo hi
-(...)
-{?!}17: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:36
-	cat <missing | echo oi
-(...)
-{?!}19: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:40
-	echo <123 <456 hi | echo 42
-(...)
-{?!}29: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:60
-	echo hi >./outfiles/outfile01 | echo bye
-{?!}30: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:62
-	echo hi >./outfiles/outfile01 >./outfiles/outfile02 | echo bye
-{?!}31: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:64
-	echo hi >./outfiles/outfile01 >./test_files/invalid_permission | echo bye
-{?!}32: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:66
-	echo hi >./test_files/invalid_permission | echo bye
-{?!}33: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:68
-	echo hi >./test_files/invalid_permission >./outfiles/outfile01 | echo bye
-(...)
-{?!}53: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:108
-	echo hi >>./outfiles/outfile01 | echo bye
-{?!}54: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:110
-	echo hi >>./outfiles/outfile01 >>./outfiles/outfile02 | echo bye
-{?!}55: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:112
-	echo hi >>./test_files/invalid_permission | echo bye
-{?!}56: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:114
-	echo hi >>./test_files/invalid_permission >./outfiles/outfile01 | echo bye
-(...)
+
 83: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:208
-	cat << EOF
-	"EOF"
-	!! HELLO
-	@42 !!
-	 EOF\t\b\n
-	testing your minishell :)
-	limm
-	EOF
-(...)
+cat << EOF
+"EOF"
+!! HELLO
+@42 !!
+ EOF\t\b\n
+testing your minishell :)
+limm
+EOF
 
 # **************************************************************************** #
 #                                     SCMD                                     #
 # **************************************************************************** #
-(...)
+
 7: tester.sh: line 301: 2137822 Done                    echo -n "$INPUT"
      2137823 Aborted                 (core dumped) | $MINISHELL_PATH/$EXECUTABLE 2> tmp_err_minishell > tmp_out_minishell
 STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
 	/bin/echo test1
-(...)
 
 # **************************************************************************** #
 #                                  VARIABLES                                   #
 # **************************************************************************** #
-(...)
+
 45: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
-	export X="  A  B  "
-	/bin/echo "1"$X'2'
+export X="  A  B  "
+/bin/echo "1"$X'2'
+
 46: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:133
-	export X=" A  B  "
-	/bin/echo "1"$X'2'
+export X=" A  B  "
+/bin/echo "1"$X'2'
+
 47: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:136
-	export X="A  B  "
-	/bin/echo "1"$X'2'
+export X="A  B  "
+/bin/echo "1"$X'2'
+
 48: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:139
-	export X="  A  B "
-	/bin/echo "1"$X'2'
+export X="  A  B "
+/bin/echo "1"$X'2'
+
 49: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:142
-	export X="  A  B"
-	/bin/echo "1"$X'2'
+export X="  A  B"
+/bin/echo "1"$X'2'
+
 50: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:145
-	export X="  A B  "
-	/bin/echo "1"$X'2'
+export X="  A B  "
+/bin/echo "1"$X'2'
+
 51: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:148
-	export X="  AB  "
-	/bin/echo "1"$X'2'
+export X="  AB  "
+/bin/echo "1"$X'2'
+
 52: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:151
-	export X="  A  B  "
-	/bin/echo $X'2'
+export X="  A  B  "
+/bin/echo $X'2'
+
 53: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:154
-	export X="  A  B  "
-	/bin/echo $X"1"
-(...)
+export X="  A  B  "
+/bin/echo $X"1"
+
 56: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:163
-	export X="   "
-	/bin/echo "1"$X'2'
+export X="   "
+/bin/echo "1"$X'2'
+
 57: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:166
-	export X="  A  B  "
-	/bin/echo ?$X'2'
+export X="  A  B  "
+/bin/echo ?$X'2'
+
 58: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:169
-	export X="  A  B  "
-	/bin/echo "1"$X?
-(...)
+export X="  A  B  "
+/bin/echo "1"$X?
 
 # **************************************************************************** #
 #                                  CORRECTION                                  #
 # **************************************************************************** #
-(...)
+
 110: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:261
-	unset PATH
-	cd /bin
-	ls
+unset PATH
+cd /bin
+ls
+
 111: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:265
-	unset PATH
-	cd /bin/../bin/
-	ls
-(...)
+unset PATH
+cd /bin/../bin/
+ls
+
 113: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:273
-	unset PATH
-	cd /bin/
-	sleep 2
-(...)
+unset PATH
+cd /bin/
+sleep 2
 
 # **************************************************************************** #
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
+
 1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:5
-	unset PATH
-	echo $PATH
-	/bin/ls
-	echo 1
-	cd -
-	echo 42
-(...)
+unset PATH
+echo $PATH
+/bin/ls
+echo 1
+cd -
+echo 42
+
 5: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
-	cd -
-(...)
+cd -
+
 8: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:32
-	cd ~/Desktop/
-	pwd
-(...)
+cd ~/Desktop/
+pwd
+
 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
-	env -i ./minishell
-	cd /bin/
-	ls
+env -i ./minishell
+cd /bin/
+ls
+
 12: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
-	touch tmp_x_file1
-	tmp_x_file1
-	echo $?
-	./tmp_x_file1
-	echo $?
-	export PATH=$HOME
-	echo $PATH
-	tmp_x_file1
-	echo $?
-	./tmp_x_file1
-	echo $?
-	unset PATH
-	tmp_x_file1
-	echo $?
-	./tmp_x_file1
-	echo $?
-	echo 42
-	/bin/rm -f tmp_x_file1
-(...)
+touch tmp_x_file1
+tmp_x_file1
+echo $?
+./tmp_x_file1
+echo $?
+export PATH=$HOME
+echo $PATH
+tmp_x_file1
+echo $?
+./tmp_x_file1
+echo $?
+unset PATH
+tmp_x_file1
+echo $?
+./tmp_x_file1
+echo $?
+echo 42
+/bin/rm -f tmp_x_file1
 
 # **************************************************************************** #
 #                                SYNTAX ERRORS                                 #
 # **************************************************************************** #
-(...)
+
 8: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:19
-	~
-(...)
+~
+
 20: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:43
-	>echo>
-	/bin/rm -f echo
+>echo>
+/bin/rm -f echo
+
 21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:46
-	<echo<
-	/bin/rm -f echo
+<echo<
+/bin/rm -f echo
+
 22: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:49
-	>>echo>>
-	/bin/rm -f echo
-(...)
+>>echo>>
+/bin/rm -f echo
 
 # **************************************************************************** #
 #                                     WILD                                     #
 # **************************************************************************** #
-(...)
-{?!}2: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:7
-	yes "no" | head -n 10
-(...)
+
+2: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:7
+yes "no" | head -n 10
+
 4: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
-	/bin/echo '\1$42' > tmp_redir_out
-	ls -la | grep tmp_redir_out | awk '{print $1 $2}'
-	cat -e tmp_redir_out
-	rm tmp_redir_out
-(...)
-{?!}8: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:26
-	grep 1 < filedoesnotexist | echo 1 | grep 1 | head -1 | cat | ls
-(...)
+/bin/echo '\1$42' > tmp_redir_out
+ls -la | grep tmp_redir_out | awk '{print $1 $2}'
+cat -e tmp_redir_out
+rm tmp_redir_out
+
 10: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
-	export test="arg1	arg2"
-	echo 'echo $1' > tmp_test_sh
-	bash tmp_test_sh $test
-	echo 'echo $2' > tmp_test_sh
-	bash tmp_test_sh $test
-	rm -f tmp_test_sh
-(...)
+export test="arg1	arg2"
+echo 'echo $1' > tmp_test_sh
+bash tmp_test_sh $test
+echo 'echo $2' > tmp_test_sh
+bash tmp_test_sh $test
+rm -f tmp_test_sh
+
 13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
-	echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-	echo $?
+echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+echo $?
+
 14: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
-	echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-	echo $?
+echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+echo $?
+
 15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
-	echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-	echo $?
-(...)
+echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+echo $?
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 885  LEAKING: 0 
-                     STD_OUT: 33  STD_ERR: 12  EXIT_CODE: 20 - 40
+             TOTAL TEST COUNT: 941  TESTS PASSED: 886  LEAKING: 0 
+                     STD_OUT: 33  STD_ERR: 20  EXIT_CODE: 16  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 65 - 85
-                                     ✅ 2751 - 2745
+                                     ❌ 69   
+                                     ✅ 2754

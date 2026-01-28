@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:20 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 23:12:24 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/28 01:12:56 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	handle_child_status(int status)
 	{
 		sig = WTERMSIG(status);
 		if (sig == SIGINT)
+		{
+			write(STDOUT_FILENO, "\n", 1);
 			shell()->exit_code = 130;
+		}
 		else if (sig == SIGQUIT)
 		{
 			ft_putstr_fd("Quit (core dumped)\n", 2);

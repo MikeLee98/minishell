@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 09:04:51 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/27 23:52:16 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 17:57:44 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	pipeline_child_exec(t_pipeline *p)
 {
 	setup_signals(SIG_DEFAULT);
-	signal(SIGPIPE, SIG_IGN);
+	signal(SIGPIPE, SIG_DFL);
 	if (p->prev_fd != -1)
 	{
 		dup2(p->prev_fd, STDIN_FILENO);

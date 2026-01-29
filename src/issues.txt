@@ -258,15 +258,12 @@ To run tests without environment: bash tester.sh ne
 To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                             MANDATORY (WITH VALGRIND)                         🚀
+🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
 #                                   BUILTINS                                   #
 # **************************************************************************** #
-
-102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅ minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
-cd '/////' 2>/dev/null
  
 105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
 cd "doesntexist" 2>/dev/null 
@@ -274,21 +271,13 @@ cd "doesntexist" 2>/dev/null
 107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
 cd "wtf" 2>/dev/null 
 
-122: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
-cd ../../
-cd -
-cd -
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                             MANDATORY (WITH VALGRIND)                         🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
-131: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
-pwd
-cd ~
-cd -
-pwd
-
-132: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
-pwd
-cd -
-pwd
+# **************************************************************************** #
+#                                   BUILTINS                                   #
+# **************************************************************************** #
 
 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
 env what
@@ -315,59 +304,8 @@ unset -TEST
 #                                  PIPELINES                                   #
 # **************************************************************************** #
 
-1: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:4
-ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
-
-2: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:6
-ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
-
 15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:32
 /bin/env | grep "_="
-
-25:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:55
-ls | cat << stop | grep "asd"
-is this good
-stop
-
-26: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:59
-ls | cat << stop | ls -la | cat << stop1
-12
-32232
-23
-stop
-awdaw
-daswd
-stop1
-
-27: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:68
-ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la | cat << stop3
-$USER
-ad
-as $HOME
-stop
-awd
-wf$PWDdqwdwqd
-stop1
-das
-das
-stop2
-dsq
-wd
-wf$PWDdqwdwqd
-stop3
-
-28:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:84
-ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > out | cat << 'stop3'
-$USER
-ad
-stop
-dsa
-stop1
-sad
-stop2
-as $HOME
-stop3
-/bin/rm -f out
 
 29: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
 ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
@@ -383,23 +321,6 @@ stop2
 cat Makefile | ls > out
 cat out
 /bin/rm -f out
-
-30:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:110
-ls | cat << stop | ls -la > out0| cat << stop1 | ls | cat << stop2 | ls -la >> out | cat << stop3
-fe
-wf
-fwe
-f
-stop
-dw
-stop1
-dw
-stop2
-e
-wf
-stop3
-/bin/rm -f out
-/bin/rm -f out0
 
 # **************************************************************************** #
 #                                    REDIRS                                    #
@@ -499,17 +420,6 @@ sleep 2
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 
-1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:5
-unset PATH
-echo $PATH
-/bin/ls
-echo 1
-cd -
-echo 42
-
-5: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
-cd -
-
 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
 env -i ./minishell
 cd /bin/
@@ -555,9 +465,6 @@ echo 42
 #                                     WILD                                     #
 # **************************************************************************** #
 
-2: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:7
-yes "no" | head -n 10
-
 4: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
 /bin/echo '\1$42' > tmp_redir_out
 ls -la | grep tmp_redir_out | awk '{print $1 $2}'
@@ -587,8 +494,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 889  LEAKING: 0 
-                     STD_OUT: 31  STD_ERR: 19  EXIT_CODE: 15  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 903  LEAKING: 0 
+                     STD_OUT: 26  STD_ERR: 10  EXIT_CODE: 14  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 65   
-                                     ✅ 2758
+                                     ❌ 50   
+                                     ✅ 2773

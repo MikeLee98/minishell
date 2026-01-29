@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:17:32 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:49:50 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 15:23:00 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,13 @@ t_token	*lexer(char *input)
 			i++;
 		if (!input[i])
 			break ;
+		while (input[i] && is_fd_prefix(input[i]))
+		{
+			if (input[i + 1] && is_redir_char(input[i + 1]))
+				i++;
+			else
+				break ;
+		}
 		if (!handle_token(&head, input, &i))
 		{
 			free_tokens(head);

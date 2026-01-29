@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:36 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:47:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 15:03:42 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	process_and_execute(char *input)
 {
 	if (!tokenize_and_validate(input))
 		return ;
+	if (MINISHELL_DEBUG)
+		print_debug_info();
 	if (!parser())
 	{
 		free_tokens(shell()->toks);
@@ -49,7 +51,11 @@ void	process_and_execute(char *input)
 		return ;
 	}
 	if (shell()->cmds)
+	{
+		if (MINISHELL_DEBUG)
+			print_cmd_list(shell()->cmds, "COMMANDS");
 		run_executor();
+	}
 	free_tokens(shell()->toks);
 	shell()->toks = NULL;
 	free_cmd_list(shell()->cmds);

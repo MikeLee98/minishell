@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/29 14:17:39 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 21:47:53 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <signal.h>
+
+// Enable Debug Mode
+# define MINISHELL_DEBUG 0
 
 // Signal Modes
 # define SIG_INTERACTIVE	0
@@ -108,6 +111,8 @@ char	*handle_word(char *input, int *i);
 t_token	*create_token(t_token_type type, char *value);
 int		is_whitespace(char c);
 int		is_special_char(char c);
+int		is_fd_prefix(char c);
+int		is_redir_char(char c);
 
 // Syntax Checker Functions (syntax_checker.c)
 int		check_syntax(void);
@@ -202,6 +207,9 @@ int		ft_unset(char **args);
 
 // builtin_cd
 int		ft_cd(char **args);
+
+// builtin_cd_utils
+char	*cd_get_target(char **args, int *should_free, int *print_pwd);
 
 // builtin_pwd
 int		ft_pwd(void);

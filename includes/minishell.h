@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/28 01:03:43 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 14:17:39 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,8 @@ void	word_split_tokens(t_token **tokens);
 char	*expand_token(char *token);
 void	expand_tokens(void);
 
-// Expansion Quote Functions (expander_quotes.c)
+// Expansion Special Case Functions (expander_special.c)
+char	*expand_tilde(char *str, int *i);
 char	*expand_single_quotes(char *str, int *i);
 char	*expand_double_quotes(char *str, int *i);
 char	*expand_ansi_c_quotes(char *str, int *i);

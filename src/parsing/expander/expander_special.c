@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_quotes.c                                  :+:      :+:    :+:   */
+/*   expander_special.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 09:54:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:53:50 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 13:54:31 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+char	*expand_tilde(char *str, int *i)
+{
+	char	*home;
+
+	if (*i == 0 && str[*i] == '~' && (!str[*i + 1] || str[*i + 1] == '/'))
+	{
+		home = ft_getenv(shell()->env, "HOME");
+		if (!home || !*home)
+		{
+			(*i)++;
+			return (ft_strdup("~"));
+		}
+		(*i)++;
+		return (ft_strdup(home));
+	}
+	(*i)++;
+	return (ft_strdup("~"));
+}
 
 static char	*handle_expansion_char(char *str, int *i,
 	char **result)

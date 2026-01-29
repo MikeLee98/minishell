@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:09:57 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:53:27 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/29 12:58:48 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 static char	*get_next_segment(char *token, int *i)
 {
-	if (token[*i] == '\'')
+	if (*i == 0 && token[*i] == '~')
+		return (expand_tilde(token, i));
+	else if (token[*i] == '\'')
 		return (expand_single_quotes(token, i));
 	else if (token[*i] == '"')
 		return (expand_double_quotes(token, i));

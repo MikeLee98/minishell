@@ -279,22 +279,6 @@ cd "wtf" 2>/dev/null
 #                                   BUILTINS                                   #
 # **************************************************************************** #
 
-122: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
-cd ../../
-cd -
-cd -
-
-131: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:328
-pwd
-cd ~
-cd -
-pwd
-
-132: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:333
-pwd
-cd -
-pwd
-
 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
 env what
 
@@ -504,17 +488,6 @@ sleep 2
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 
-1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:5
-unset PATH
-echo $PATH
-/bin/ls
-echo 1
-cd -
-echo 42
-
-5: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
-cd -
-
 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
 env -i ./minishell
 cd /bin/
@@ -592,8 +565,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 890  LEAKING: 0 
-                     STD_OUT: 31  STD_ERR: 18  EXIT_CODE: 14  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 895  LEAKING: 0 
+                     STD_OUT: 26  STD_ERR: 18  EXIT_CODE: 14  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 63   
-                                     ✅ 2760
+                                     ❌ 58   
+                                     ✅ 2765

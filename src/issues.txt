@@ -258,21 +258,26 @@ To run tests without environment: bash tester.sh ne
 To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                             MANDATORY (WITH VALGRIND)                         🚀
+🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
 #                                   BUILTINS                                   #
 # **************************************************************************** #
-
-102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅ minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
-cd '/////' 2>/dev/null
  
 105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
 cd "doesntexist" 2>/dev/null 
 
 107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
 cd "wtf" 2>/dev/null 
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                             MANDATORY (WITH VALGRIND)                         🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+# **************************************************************************** #
+#                                   BUILTINS                                   #
+# **************************************************************************** #
 
 122: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:290
 cd ../../
@@ -587,8 +592,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 889  LEAKING: 0 
-                     STD_OUT: 31  STD_ERR: 19  EXIT_CODE: 15  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 890  LEAKING: 0 
+                     STD_OUT: 31  STD_ERR: 18  EXIT_CODE: 14  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 65   
-                                     ✅ 2758
+                                     ❌ 63   
+                                     ✅ 2760

@@ -265,9 +265,6 @@ To run mandatory pipe segfault tests (BRUTAL): bash tester.sh d
 #                                   BUILTINS                                   #
 # **************************************************************************** #
 
-1: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:7
-echo cd ~
-
 102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  LEAKS: ✅ minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
 cd '/////' 2>/dev/null
  
@@ -513,10 +510,6 @@ echo 42
 5: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:26
 cd -
 
-8: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:32
-cd ~/Desktop/
-pwd
-
 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
 env -i ./minishell
 cd /bin/
@@ -545,9 +538,6 @@ echo 42
 # **************************************************************************** #
 #                                SYNTAX ERRORS                                 #
 # **************************************************************************** #
-
-8: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:19
-~
 
 20: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:43
 >echo>
@@ -597,8 +587,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 886  LEAKING: 0 
-                     STD_OUT: 33  STD_ERR: 20  EXIT_CODE: 16  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 889  LEAKING: 0 
+                     STD_OUT: 31  STD_ERR: 19  EXIT_CODE: 15  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 69   
-                                     ✅ 2754
+                                     ❌ 65   
+                                     ✅ 2758

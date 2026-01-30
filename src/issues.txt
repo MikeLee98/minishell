@@ -42,39 +42,6 @@ unset TES;T
 unset -TEST
 
 # **************************************************************************** #
-#                                  PIPELINES                                   #
-# **************************************************************************** #
-
-29: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_pipelines.sh:96
-ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
-fe
-wf
-fwe
-f
-stop
-dw
-stop1
-dwasd
-stop2
-cat Makefile | ls > out
-cat out
-/bin/rm -f out
-
-# **************************************************************************** #
-#                                    REDIRS                                    #
-# **************************************************************************** #
-
-83: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_redirs.sh:208
-cat << EOF
-"EOF"
-!! HELLO
-@42 !!
- EOF\t\b\n
-testing your minishell :)
-limm
-EOF
-
-# **************************************************************************** #
 #                                     SCMD                                     #
 # **************************************************************************** #
 
@@ -184,22 +151,6 @@ echo 42
 /bin/rm -f tmp_x_file1
 
 # **************************************************************************** #
-#                                SYNTAX ERRORS                                 #
-# **************************************************************************** #
-
-20: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:43
->echo>
-/bin/rm -f echo
-
-21: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:46
-<echo<
-/bin/rm -f echo
-
-22: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/8_syntax_errors.sh:49
->>echo>>
-/bin/rm -f echo
-
-# **************************************************************************** #
 #                                     WILD                                     #
 # **************************************************************************** #
 
@@ -232,8 +183,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 904  LEAKING: 0 
-                     STD_OUT: 25  STD_ERR: 10  EXIT_CODE: 14  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 909  LEAKING: 0 
+                     STD_OUT: 23  STD_ERR: 10  EXIT_CODE: 10  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 49   
-                                     ✅ 2774
+                                     ❌ 43   
+                                     ✅ 2780

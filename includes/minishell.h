@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/30 12:33:44 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/30 16:31:31 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,16 +135,20 @@ void	word_split_tokens(t_token **tokens);
 char	*expand_token(char *token);
 void	expand_tokens(void);
 
-// Expansion Special Case Functions (expander_special.c)
+// Expansion Quotes and Tilde (expander_quotes.c)
 char	*expand_tilde(char *str, int *i);
 char	*expand_single_quotes(char *str, int *i);
 char	*expand_double_quotes(char *str, int *i);
 char	*expand_ansi_c_quotes(char *str, int *i);
 
-// Expansion Utils (expander_utils.c)
+// Expansion Variables (expander_variables.c)
 char	*expand_variable(char *str, int *i);
 
-// Expansion Helpers (expander_helpers.c)
+// Expansion Heredoc (expander_heredoc.c)
+char	*expand_heredoc_line(char *line);
+
+// Expansion Helpers (expander_utils.c)
+char	*dup_char_and_advance(char c, int *i);
 char	*get_env_value(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);

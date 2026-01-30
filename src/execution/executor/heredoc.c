@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:26 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 23:52:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/30 16:11:39 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	write_heredoc_line(int hd_expand, int fd, char *line)
 
 	if (hd_expand)
 	{
-		expanded = expand_token(line);
+		expanded = expand_heredoc_line(line);
 		write(fd, expanded, ft_strlen(expanded));
 		free(expanded);
 	}

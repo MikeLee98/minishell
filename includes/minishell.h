@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/29 16:34:35 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/30 12:09:39 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <signal.h>
 
 // Enable Debug Mode
-# define MINISHELL_DEBUG 0
+# define MINISHELL_DEBUG	0
 
 // Signal Modes
 # define SIG_INTERACTIVE	0

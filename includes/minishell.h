@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/30 16:16:27 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 00:23:34 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ char	*expand_heredoc_line(char *line);
 
 // Expansion Helpers (expander_utils.c)
 char	*dup_char_and_advance(char c, int *i);
-char	*get_env_value(char *var_name);
+char	*expand_var_from_name(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);
 

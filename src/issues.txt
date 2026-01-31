@@ -45,10 +45,11 @@ unset -TEST
 #                                     SCMD                                     #
 # **************************************************************************** #
 
-7: tester.sh: line 301: 2137822 Done                    echo -n "$INPUT"
-     2137823 Aborted                 (core dumped) | $MINISHELL_PATH/$EXECUTABLE 2> tmp_err_minishell > tmp_out_minishell
-STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(134)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
-	/bin/echo test1
+7:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
+	touch "
+	"
+	/bin/rm -f "
+	"
 
 # **************************************************************************** #
 #                                  VARIABLES                                   #
@@ -184,7 +185,7 @@ echo $?
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
              TOTAL TEST COUNT: 941  TESTS PASSED: 909  LEAKING: 0 
-                     STD_OUT: 23  STD_ERR: 10  EXIT_CODE: 10  
+                     STD_OUT: 23  STD_ERR: 10  EXIT_CODE: 9  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 43   
-                                     ✅ 2780
+                                     ❌ 42   
+                                     ✅ 2781

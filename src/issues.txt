@@ -94,25 +94,6 @@ export X="  A  B  "
 /bin/echo "1"$X?
 
 # **************************************************************************** #
-#                                  CORRECTION                                  #
-# **************************************************************************** #
-
-110: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:261
-unset PATH
-cd /bin
-ls
-
-111: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:265
-unset PATH
-cd /bin/../bin/
-ls
-
-113: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_correction.sh:273
-unset PATH
-cd /bin/
-sleep 2
-
-# **************************************************************************** #
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 
@@ -174,8 +155,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 910  LEAKING: 0 
-                     STD_OUT: 23  STD_ERR: 9  EXIT_CODE: 9  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 913  LEAKING: 0 
+                     STD_OUT: 21  STD_ERR: 6  EXIT_CODE: 6  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 41   
-                                     ✅ 2782
+                                     ❌ 33   
+                                     ✅ 2790

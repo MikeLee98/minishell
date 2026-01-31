@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/31 01:41:25 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 20:06:11 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,8 @@ int		ft_exit(char **args);
 // exec_main
 void	executor(void);
 int		run_builtin(char **args);
+
+// exec_paths
 void	execve_with_path(t_cmd *cmd);
 
 // exec_single

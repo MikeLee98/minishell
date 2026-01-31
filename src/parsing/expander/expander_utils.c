@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 09:54:55 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/30 15:53:23 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 00:23:09 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*dup_char_and_advance(char c, int *i)
 	return (ft_strdup(char_str));
 }
 
-char	*get_env_value(char *var_name)
+static char	*get_env_value(char *var_name)
 {
 	char	*value;
 
@@ -37,6 +37,20 @@ char	*get_env_value(char *var_name)
 	if (value)
 		return (ft_strdup(value));
 	return (ft_strdup(""));
+}
+
+char	*expand_var_from_name(char *var_name)
+{
+	char	*var_value;
+
+	if (!var_name || !var_name[0])
+	{
+		free(var_name);
+		return (ft_strdup("$"));
+	}
+	var_value = get_env_value(var_name);
+	free(var_name);
+	return (var_value);
 }
 
 char	*append_string(char *result, char *to_add, int free_add)

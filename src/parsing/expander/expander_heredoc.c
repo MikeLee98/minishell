@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:36:05 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/30 15:58:33 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 00:22:00 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,6 @@ static char	*extract_heredoc_var_name(char *str, int *i)
 	return (ft_substr(str, start, *i - start));
 }
 
-static char	*expand_heredoc_var(char *str, int *i)
-{
-	char	*var_name;
-	char	*var_value;
-
-	var_name = extract_heredoc_var_name(str, i);
-	if (!var_name || !var_name[0])
-	{
-		free(var_name);
-		return (ft_strdup("$"));
-	}
-	var_value = get_env_value(var_name);
-	free(var_name);
-	return (var_value);
-}
-
 static char	*process_heredoc_char(char *str, int *i)
 {
 	if (str[*i] == '\\' && str[*i + 1])
@@ -60,7 +44,7 @@ static char	*process_heredoc_char(char *str, int *i)
 	{
 		if (str[*i + 1] && (ft_isalnum(str[*i + 1])
 				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
-			return (expand_heredoc_var(str, i));
+			return (expand_var_from_name(extract_heredoc_var_name(str, i)));
 		else
 			return (dup_char_and_advance('$', i));
 	}

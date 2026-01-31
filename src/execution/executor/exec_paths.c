@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 10:19:56 by mario             #+#    #+#             */
-/*   Updated: 2026/01/31 19:27:02 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 19:44:24 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	execve_absolute_path(t_cmd *cmd)
 	print_cmd_error(cmd->args[0], ": No such file or directory", 127);
 }
 
-static void	execve_search_path(t_cmd *cmd, char *path_env)
+static void	execve_from_path(t_cmd *cmd, char *path_env)
 {
 	char	**paths;
 	char	**envp;
@@ -92,5 +92,5 @@ void	execve_with_path(t_cmd *cmd)
 	if (ft_strchr(cmd->args[0], '/'))
 		execve_absolute_path(cmd);
 	path_env = ft_getenv(shell()->env, "PATH");
-	execve_search_path(cmd, path_env);
+	execve_from_path(cmd, path_env);
 }

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:33 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:45:27 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 01:07:46 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	validate_input(char *input)
 	if (unclosed_quote)
 	{
 		print_unclosed_quote_error(unclosed_quote);
-		free(input);
 		return (2);
 	}
 	return (0);

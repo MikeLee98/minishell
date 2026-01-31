@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/29 15:47:43 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 01:38:48 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ static void	shell_loop(void)
 		if (validation_result == 1)
 			break ;
 		else if (validation_result == 2)
+		{
+			free(input);
 			continue ;
+		}
 		if (!*input)
 		{
 			free(input);

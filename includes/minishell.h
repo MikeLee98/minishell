@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/31 00:23:34 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 01:18:15 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ t_token	*lexer(char *input);
 // Lexer Utils Functions (lexer_utils.c)
 char	*handle_word(char *input, int *i);
 
-// Lexer Helpers Functions (lexer_helpers.c)
+// Lexer Helper Functions (lexer_helpers.c)
 t_token	*create_token(t_token_type type, char *value);
 int		is_whitespace(char c);
 int		is_special_char(char c);
@@ -124,7 +124,7 @@ int		parser(void);
 // Parser Utils Functions (parser_utils.c)
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
 
-// Parser Helpers Functions (parser_helpers.c)
+// Parser Helper Functions (parser_helpers.c)
 void	mark_word_split(t_token *tokens);
 void	mark_heredoc_expansion(t_token *tokens);
 
@@ -135,7 +135,7 @@ void	word_split_tokens(t_token **tokens);
 char	*expand_token(char *token);
 void	expand_tokens(void);
 
-// Expansion Quotes and Tilde (expander_quotes.c)
+// Expansion Quotes and Tilde Functions (expander_quotes.c)
 char	*expand_tilde(char *str, int *i);
 char	*expand_single_quotes(char *str, int *i);
 char	*expand_double_quotes(char *str, int *i);
@@ -147,7 +147,7 @@ char	*expand_variable(char *str, int *i);
 // Expansion Heredoc (expander_heredoc.c)
 char	*expand_heredoc_line(char *line);
 
-// Expansion Helpers (expander_utils.c)
+// Expansion Helper Functions (expander_utils.c)
 char	*dup_char_and_advance(char c, int *i);
 char	*expand_var_from_name(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);

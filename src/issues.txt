@@ -42,16 +42,6 @@ unset TES;T
 unset -TEST
 
 # **************************************************************************** #
-#                                     SCMD                                     #
-# **************************************************************************** #
-
-7:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_scmds.sh:19
-	touch "
-	"
-	/bin/rm -f "
-	"
-
-# **************************************************************************** #
 #                                  VARIABLES                                   #
 # **************************************************************************** #
 
@@ -184,8 +174,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 909  LEAKING: 0 
-                     STD_OUT: 23  STD_ERR: 10  EXIT_CODE: 9  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 910  LEAKING: 0 
+                     STD_OUT: 23  STD_ERR: 9  EXIT_CODE: 9  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 42   
-                                     ✅ 2781
+                                     ❌ 41   
+                                     ✅ 2782

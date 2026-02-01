@@ -42,58 +42,6 @@ unset TES;T
 unset -TEST
 
 # **************************************************************************** #
-#                                  VARIABLES                                   #
-# **************************************************************************** #
-
-45: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
-export X="  A  B  "
-/bin/echo "1"$X'2'
-
-46: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:133
-export X=" A  B  "
-/bin/echo "1"$X'2'
-
-47: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:136
-export X="A  B  "
-/bin/echo "1"$X'2'
-
-48: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:139
-export X="  A  B "
-/bin/echo "1"$X'2'
-
-49: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:142
-export X="  A  B"
-/bin/echo "1"$X'2'
-
-50: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:145
-export X="  A B  "
-/bin/echo "1"$X'2'
-
-51: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:148
-export X="  AB  "
-/bin/echo "1"$X'2'
-
-52: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:151
-export X="  A  B  "
-/bin/echo $X'2'
-
-53: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:154
-export X="  A  B  "
-/bin/echo $X"1"
-
-56: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:163
-export X="   "
-/bin/echo "1"$X'2'
-
-57: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:166
-export X="  A  B  "
-/bin/echo ?$X'2'
-
-58: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:169
-export X="  A  B  "
-/bin/echo "1"$X?
-
-# **************************************************************************** #
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 

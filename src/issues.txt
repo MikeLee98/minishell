@@ -74,12 +74,6 @@ echo 42
 #                                     WILD                                     #
 # **************************************************************************** #
 
-4: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
-/bin/echo '\1$42' > tmp_redir_out
-ls -la | grep tmp_redir_out | awk '{print $1 $2}'
-cat -e tmp_redir_out
-rm tmp_redir_out
-
 10: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
 export test="arg1	arg2"
 echo 'echo $1' > tmp_test_sh
@@ -103,8 +97,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 925  LEAKING: 0 
-                     STD_OUT: 9  STD_ERR: 6  EXIT_CODE: 6  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 926  LEAKING: 0 
+                     STD_OUT: 8  STD_ERR: 6  EXIT_CODE: 6  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 21   
-                                     ✅ 2802
+                                     ❌ 20   
+                                     ✅ 2803

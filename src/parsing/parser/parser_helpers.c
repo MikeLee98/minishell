@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 09:13:25 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:52:01 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/01 18:51:58 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void	mark_word_split(t_token *tokens)
 	{
 		if (tokens->type == TOKEN_WORD
 			&& !is_variable_assignment(tokens->value)
-			&& !has_quotes(tokens->value)
 			&& has_unquoted_whitespace(tokens->value))
 			tokens->wd_split = 1;
 		else

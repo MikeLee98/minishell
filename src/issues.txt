@@ -74,14 +74,6 @@ echo 42
 #                                     WILD                                     #
 # **************************************************************************** #
 
-10: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
-export test="arg1	arg2"
-echo 'echo $1' > tmp_test_sh
-bash tmp_test_sh $test
-echo 'echo $2' > tmp_test_sh
-bash tmp_test_sh $test
-rm -f tmp_test_sh
-
 13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
@@ -97,8 +89,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 926  LEAKING: 0 
-                     STD_OUT: 8  STD_ERR: 6  EXIT_CODE: 6  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 927  LEAKING: 0 
+                     STD_OUT: 7  STD_ERR: 6  EXIT_CODE: 6  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 20   
-                                     ✅ 2803
+                                     ❌ 19   
+                                     ✅ 2804

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:33 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 16:52:15 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 19:34:32 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	skip_double_quoted(char *str, int *i)
 				|| str[*i + 1] == '\\' || str[*i + 1] == '$'))
 		{
 			(*i) += 2;
-			continue;
+			continue ;
 		}
 		if (str[*i] == '"')
 		{
@@ -56,7 +56,7 @@ static char	get_unclosed_quote_type(char *str)
 		if (str[i] == '\\' && str[i + 1])
 		{
 			i += 2;
-			continue;
+			continue ;
 		}
 		if (str[i] == '\'')
 		{

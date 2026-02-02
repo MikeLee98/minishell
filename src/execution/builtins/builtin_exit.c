@@ -3,19 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:11 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 21:51:35 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/02 19:43:04 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
+static int	check_overflow(unsigned long result, int digit, int sign)
+{
+	unsigned long	limit;
+
+	if (sign == -1)
+		limit = -(unsigned long)LONG_MIN;
+	else
+		limit = LONG_MAX;
+	if (result > (limit - digit) / 10)
+		return (1);
+	return (0);
+}
+
 static int	parse_exit_code(const char *s, long *out)
 {
-	long	result;
-	int		sign;
+	unsigned long	result;
+	int				sign;
 
 	result = 0;
 	sign = 1;
@@ -31,7 +44,7 @@ static int	parse_exit_code(const char *s, long *out)
 	{
 		if (!ft_isdigit(*s))
 			return (0);
-		if (result > (LONG_MAX - (*s - '0')) / 10)
+		if (check_overflow(result, *s - '0', sign))
 			return (0);
 		result = result * 10 + (*s - '0');
 		s++;

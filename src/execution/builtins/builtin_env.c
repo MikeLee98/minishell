@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 19:56:07 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/02 21:06:50 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ int	ft_env(void)
 
     if (shell()->cmds->args[1])
     {
-        ft_putendl_fd("env: too many arguments", 2);
-        shell()->exit_code = 1;
-        return (1);
+		ft_putstr_fd("env: ‘", 2);
+		ft_putstr_fd(shell()->cmds->args[1], 2);
+		ft_putstr_fd("’: No such file or directory\n", 2);
+        return (127);
     }
 	tmp = shell()->env;
 	while (tmp)
@@ -29,6 +30,5 @@ int	ft_env(void)
 			ft_printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
-	shell()->exit_code = 0;
 	return (0);
 }

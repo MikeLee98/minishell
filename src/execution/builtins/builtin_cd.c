@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/29 16:24:49 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 21:06:39 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,5 @@ int	ft_cd(char **args)
 	cd_update_env(oldpwd);
 	if (should_free)
 		free(target);
-	shell()->exit_code = 0;
 	return (0);
 }

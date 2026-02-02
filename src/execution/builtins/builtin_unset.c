@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:28 by mario             #+#    #+#             */
-/*   Updated: 2026/01/21 20:03:29 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/02 21:10:02 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,5 @@ int	ft_unset(char **args)
 			env_unset(&shell()->env, args[i]);
 		i++;
 	}
-	shell()->exit_code = 0;
 	return (0);
 }

@@ -6,11 +6,36 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:18:02 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:50:10 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 14:56:18 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+int	count_backslashes(char *str, int i)
+{
+	int	count;
+	int	check;
+
+	count = 0;
+	check = i - 1;
+	while (check >= 0 && str[check] == '\\')
+	{
+		count++;
+		check--;
+	}
+	return (count);
+}
+
+static int	is_escaped_quote(char *input, int i, char quote)
+{
+	int	backslash_count;
+
+	if (quote != '"')
+		return (0);
+	backslash_count = count_backslashes(input, i);
+	return (backslash_count % 2 == 1);
+}
 
 static int	calculate_quoted_length(char *input, int *i, char quote)
 {
@@ -18,8 +43,18 @@ static int	calculate_quoted_length(char *input, int *i, char quote)
 
 	len = 1;
 	(*i)++;
-	while (input[*i] && input[*i] != quote)
+	while (input[*i])
 	{
+		if (input[*i] == quote)
+		{
+			if (is_escaped_quote(input, *i, quote))
+			{
+				len++;
+				(*i)++;
+				continue ;
+			}
+			break ;
+		}
 		len++;
 		(*i)++;
 	}
@@ -50,29 +85,6 @@ static int	calculate_word_length(char *input, int start)
 		}
 	}
 	return (len);
-}
-
-static void	copy_quoted_section(char *dst, char *src, int *dst_pos,
-	int *src_pos)
-{
-	char	quote;
-
-	quote = src[*src_pos];
-	dst[*dst_pos] = quote;
-	(*src_pos)++;
-	(*dst_pos)++;
-	while (src[*src_pos] && src[*src_pos] != quote)
-	{
-		dst[*dst_pos] = src[*src_pos];
-		(*src_pos)++;
-		(*dst_pos)++;
-	}
-	if (src[*src_pos] == quote)
-	{
-		dst[*dst_pos] = quote;
-		(*src_pos)++;
-		(*dst_pos)++;
-	}
 }
 
 char	*handle_word(char *input, int *i)

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:51:10 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:25:04 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	parser(void)
 		return (1);
 	}
 	mark_word_split(shell()->toks);
-	word_split_tokens(&shell()->toks);
+	apply_word_split(&shell()->toks);
 	mark_heredoc_expansion(shell()->toks);
 	handle_quotes();
 	shell()->cmds = NULL;

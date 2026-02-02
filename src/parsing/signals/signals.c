@@ -6,13 +6,13 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 09:52:01 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/27 23:50:15 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:51:39 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-static void	handle_sigint_interactive(int sig)
+static void	handle_interactive_sigint(int sig)
 {
 	(void)sig;
 	shell()->exit_code = 130;
@@ -22,7 +22,7 @@ static void	handle_sigint_interactive(int sig)
 	rl_redisplay();
 }
 
-static void	handle_sigint_heredoc(int sig)
+static void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
@@ -33,7 +33,7 @@ void	setup_signals(int mode)
 {
 	if (mode == SIG_INTERACTIVE)
 	{
-		signal(SIGINT, handle_sigint_interactive);
+		signal(SIGINT, handle_interactive_sigint);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (mode == SIG_IGNORE)
@@ -48,7 +48,7 @@ void	setup_signals(int mode)
 	}
 	else if (mode == SIG_HEREDOC)
 	{
-		signal(SIGINT, handle_sigint_heredoc);
+		signal(SIGINT, handle_heredoc_sigint);
 		signal(SIGQUIT, SIG_IGN);
 	}
 }

@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_variables.c                               :+:      :+:    :+:   */
+/*   expander_substitutions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:11:08 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/31 00:21:28 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 16:43:47 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+char	*expand_tilde(char *str, int *i)
+{
+	char	*home;
+
+	if (*i == 0 && str[*i] == '~' && (!str[*i + 1] || str[*i + 1] == '/'))
+	{
+		home = ft_getenv(shell()->env, "HOME");
+		if (!home || !*home)
+		{
+			(*i)++;
+			return (ft_strdup("~"));
+		}
+		(*i)++;
+		return (ft_strdup(home));
+	}
+	(*i)++;
+	return (ft_strdup("~"));
+}
 
 static char	*extract_var_name(char *str, int *i)
 {
@@ -33,13 +52,31 @@ static char	*extract_var_name(char *str, int *i)
 	return (ft_substr(str, start, *i - start));
 }
 
+static char	*handle_backslash_outside_quotes(char *str, int *i)
+{
+	char	*result;
+
+	if (!str[*i + 1])
+		return (dup_char_and_advance('\\', i));
+	if (str[*i + 1] == '"' || str[*i + 1] == '\'')
+	{
+		result = malloc(3);
+		if (!result)
+			return (NULL);
+		result[0] = '\\';
+		result[1] = str[*i + 1];
+		result[2] = '\0';
+		(*i) += 2;
+		return (result);
+	}
+	(*i)++;
+	return (dup_char_and_advance(str[*i], i));
+}
+
 char	*expand_variable(char *str, int *i)
 {
-	if (str[*i] == '\\' && str[*i + 1])
-	{
-		(*i)++;
-		return (dup_char_and_advance(str[*i], i));
-	}
+	if (str[*i] == '\\')
+		return (handle_backslash_outside_quotes(str, i));
 	else if (str[*i] == '$')
 	{
 		if (str[*i + 1] && (ft_isalnum(str[*i + 1])

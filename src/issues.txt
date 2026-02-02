@@ -1,3 +1,21 @@
+ISSUES:
+
+export VAR_1=123
+export _oculto="123"    <--- não pode aparecer
+$? = 0
+
+exit -9223372036854775808
+exit
+$? = 0
+
+msdmrf@hp-pavilion-15-bc000bp: export SHLVL=999
+msdmrf@hp-pavilion-15-bc000bp: bash
+    bash: warning: shell level (1000) too high, resetting to 1
+msdmrf@hp-pavilion-15-bc000bp: env
+...
+    SHLVL=1
+...
+
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -42,58 +60,6 @@ different case not specified, exit code 2 - 231: STD_OUT: ✅  STD_ERR: ❌  EXI
 unset -TEST
 
 # **************************************************************************** #
-#                                  VARIABLES                                   #
-# **************************************************************************** #
-
-45: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:130
-export X="  A  B  "
-/bin/echo "1"$X'2'
-
-46: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:133
-export X=" A  B  "
-/bin/echo "1"$X'2'
-
-47: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:136
-export X="A  B  "
-/bin/echo "1"$X'2'
-
-48: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:139
-export X="  A  B "
-/bin/echo "1"$X'2'
-
-49: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:142
-export X="  A  B"
-/bin/echo "1"$X'2'
-
-50: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:145
-export X="  A B  "
-/bin/echo "1"$X'2'
-
-51: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:148
-export X="  AB  "
-/bin/echo "1"$X'2'
-
-52: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:151
-export X="  A  B  "
-/bin/echo $X'2'
-
-53: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:154
-export X="  A  B  "
-/bin/echo $X"1"
-
-56: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:163
-export X="   "
-/bin/echo "1"$X'2'
-
-57: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:166
-export X="  A  B  "
-/bin/echo ?$X'2'
-
-58: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_variables.sh:169
-export X="  A  B  "
-/bin/echo "1"$X?
-
-# **************************************************************************** #
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 
@@ -126,20 +92,6 @@ echo 42
 #                                     WILD                                     #
 # **************************************************************************** #
 
-4: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:11
-/bin/echo '\1$42' > tmp_redir_out
-ls -la | grep tmp_redir_out | awk '{print $1 $2}'
-cat -e tmp_redir_out
-rm tmp_redir_out
-
-10: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:30
-export test="arg1	arg2"
-echo 'echo $1' > tmp_test_sh
-bash tmp_test_sh $test
-echo 'echo $2' > tmp_test_sh
-bash tmp_test_sh $test
-rm -f tmp_test_sh
-
 13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
@@ -155,8 +107,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 913  LEAKING: 0 
-                     STD_OUT: 21  STD_ERR: 6  EXIT_CODE: 6  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 927  LEAKING: 0 
+                     STD_OUT: 7  STD_ERR: 6  EXIT_CODE: 6  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 33   
-                                     ✅ 2790
+                                     ❌ 19   
+                                     ✅ 2804

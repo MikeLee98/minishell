@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_word_split.c                                :+:      :+:    :+:   */
+/*   parser_split_apply.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:13:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:53:08 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:23:42 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,20 @@ static void	insert_split_tokens(t_token *current, char **words)
 	insert_remaining_words(current, words);
 }
 
-void	word_split_tokens(t_token **tokens)
+static void	normalize_ifs(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\t' || str[i] == '\n')
+			str[i] = ' ';
+		i++;
+	}
+}
+
+void	apply_word_split(t_token **tokens)
 {
 	t_token	*current;
 	t_token	*next;
@@ -72,6 +85,7 @@ void	word_split_tokens(t_token **tokens)
 		next = current->next;
 		if (current->type == TOKEN_WORD && current->wd_split == 1)
 		{
+			normalize_ifs(current->value);
 			words = ft_split(current->value, ' ');
 			if (words)
 			{

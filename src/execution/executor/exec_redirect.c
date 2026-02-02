@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirect.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:09 by mario             #+#    #+#             */
-/*   Updated: 2026/01/23 00:44:55 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/01 19:54:31 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ static int	open_redir_fd(t_redir *r)
 	if (r->type == TOKEN_REDIR_IN)
 		return (open(r->file, O_RDONLY));
 	if (r->type == TOKEN_REDIR_OUT)
-		return (open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644));
+		return (open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0666));
 	if (r->type == TOKEN_REDIR_APPEND)
-		return (open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644));
+		return (open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0666));
 	return (-1);
 }
 

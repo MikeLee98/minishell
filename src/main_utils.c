@@ -6,29 +6,67 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:33 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/31 01:07:46 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 16:52:15 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+static int	skip_double_quoted(char *str, int *i)
+{
+	(*i)++;
+	while (str[*i])
+	{
+		if (str[*i] == '\\' && str[*i + 1] && (str[*i + 1] == '"'
+				|| str[*i + 1] == '\\' || str[*i + 1] == '$'))
+		{
+			(*i) += 2;
+			continue;
+		}
+		if (str[*i] == '"')
+		{
+			(*i)++;
+			return (1);
+		}
+		(*i)++;
+	}
+	return (0);
+}
+
+static int	skip_single_quoted(char *str, int *i)
+{
+	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	if (str[*i] == '\'')
+	{
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
 static char	get_unclosed_quote_type(char *str)
 {
 	int		i;
-	char	quote;
 
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if (str[i] == '\\' && str[i + 1])
 		{
-			quote = str[i];
-			i++;
-			while (str[i] && str[i] != quote)
-				i++;
-			if (!str[i])
-				return (quote);
-			i++;
+			i += 2;
+			continue;
+		}
+		if (str[i] == '\'')
+		{
+			if (!skip_single_quoted(str, &i))
+				return ('\'');
+		}
+		else if (str[i] == '"')
+		{
+			if (!skip_double_quoted(str, &i))
+				return ('"');
 		}
 		else
 			i++;

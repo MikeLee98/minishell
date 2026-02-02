@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 09:57:13 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:56:09 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 16:44:52 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ int	count_unquoted_len(char *str)
 			len += skip_quotes(str, &i, '\'');
 		else if (str[i] == '"')
 			len += skip_quotes(str, &i, '"');
+		else if (str[i] == '\\' && (str[i + 1] == '"' || str[i + 1] == '\''))
+		{
+			len++;
+			i += 2;
+		}
 		else
 		{
 			len++;
@@ -48,24 +53,6 @@ int	count_unquoted_len(char *str)
 		}
 	}
 	return (len);
-}
-
-static void	copy_single_quoted(char *dest, char *src, int *j, int *i)
-{
-	(*i)++;
-	while (src[*i] && src[*i] != '\'')
-		dest[(*j)++] = src[(*i)++];
-	if (src[*i] == '\'')
-		(*i)++;
-}
-
-static void	copy_double_quoted(char *dest, char *src, int *j, int *i)
-{
-	(*i)++;
-	while (src[*i] && src[*i] != '"')
-		dest[(*j)++] = src[(*i)++];
-	if (src[*i] == '"')
-		(*i)++;
 }
 
 void	copy_unquoted(char *dest, char *src)
@@ -81,6 +68,11 @@ void	copy_unquoted(char *dest, char *src)
 			copy_single_quoted(dest, src, &j, &i);
 		else if (src[i] == '"')
 			copy_double_quoted(dest, src, &j, &i);
+		else if (src[i] == '\\' && (src[i + 1] == '"' || src[i + 1] == '\''))
+		{
+			dest[j++] = src[i + 1];
+			i += 2;
+		}
 		else
 			dest[j++] = src[i++];
 	}

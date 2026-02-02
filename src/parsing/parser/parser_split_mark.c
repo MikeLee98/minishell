@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_helpers.c                                   :+:      :+:    :+:   */
+/*   parser_split_mark.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 09:13:25 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/01 18:51:58 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:20:10 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,33 @@ static int	is_variable_assignment(char *str)
 	return (str[i] == '=' && i > 0);
 }
 
-static int	has_quotes(char *str)
+static int	is_escaped_quote_at(char *str, int i)
 {
-	int	i;
+	int	backslash_count;
 
-	i = 0;
-	while (str[i])
+	if (i == 0 || str[i - 1] != '\\')
+		return (0);
+	backslash_count = count_backslashes(str, i);
+	return (backslash_count % 2 == 1);
+}
+
+static int	handle_quote_char(char *str, int *i, int *in_quote,
+	char *quote_type)
+{
+	if (!*in_quote && (str[*i] == '"' || str[*i] == '\''))
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		*in_quote = 1;
+		*quote_type = str[*i];
+	}
+	else if (*in_quote && str[*i] == *quote_type)
+	{
+		if (*quote_type == '"' && is_escaped_quote_at(str, *i))
+		{
+			(*i)++;
 			return (1);
-		i++;
+		}
+		*in_quote = 0;
+		*quote_type = 0;
 	}
 	return (0);
 }
@@ -55,17 +72,9 @@ static int	has_unquoted_whitespace(char *str)
 	quote_type = 0;
 	while (str[i])
 	{
-		if (!in_quote && (str[i] == '"' || str[i] == '\''))
-		{
-			in_quote = 1;
-			quote_type = str[i];
-		}
-		else if (in_quote && str[i] == quote_type)
-		{
-			in_quote = 0;
-			quote_type = 0;
-		}
-		else if (!in_quote && (str[i] == ' ' || str[i] == '\t'))
+		if (handle_quote_char(str, &i, &in_quote, &quote_type))
+			continue ;
+		if (!in_quote && (str[i] == ' ' || str[i] == '\t'))
 			return (1);
 		i++;
 	}
@@ -82,23 +91,6 @@ void	mark_word_split(t_token *tokens)
 			tokens->wd_split = 1;
 		else
 			tokens->wd_split = 0;
-		tokens = tokens->next;
-	}
-}
-
-void	mark_heredoc_expansion(t_token *tokens)
-{
-	while (tokens)
-	{
-		if (tokens->type == TOKEN_REDIR_HEREDOC
-			&& tokens->next
-			&& tokens->next->type == TOKEN_WORD)
-		{
-			if (has_quotes(tokens->next->value))
-				tokens->next->hd_expand = 0;
-			else
-				tokens->next->hd_expand = 1;
-		}
 		tokens = tokens->next;
 	}
 }

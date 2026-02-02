@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 19:32:53 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 23:15:54 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,10 @@ int		run_builtin(char **args);
 
 // exec_paths.c
 void	execve_with_path(t_cmd *cmd);
+
+// exec_paths_utils.c
+void	exit_with_cmd_error(char *cmd_name, const char *msg, int code);
+void	execve_without_path(t_cmd *cmd);
 
 // exec_single.c
 void	execute_single(t_cmd *cmd);

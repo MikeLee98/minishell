@@ -20,25 +20,25 @@ cd "wtf" 2>/dev/null
 #                                   BUILTINS                                   #
 # **************************************************************************** #
 
-140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
+solved - 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
 env what
 
-150: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
+unknown error - 150: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
 export
 
-165: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
+different case not specified, exit code 2 - 165: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
 export --TEST=123
 
-170: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
+different case not specified, exit code 2 - 170: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
 export -TEST=100
 
-185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
+different case not specified, exit code 2 - 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
 export -TEST=123
 
-224: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
+maybe parsing error - 224: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
 unset TES;T
 
-231: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
+different case not specified, exit code 2 - 231: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
 unset -TEST
 
 # **************************************************************************** #
@@ -97,12 +97,12 @@ export X="  A  B  "
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
 
-11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
+bash identical behaviour - 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
 env -i ./minishell
 cd /bin/
 ls
 
-12: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
+different case not specified, exit code 126, more investigation needed - 12: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
 touch tmp_x_file1
 tmp_x_file1
 echo $?

@@ -8,7 +8,13 @@ exit -9223372036854775808
 exit
 $? = 0
 
-
+msdmrf@hp-pavilion-15-bc000bp: export SHLVL=999
+msdmrf@hp-pavilion-15-bc000bp: bash
+    bash: warning: shell level (1000) too high, resetting to 1
+msdmrf@hp-pavilion-15-bc000bp: env
+...
+    SHLVL=1
+...
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀

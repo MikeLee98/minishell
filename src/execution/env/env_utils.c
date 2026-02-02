@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:46 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 18:58:45 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/02 19:31:59 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,22 +75,4 @@ char	**env_to_array(t_env *env)
 		env = env->next;
 	}
 	return (envp[i] = NULL, envp);
-}
-
-void	update_shlvl(void)
-{
-	char	*shlvl_str;
-	int		shlvl;
-	char	buffer[16];
-
-	shlvl_str = ft_getenv(shell()->env, "SHLVL");
-	shlvl = 1;
-	if (shlvl_str)
-	{
-		shlvl = ft_atoi(shlvl_str) + 1;
-		if (shlvl < 0)
-			shlvl = 0;
-	}
-	ft_itoa_buffer(shlvl, buffer);
-	env_set(&shell()->env, "SHLVL", buffer, 0);
 }

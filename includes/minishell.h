@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 16:11:19 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 19:32:53 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,8 @@ void	env_unset(t_env **env, char *key);
 char	*ft_getenv(t_env *env, char *key);
 t_env	*env_find(t_env *env, char *key);
 char	**env_to_array(t_env *env);
+
+// env_shlvl.c
 void	update_shlvl(void);
 
 // free_env.c

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:40 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:48:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:59:04 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ static void	handle_stage(t_token *copy, char *stage)
 	expand_tokens();
 	mark_word_split(shell()->toks);
 	if (ft_strncmp(stage, "TOKENS (after word splitting)", 30) == 0)
-		word_split_tokens(&shell()->toks);
+		apply_word_split(&shell()->toks);
 	else if (ft_strncmp(stage, "TOKENS (after quote removal)", 28) == 0)
 	{
-		word_split_tokens(&shell()->toks);
+		apply_word_split(&shell()->toks);
 		handle_quotes();
 	}
 	shell()->toks = original;

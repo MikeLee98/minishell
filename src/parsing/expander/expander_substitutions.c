@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_variables.c                               :+:      :+:    :+:   */
+/*   expander_substitutions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:11:08 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/31 00:21:28 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:38:44 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+char	*expand_tilde(char *str, int *i)
+{
+	char	*home;
+
+	if (*i == 0 && str[*i] == '~' && (!str[*i + 1] || str[*i + 1] == '/'))
+	{
+		home = ft_getenv(shell()->env, "HOME");
+		if (!home || !*home)
+		{
+			(*i)++;
+			return (ft_strdup("~"));
+		}
+		(*i)++;
+		return (ft_strdup(home));
+	}
+	(*i)++;
+	return (ft_strdup("~"));
+}
 
 static char	*extract_var_name(char *str, int *i)
 {

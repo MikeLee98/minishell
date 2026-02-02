@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 09:57:13 by migusant          #+#    #+#             */
-/*   Updated: 2026/01/23 19:56:09 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:47:23 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,6 @@ int	count_unquoted_len(char *str)
 		}
 	}
 	return (len);
-}
-
-static void	copy_single_quoted(char *dest, char *src, int *j, int *i)
-{
-	(*i)++;
-	while (src[*i] && src[*i] != '\'')
-		dest[(*j)++] = src[(*i)++];
-	if (src[*i] == '\'')
-		(*i)++;
-}
-
-static void	copy_double_quoted(char *dest, char *src, int *j, int *i)
-{
-	(*i)++;
-	while (src[*i] && src[*i] != '"')
-		dest[(*j)++] = src[(*i)++];
-	if (src[*i] == '"')
-		(*i)++;
 }
 
 void	copy_unquoted(char *dest, char *src)

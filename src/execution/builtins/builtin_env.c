@@ -16,6 +16,12 @@ int	ft_env(void)
 {
 	t_env	*tmp;
 
+    if (shell()->cmds->args[1])
+    {
+        ft_putendl_fd("env: too many arguments", 2);
+        shell()->exit_code = 1;
+        return (1);
+    }
 	tmp = shell()->env;
 	while (tmp)
 	{

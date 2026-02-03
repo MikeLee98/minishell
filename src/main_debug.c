@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 10:22:03 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 11:19:44 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	print_tokens(t_token *tokens, char *stage)
 	ft_printf("\n%s:\n", stage);
 	while (tokens)
 	{
-		ft_printf("[%d] Type: %-15s Value: %s",
+		printf("[%d] Type: %-15s Value: %s",
 			i, token_type_str(tokens->type), tokens->value);
 		if (tokens->type == TOKEN_WORD && show_wd_split)
 			ft_printf(" (wd_split: %d)", tokens->wd_split);

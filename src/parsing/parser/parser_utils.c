@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:19:20 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:13:35 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:12:57 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ t_token	*parse_cmd(t_cmd *cmd, t_token *current)
 {
 	int	hd_expand;
 
-	while (current && current->type != TOKEN_PIPE)
+	while (current && current->type != TOKEN_PIPE
+		&& current->type != TOKEN_SEMICOLON)
 	{
 		if (current->type == TOKEN_WORD)
 		{

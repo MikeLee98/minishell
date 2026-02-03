@@ -35,9 +35,6 @@ export -TEST=100
 different case not specified, exit code 2 - 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
 export -TEST=123
 
-maybe parsing error - 224: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:552
-unset TES;T
-
 different case not specified, exit code 2 - 231: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
 unset -TEST
 
@@ -49,26 +46,6 @@ bash identical behaviour - 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS
 env -i ./minishell
 cd /bin/
 ls
-
-different case not specified, exit code 126, more investigation needed - 12: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:47
-touch tmp_x_file1
-tmp_x_file1
-echo $?
-./tmp_x_file1
-echo $?
-export PATH=$HOME
-echo $PATH
-tmp_x_file1
-echo $?
-./tmp_x_file1
-echo $?
-unset PATH
-tmp_x_file1
-echo $?
-./tmp_x_file1
-echo $?
-echo 42
-/bin/rm -f tmp_x_file1
 
 # **************************************************************************** #
 #                                     WILD                                     #
@@ -89,8 +66,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 927  LEAKING: 0 
-                     STD_OUT: 7  STD_ERR: 6  EXIT_CODE: 6  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 929  LEAKING: 0 
+                     STD_OUT: 6  STD_ERR: 5  EXIT_CODE: 5  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 19   
-                                     ✅ 2804
+                                     ❌ 16   
+                                     ✅ 2807

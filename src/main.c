@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:55:32 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 10:29:14 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	shell_loop(void)
 void	cleanup_shell(void)
 {
 	if (MINISHELL_DEBUG)
-		printf("Cleaning up shell...\n");
+		ft_printf("Cleaning up shell...\n");
 	rl_clear_history();
 	if (shell()->toks)
 		free_tokens(shell()->toks);

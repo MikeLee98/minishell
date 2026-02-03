@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:17 by mario             #+#    #+#             */
-/*   Updated: 2026/01/22 18:14:00 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/03 19:57:15 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ static void	split_key_value(char *arg, t_env *tmp, int *append)
 		if (!tmp->key)
 			return ;
 		tmp->value = ft_strdup(arg + pos + 2);
-		if (!tmp->value)
-			return ;
 		return ;
 	}
 	pos = 0;
@@ -74,49 +72,57 @@ static void	export_assign(t_env **env, char *arg)
 	free(tmp.value);
 }
 
-static int	is_valid_identifier(char *s)
+static void	process_export_arg(char *arg, int *has_error, int *opts)
 {
-	int	i;
-
-	if (!s || (!ft_isalpha(s[0]) && s[0] != '_'))
-		return (0);
-	i = 1;
-	while (s[i] && s[i] != '=')
+	if (is_valid_option(arg))
 	{
-		if (s[i] == '+' && s[i + 1] == '=')
-			break ;
-		if (!ft_isalnum(s[i]) && s[i] != '_')
-			return (0);
-		i++;
+		if (ft_strchr(arg, 'f'))
+			*opts |= 1;
+		if (ft_strcmp(arg, "--") == 0 || ft_strchr(arg, 'n')
+			|| ft_strchr(arg, 'p'))
+			*opts |= 2;
+		return ;
 	}
-	return (1);
+	if (arg[0] == '-' && arg[1] != '\0')
+	{
+		export_option_error(arg);
+		shell()->exit_code = 2;
+		*has_error = 1;
+	}
+	else if (!is_valid_identifier(arg))
+	{
+		export_identifier_error(arg);
+		shell()->exit_code = 1;
+		*has_error = 1;
+	}
+	else
+		export_assign(&shell()->env, arg);
 }
 
 int	ft_export(char **args)
 {
 	int	i;
+	int	has_error;
+	int	opts;
 
 	if (!args[1])
-	{
-		print_export(shell()->env);
-		shell()->exit_code = 0;
-		return (shell()->exit_code);
-	}
+		return (print_export(shell()->env), shell()->exit_code = 0, 0);
 	i = 1;
+	has_error = 0;
+	opts = 0;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			shell()->exit_code = 1;
-		}
-		else
-			export_assign(&shell()->env, args[i]);
+		process_export_arg(args[i], &has_error, &opts);
 		i++;
 	}
-	if (shell()->exit_code != 1)
+	if ((opts & 1) && i > 2)
+	{
+		export_function_error(args[i - 1]);
+		return (1);
+	}
+	if ((opts & 2) && !(opts & 1) && i == 2)
+		print_export(shell()->env);
+	if (!has_error)
 		shell()->exit_code = 0;
 	return (shell()->exit_code);
 }

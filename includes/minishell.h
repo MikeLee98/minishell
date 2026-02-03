@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/03 12:16:15 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 22:20:13 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,14 @@ int		ft_env(void);
 // builtin_export.c
 int		ft_export(char **args);
 
-// builtin_print_export.c
+// builtin_export_utils.c
+int		is_valid_identifier(char *s);
+void	export_identifier_error(char *arg);
+int		is_valid_option(char *arg);
+void	export_option_error(char *arg);
+void	export_function_error(char *arg);
+
+// builtin_export_print.c
 void	print_export(t_env *env);
 
 // builtin_unset.c

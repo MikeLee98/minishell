@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:55:52 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 10:22:03 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ void	print_tokens(t_token *tokens, char *stage)
 
 	i = 0;
 	show_wd_split = (ft_strncmp(stage, "TOKENS (after expansion)", 24) == 0);
-	printf("\n%s:\n", stage);
+	ft_printf("\n%s:\n", stage);
 	while (tokens)
 	{
-		printf("[%d] Type: %-15s Value: %s",
+		ft_printf("[%d] Type: %-15s Value: %s",
 			i, token_type_str(tokens->type), tokens->value);
 		if (tokens->type == TOKEN_WORD && show_wd_split)
-			printf(" (wd_split: %d)", tokens->wd_split);
-		printf("\n");
+			ft_printf(" (wd_split: %d)", tokens->wd_split);
+		ft_printf("\n");
 		tokens = tokens->next;
 		i++;
 	}
@@ -66,11 +66,11 @@ void	print_redirections(t_redir *redir)
 {
 	while (redir)
 	{
-		printf("        Redir: %s %s",
+		ft_printf("        Redir: %s %s",
 			token_type_str(redir->type), redir->file);
 		if (redir->type == TOKEN_REDIR_HEREDOC)
-			printf(" (hd_expand: %d)", redir->hd_expand);
-		printf("\n");
+			ft_printf(" (hd_expand: %d)", redir->hd_expand);
+		ft_printf("\n");
 		redir = redir->next;
 	}
 }
@@ -81,14 +81,14 @@ void	print_cmd_list(t_cmd *cmd_list, char *stage)
 	int	i;
 
 	cmd_num = 0;
-	printf("\n%s:\n", stage);
+	ft_printf("\n%s:\n", stage);
 	while (cmd_list)
 	{
-		printf("[%d] Args:\n", cmd_num);
+		ft_printf("[%d] Args:\n", cmd_num);
 		i = 0;
 		while (cmd_list->args && cmd_list->args[i])
 		{
-			printf("    [%d] = %s\n", i, cmd_list->args[i]);
+			ft_printf("    [%d] = %s\n", i, cmd_list->args[i]);
 			i++;
 		}
 		if (cmd_list->redirections)
@@ -96,5 +96,5 @@ void	print_cmd_list(t_cmd *cmd_list, char *stage)
 		cmd_list = cmd_list->next;
 		cmd_num++;
 	}
-	printf("\n");
+	ft_printf("\n");
 }

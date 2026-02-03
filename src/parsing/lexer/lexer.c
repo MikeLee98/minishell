@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:17:32 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 16:10:45 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:17:19 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static t_token	*create_operator_token(char *input, int *i)
 {
 	if (input[*i] == '|')
 		return (create_token(TOKEN_PIPE, ft_strdup("|")));
+	else if (input[*i] == ';')
+		return (create_token(TOKEN_SEMICOLON, ft_strdup(";")));
 	else if (input[*i] == '<' && input[*i + 1] == '<')
 	{
 		(*i)++;

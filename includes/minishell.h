@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 23:15:54 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 00:01:37 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,85 +101,85 @@ typedef struct s_shell
 //                                  PARSING                                   //
 // ************************************************************************** //
 
-// lexer.c - Main tokenization logic
+// lexer.c
 t_token	*lexer(char *input);
 
-// lexer_helpers.c - Token creation and character classification
+// lexer_helpers.c
 t_token	*create_token(t_token_type type, char *value);
 int		is_whitespace(char c);
 int		is_special_char(char c);
 int		is_fd_prefix(char c);
 int		is_redir_char(char c);
 
-// lexer_utils.c - Word extraction and escape detection
+// lexer_utils.c
 int		count_backslashes(char *str, int i);
 char	*handle_word(char *input, int *i);
 
-// lexer_quotes.c - Quote section copying with escape handling
+// lexer_quotes.c
 void	copy_quoted_section(char *dst, char *src, int *dst_pos, int *src_pos);
 
-// syntax_checker.c - Main syntax validation logic
+// syntax_checker.c
 int		check_syntax(void);
 
-// syntax_checker_utils.c - Syntax checking helper functions
+// syntax_checker_utils.c
 int		is_redir_token(t_token_type type);
 void	print_syntax_error(t_token *token);
 
-// parser.c - Main parsing logic and command building
+// parser.c
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);
 int		parser(void);
 
-// parser_utils.c - Command parsing utilities
+// parser_utils.c
 t_token	*parse_cmd(t_cmd *cmd, t_token *current);
 
-// parser_split_mark.c - Mark tokens that need word splitting
+// parser_split_mark.c
 void	mark_word_split(t_token *tokens);
 
-// parser_heredoc_mark.c - Mark heredocs for expansion
+// parser_heredoc_mark.c
 void	mark_heredoc_expansion(t_token *tokens);
 
-// parser_split_apply.c - Apply word splitting to marked tokens
+// parser_split_apply.c
 void	apply_word_split(t_token **tokens);
 
-// expander.c - Main token expansion logic
+// expander.c
 char	*expand_token(char *token);
 void	expand_tokens(void);
 
-// expander_quotes.c - Quote expansion (single, double, ANSI-C)
+// expander_quotes.c
 char	*expand_single_quotes(char *str, int *i);
 char	*expand_double_quotes(char *str, int *i);
 char	*expand_ansi_c_quotes(char *str, int *i);
 
-// expander_substitutions.c - Variable and tilde substitution
+// expander_substitutions.c
 char	*expand_tilde(char *str, int *i);
 char	*expand_variable(char *str, int *i);
 
-// expander_heredoc.c - Heredoc line expansion
+// expander_heredoc.c
 char	*expand_heredoc_line(char *line);
 
-// expander_utils.c - Expansion helper utilities
+// expander_utils.c
 char	*dup_char_and_advance(char c, int *i);
 char	*expand_var_from_name(char *var_name);
 char	*append_string(char *result, char *to_add, int free_add);
 char	*append_char(char *result, char c);
 
-// quote_removal.c - Main quote removal logic
+// quote_removal.c
 void	handle_quotes(void);
 
-// quote_removal_utils.c - Quote removal utilities
+// quote_removal_utils.c
 int		count_unquoted_len(char *str);
 void	copy_unquoted(char *dest, char *src);
 
-// quote_removal_single.c - Single quote handling
+// quote_removal_single.c
 void	copy_single_quoted(char *dest, char *src, int *j, int *i);
 
-// quote_removal_double.c - Double quote handling with escape sequences
+// quote_removal_double.c
 void	copy_double_quoted(char *dest, char *src, int *j, int *i);
 
-// signals.c - Signal handling setup and handlers
+// signals.c
 void	setup_signals(int mode);
 
-// free.c - Memory cleanup functions
+// free.c
 void	free_tokens(t_token *tokens);
 void	free_split(char **split);
 void	free_cmd(t_cmd *cmd);
@@ -280,23 +280,23 @@ int		prepare_heredocs(void);
 //                                   MAIN                                     //
 // ************************************************************************** //
 
-// main.c - Main entry point and shell initialization
+// main.c
 t_shell	*shell(void);
 void	cleanup_shell(void);
 
-// main_utils.c - Input validation utilities
+// main_utils.c
 int		validate_input(char *input);
 
-// main_pipeline.c - Command processing pipeline
+// main_pipeline.c
 void	process_and_execute(char *input);
 
-// main_debug.c - Debug output functions
+// main_debug.c
 void	print_debug_info(void);
 void	print_tokens(t_token *tokens, char *stage);
 void	print_redirections(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list, char *stage);
 
-// main_debug_utils.c - Debug helper utilities
+// main_debug_utils.c
 void	print_tokens_copy(char *stage);
 
 #endif

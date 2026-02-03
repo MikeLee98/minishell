@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:25:04 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:16:50 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static t_token	*build_cmd(t_cmd **cmd_list, t_token *current_token)
 		return (NULL);
 	}
 	add_cmd_to_list(cmd_list, current_cmd);
-	if (current_token && current_token->type == TOKEN_PIPE)
+	if (current_token && (current_token->type == TOKEN_PIPE
+			|| current_token->type == TOKEN_SEMICOLON))
 		current_token = current_token->next;
 	return (current_token);
 }

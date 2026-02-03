@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 11:40:36 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:15:08 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static char	*token_type_str(t_token_type type)
 		return ("WORD");
 	else if (type == TOKEN_PIPE)
 		return ("PIPE");
+	else if (type == TOKEN_SEMICOLON)
+		return ("SEMICOLON");
 	else if (type == TOKEN_REDIR_IN)
 		return ("REDIR_IN");
 	else if (type == TOKEN_REDIR_OUT)

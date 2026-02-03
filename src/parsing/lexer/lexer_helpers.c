@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 09:29:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 16:10:47 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 12:08:37 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	is_whitespace(char c)
 
 int	is_special_char(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '|' || c == ';' || c == '<' || c == '>');
 }
 
 int	is_fd_prefix(char c)

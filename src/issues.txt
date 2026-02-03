@@ -35,9 +35,6 @@ export -TEST=100
 different case not specified, exit code 2 - 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
 export -TEST=123
 
-different case not specified, exit code 2 - 231: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:566
-unset -TEST
-
 # **************************************************************************** #
 #                                  PATH FAILS                                  #
 # **************************************************************************** #
@@ -66,8 +63,8 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 929  LEAKING: 0 
-                     STD_OUT: 6  STD_ERR: 5  EXIT_CODE: 5  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 930  LEAKING: 0 
+                     STD_OUT: 6  STD_ERR: 4  EXIT_CODE: 4  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 16   
-                                     ✅ 2807
+                                     ❌ 14   
+                                     ✅ 2809

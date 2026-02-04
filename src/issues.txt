@@ -3,42 +3,26 @@
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
-#                                   BUILTINS                                   #
-# **************************************************************************** #
-
-solved - 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
-env what
-
-# **************************************************************************** #
-#                                  PATH FAILS                                  #
-# **************************************************************************** #
-
-bash identical behaviour - 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
-env -i ./minishell
-cd /bin/
-ls
-
-# **************************************************************************** #
 #                                     WILD                                     #
 # **************************************************************************** #
 
-13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
+13: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
-14: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
+14: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
 echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
-15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
+15: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
 echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 936  LEAKING: 0 
-                     STD_OUT: 5  STD_ERR: 2  EXIT_CODE: 1  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 938  LEAKING: 0 
+                     STD_OUT: 3  STD_ERR: 3  EXIT_CODE: ✓   
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 8   
-                                     ✅ 2815
+                                     ❌ 6   
+                                     ✅ 2817

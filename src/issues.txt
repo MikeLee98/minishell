@@ -10,10 +10,6 @@
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
-14: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
-echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-echo $?
-
 15: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
 echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
@@ -22,7 +18,7 @@ echo $?
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
              TOTAL TEST COUNT: 941  TESTS PASSED: 938  LEAKING: 0 
-                     STD_OUT: 3  STD_ERR: 3  EXIT_CODE: ✓   
+                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: ✓   
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 6   
-                                     ✅ 2817
+                                     ❌ 4   
+                                     ✅ 2819

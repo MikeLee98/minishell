@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 16:51:34 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 19:05:22 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	free_env_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env.c
-int		ft_env(void);
+int		ft_env(char **args);
 
 // builtin_export.c
 int		ft_export(char **args);

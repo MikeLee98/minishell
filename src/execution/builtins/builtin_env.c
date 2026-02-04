@@ -6,13 +6,13 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 19:03:47 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 19:28:35 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int ft_env(char **args)
+int	ft_env(char **args)
 {
 	t_env	*tmp;
 

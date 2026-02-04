@@ -1,38 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   lexer_checks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 22:49:59 by migusant         ###   ########.fr       */
+/*   Created: 2026/02/02 10:50:08 by migusant          #+#    #+#             */
+/*   Updated: 2026/02/04 16:50:38 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int	ft_env(char **args)
+int	is_whitespace(char c)
 {
-	t_env	*tmp;
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
 
-	if (args[1])
-	{
-		if (!shell()->stderr_redir)
-		{
-			ft_putstr_fd("env: ‘", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putstr_fd("’: No such file or directory\n", 2);
-		}
-		shell()->exit_code = 127;
-		return (127);
-	}
-	tmp = shell()->env;
-	while (tmp)
-	{
-		if (tmp->value)
-			ft_printf("%s=%s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
-	}
-	return (0);
+int	is_special_char(char c)
+{
+	return (c == '|' || c == ';' || c == '<' || c == '>');
+}
+
+int	is_redir_char(char c)
+{
+	return (c == '>' || c == '<');
+}
+
+int	is_fd_prefix(char c)
+{
+	return (ft_isdigit(c) || c == '&');
 }

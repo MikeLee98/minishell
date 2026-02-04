@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 12:15:08 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 12:58:25 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ void	print_debug_info(void)
 {
 	if (!shell() || !shell()->toks)
 		return ;
-	ft_putstr_fd("\nNOTE:\nFile descriptor redirections (2>, 2>>, &>) ", 1);
+	ft_putstr_fd("\nNOTE:\n", 1);
+	ft_putstr_fd("File descriptor redirections (2>, 2>>, &>) ", 1);
 	ft_putstr_fd("are not required by minishell subject.\n", 1);
 	ft_putstr_fd("They will be simplified to standard redirections.\n", 1);
+	ft_putstr_fd("Error messages will be suppressed when a ", 1);
+	ft_putstr_fd("stderr redirection is detected.\n", 1);
 	print_tokens(shell()->toks, "TOKENS");
 	print_tokens_copy("TOKENS (after expansion)");
 	print_tokens_copy("TOKENS (after word splitting)");

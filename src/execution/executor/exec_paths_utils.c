@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 18:35:07 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 23:15:31 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 13:09:50 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 void	exit_with_cmd_error(char *cmd_name, const char *msg, int code)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd((char *)msg, 2);
-	ft_putstr_fd("\n", 2);
+	if (!shell()->stderr_redir)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_name, 2);
+		ft_putstr_fd((char *)msg, 2);
+		ft_putstr_fd("\n", 2);
+	}
 	exit(code);
 }
 

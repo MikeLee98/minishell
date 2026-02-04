@@ -1,70 +1,161 @@
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-
-# **************************************************************************** #
-#                                   BUILTINS                                   #
-# **************************************************************************** #
- 
-105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
-cd "doesntexist" 2>/dev/null 
-
-107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
-cd "wtf" 2>/dev/null 
-
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 🚀                             MANDATORY (WITH VALGRIND)                         🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-
-# **************************************************************************** #
-#                                   BUILTINS                                   #
-# **************************************************************************** #
-
-solved - 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
-env what
-
-unknown error - 150: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
-export
-
-different case not specified, exit code 2 - 165: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
-export --TEST=123
-
-different case not specified, exit code 2 - 170: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
-export -TEST=100
-
-different case not specified, exit code 2 - 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
-export -TEST=123
-
-# **************************************************************************** #
-#                                  PATH FAILS                                  #
-# **************************************************************************** #
-
-bash identical behaviour - 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
-env -i ./minishell
-cd /bin/
-ls
 
 # **************************************************************************** #
 #                                     WILD                                     #
 # **************************************************************************** #
 
-13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
+13: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
-14: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
-echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-echo $?
-
-15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
+15: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
 echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 930  LEAKING: 0 
-                     STD_OUT: 6  STD_ERR: 4  EXIT_CODE: 4  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 939  LEAKING: 0 
+                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: ✓   
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 14   
-                                     ✅ 2809
+                                     ❌ 4   
+                                     ✅ 2819
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                 NO_ENV                                        🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:1
+2:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:4
+3:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:7
+4:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:9
+5:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:11
+6:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:13
+7:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:15
+8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:17
+9:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:19
+10:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:22
+11:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:24
+12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:26
+13:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:29
+14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:31
+15:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:33
+16:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:35
+17:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:37
+18:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:41
+19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:44
+20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:46
+21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:50
+22:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:53
+23:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:56
+24:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:59
+25:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:62
+26:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:65
+27:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:68
+28:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:73
+29:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:78
+30:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:84
+31:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:89
+32:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:96
+33:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:102
+34:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:116
+35:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:124
+36:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:134
+37:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:142
+38:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:145
+39:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:148
+40:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:150
+41:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:152
+42:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:154
+43:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:157
+44:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:165
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                       🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 44  TESTS PASSED: 36  LEAKING: 0
+                     STD_OUT: 5  STD_ERR: 3  EXIT_CODE: 4
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 12
+                                     ✅ 120
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                  MINI_DEATH                                   🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+1:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:1
+2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:3
+3:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:5
+4:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:7
+5:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:9
+6:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:11
+7:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:13
+8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:15
+9:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:17
+10:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:19
+11:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:21
+12:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:23
+13:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:25
+14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:27
+15:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:29
+16:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:31
+17:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:33
+18:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:35
+19:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:37
+20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:39
+21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:41
+22:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:43
+23:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:45
+24:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:47
+25:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:49
+26:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:51
+27:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:55
+28:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:57
+29:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:59
+30:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:61
+31:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:63
+32:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:65
+33:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:67
+34:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:69
+35:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:71
+36:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:73
+37:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:77
+38:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:79
+39:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:81
+40:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:83
+41:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:85
+42:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:87
+43:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:89
+44:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:91
+45:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:93
+46:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:97
+47:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:99
+48:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:101
+49:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:103
+50:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:105
+51:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:107
+52:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:109
+53:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:111
+54:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:113
+55:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:115
+56:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:117
+57:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:120
+58:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:123
+59:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:126
+60:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:129
+61:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:132
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                       🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 61  TESTS PASSED: 57  LEAKING: 0
+                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: 4
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 8
+                                     ✅ 175

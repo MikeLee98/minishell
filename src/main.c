@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/04 17:33:20 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 19:24:23 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	init_shell(char **envp)
 			env_set(&shell()->env, "PWD", cwd, 0);
 			free(cwd);
 		}
-		env_set(&shell()->env, "PATH", "/usr/local/bin:/usr/bin:/bin", 0);
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;

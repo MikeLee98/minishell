@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:11 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 22:48:38 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:34:27 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ int	ft_exit(char **args)
 {
 	long	code;
 
-	ft_putstr_fd("exit\n", 1);
+	if (isatty(STDIN_FILENO))
+		ft_putstr_fd("exit\n", 1);
 	if (!args[1])
 	{
 		shell()->should_exit = 1;

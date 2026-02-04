@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:54:59 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 19:05:09 by migusant         ###   ########.fr       */
+/*   Updated: 2026/01/31 19:19:26 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	run_builtin(char **args)
 	if (ft_strcmp(args[0], "unset") == 0)
 		return (ft_unset(args));
 	if (ft_strcmp(args[0], "env") == 0)
-		return (ft_env(args));
+		return (ft_env());
 	if (ft_strcmp(args[0], "exit") == 0)
 		return (ft_exit(args));
 	return (1);

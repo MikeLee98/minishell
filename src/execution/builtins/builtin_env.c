@@ -3,28 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 22:49:59 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/03 21:44:19 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int	ft_env(char **args)
+int	ft_env(void)
 {
 	t_env	*tmp;
 
-	if (args[1])
+	if (shell()->cmds->args[1])
 	{
-		if (!shell()->stderr_redir)
-		{
-			ft_putstr_fd("env: ‘", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putstr_fd("’: No such file or directory\n", 2);
-		}
-		shell()->exit_code = 127;
+		ft_putstr_fd("env: ‘", 2);
+		ft_putstr_fd(shell()->cmds->args[1], 2);
+		ft_putstr_fd("’: No such file or directory\n", 2);
 		return (127);
 	}
 	tmp = shell()->env;

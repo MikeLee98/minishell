@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/04 16:00:05 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 17:33:20 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ static int	init_shell(char **envp)
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;
-	shell()->exit_code = 0;
+	shell()->stderr_redir = 0;
 	shell()->should_exit = 0;
+	shell()->exit_code = 0;
 	update_shlvl();
 	setup_signals(SIG_INTERACTIVE);
 	return (1);

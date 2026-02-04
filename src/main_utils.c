@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:33 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 10:21:21 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 13:16:21 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,13 @@ static char	get_unclosed_quote_type(char *str)
 
 static void	print_unclosed_quote_error(char quote)
 {
-	ft_putstr_fd("minishell: unexpected EOF while looking for matching `", 2);
-	ft_putchar_fd(quote, 2);
-	ft_putstr_fd("'\n", 2);
+	if (!shell()->stderr_redir)
+	{
+		ft_putstr_fd("minishell: unexpected EOF while ", 2);
+		ft_putstr_fd("looking for matching `", 2);
+		ft_putchar_fd(quote, 2);
+		ft_putstr_fd("'\n", 2);
+	}
 }
 
 int	validate_input(char *input)

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 23:51:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 13:10:06 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,12 @@ static int	create_pipe_safe(int pipefd[2])
 {
 	if (pipe(pipefd) == -1)
 	{
-		ft_putstr_fd("minishell: pipe: ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
+		if (!shell()->stderr_redir)
+		{
+			ft_putstr_fd("minishell: pipe: ", 2);
+			ft_putstr_fd(strerror(errno), 2);
+			ft_putstr_fd("\n", 2);
+		}
 		return (1);
 	}
 	return (0);

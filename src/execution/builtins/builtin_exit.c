@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:11 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 15:58:49 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 17:34:27 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,21 @@ static int	parse_exit_code(const char *s, long *out)
 
 static int	exit_numeric_error(char *arg)
 {
-	ft_putstr_fd("minishell: exit: ", 2);
-	ft_putstr_fd(arg, 2);
-	ft_putstr_fd(": numeric argument required\n", 2);
+	if (!shell()->stderr_redir)
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+	}
 	shell()->should_exit = 1;
 	return (2);
 }
 
 static int	exit_too_many_args(void)
 {
-	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+	if (!shell()->stderr_redir)
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+	shell()->exit_code = 1;
 	return (1);
 }
 

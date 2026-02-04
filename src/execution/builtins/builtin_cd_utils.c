@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 09:18:48 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 16:22:11 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 17:33:08 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,12 @@ static char	*get_env_var(char *var_name)
 	value = ft_getenv(shell()->env, var_name);
 	if (!value)
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(var_name, 2);
-		ft_putstr_fd(" not set\n", 2);
+		if (!shell()->stderr_redir)
+		{
+			ft_putstr_fd("minishell: cd: ", 2);
+			ft_putstr_fd(var_name, 2);
+			ft_putstr_fd(" not set\n", 2);
+		}
 		shell()->exit_code = 1;
 		return (NULL);
 	}
@@ -39,14 +42,14 @@ static int	parse_cd_flags(char **args, int *i)
 		}
 		else if (ft_strcmp(args[*i], "-") == 0)
 			break ;
-		else
+		else if (!shell()->stderr_redir)
 		{
 			ft_putstr_fd("minishell: cd: ", 2);
 			ft_putstr_fd(args[*i], 2);
 			ft_putstr_fd(": invalid option\n", 2);
-			shell()->exit_code = 2;
-			return (0);
 		}
+		shell()->exit_code = 2;
+		return (0);
 	}
 	return (1);
 }
@@ -83,7 +86,8 @@ char	*cd_get_target(char **args, int *should_free, int *print_pwd)
 		return (NULL);
 	if (args[i] && args[i + 1])
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		if (!shell()->stderr_redir)
+			ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		shell()->exit_code = 1;
 		return (NULL);
 	}

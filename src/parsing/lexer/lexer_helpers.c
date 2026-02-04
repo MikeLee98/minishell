@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 09:29:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 12:08:37 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 16:50:41 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,17 @@ t_token	*create_token(t_token_type type, char *value)
 	return (token);
 }
 
-int	is_whitespace(char c)
+void	add_token(t_token **head, t_token *new_token)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
-}
+	t_token	*current;
 
-int	is_special_char(char c)
-{
-	return (c == '|' || c == ';' || c == '<' || c == '>');
-}
-
-int	is_fd_prefix(char c)
-{
-	return (ft_isdigit(c) || c == '&');
-}
-
-int	is_redir_char(char c)
-{
-	return (c == '>' || c == '<');
+	if (!*head)
+	{
+		*head = new_token;
+		return ;
+	}
+	current = *head;
+	while (current->next)
+		current = current->next;
+	current->next = new_token;
 }

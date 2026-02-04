@@ -6,26 +6,11 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:17:32 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 12:17:19 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 16:47:19 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-
-static void	add_token(t_token **head, t_token *new_token)
-{
-	t_token	*current;
-
-	if (!*head)
-	{
-		*head = new_token;
-		return ;
-	}
-	current = *head;
-	while (current->next)
-		current = current->next;
-	current->next = new_token;
-}
 
 static t_token	*create_operator_token(char *input, int *i)
 {
@@ -89,6 +74,22 @@ static int	handle_token(t_token **head, char *input, int *i)
 	return (1);
 }
 
+static void	handle_fd_prefix(char *input, int *i)
+{
+	while (input[*i] && is_fd_prefix(input[*i]))
+	{
+		if (input[*i + 1] && is_redir_char(input[*i + 1]))
+		{
+			if ((input[*i] == '2' && input[*i + 1] == '>')
+				|| (input[*i] == '&' && input[*i + 1] == '>'))
+				shell()->stderr_redir = 1;
+			(*i)++;
+		}
+		else
+			break ;
+	}
+}
+
 t_token	*lexer(char *input)
 {
 	t_token	*head;
@@ -96,19 +97,14 @@ t_token	*lexer(char *input)
 
 	head = NULL;
 	i = 0;
+	shell()->stderr_redir = 0;
 	while (input[i])
 	{
 		while (input[i] && is_whitespace(input[i]))
 			i++;
 		if (!input[i])
 			break ;
-		while (input[i] && is_fd_prefix(input[i]))
-		{
-			if (input[i + 1] && is_redir_char(input[i + 1]))
-				i++;
-			else
-				break ;
-		}
+		handle_fd_prefix(input, &i);
 		if (!handle_token(&head, input, &i))
 		{
 			free_tokens(head);

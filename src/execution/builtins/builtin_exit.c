@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:11 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 21:09:10 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 15:58:49 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	ft_exit(char **args)
 {
 	long	code;
 
-	ft_putstr_fd("exit\n", 1);
+	if (isatty(STDIN_FILENO))
+		ft_putstr_fd("exit\n", 1);
 	if (!args[1])
 	{
 		shell()->should_exit = 1;

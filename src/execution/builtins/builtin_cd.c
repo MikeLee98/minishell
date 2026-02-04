@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:59 by mario             #+#    #+#             */
-/*   Updated: 2026/01/29 16:24:49 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 13:00:45 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,14 @@ static int	cd_chdir_and_update(char *target, char *oldpwd, int should_free)
 {
 	if (chdir(target) != 0)
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(target, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
+		if (!shell()->stderr_redir)
+		{
+			ft_putstr_fd("minishell: cd: ", 2);
+			ft_putstr_fd(target, 2);
+			ft_putstr_fd(": ", 2);
+			ft_putstr_fd(strerror(errno), 2);
+			ft_putstr_fd("\n", 2);
+		}
 		free(oldpwd);
 		if (should_free)
 			free(target);

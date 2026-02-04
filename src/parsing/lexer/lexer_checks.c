@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   lexer_checks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/21 19:56:25 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 13:05:21 by migusant         ###   ########.fr       */
+/*   Created: 2026/02/02 10:50:08 by migusant          #+#    #+#             */
+/*   Updated: 2026/02/04 16:50:38 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int	ft_pwd(void)
+int	is_whitespace(char c)
 {
-	char	*cwd;
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-	{
-		if (!shell()->stderr_redir)
-		{
-			ft_putstr_fd("minishell: pwd: error retrieving current ", 2);
-			ft_putstr_fd("directory\n", 2);
-		}
-		shell()->exit_code = 1;
-		return (1);
-	}
-	ft_printf("%s\n", cwd);
-	free(cwd);
-	shell()->exit_code = 0;
-	return (0);
+int	is_special_char(char c)
+{
+	return (c == '|' || c == ';' || c == '<' || c == '>');
+}
+
+int	is_redir_char(char c)
+{
+	return (c == '>' || c == '<');
+}
+
+int	is_fd_prefix(char c)
+{
+	return (ft_isdigit(c) || c == '&');
 }

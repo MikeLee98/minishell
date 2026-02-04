@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/04 17:17:11 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/04 20:29:56 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	init_shell(char **envp)
 			env_set(&shell()->env, "PWD", cwd, 0);
 			free(cwd);
 		}
-		env_set(&shell()->env, "PATH", "/usr/local/bin:/usr/bin:/bin", 0);
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;

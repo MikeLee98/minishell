@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:11 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 17:34:27 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 17:16:57 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static int	exit_numeric_error(char *arg)
 		ft_putstr_fd(": numeric argument required\n", 2);
 	}
 	shell()->should_exit = 1;
+	shell()->exit_code = 2;
 	return (2);
 }
 
@@ -77,8 +78,7 @@ int	ft_exit(char **args)
 {
 	long	code;
 
-	if (isatty(STDIN_FILENO))
-		ft_putstr_fd("exit\n", 1);
+	ft_putstr_fd("exit\n", 1);
 	if (!args[1])
 	{
 		shell()->should_exit = 1;

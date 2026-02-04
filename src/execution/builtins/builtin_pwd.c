@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:25 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 17:33:16 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 13:05:21 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ int	ft_pwd(void)
 	}
 	ft_printf("%s\n", cwd);
 	free(cwd);
+	shell()->exit_code = 0;
 	return (0);
 }

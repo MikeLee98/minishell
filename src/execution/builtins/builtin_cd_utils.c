@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 09:18:48 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 17:33:08 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/04 13:02:13 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,26 @@ static int	parse_cd_flags(char **args, int *i)
 	return (1);
 }
 
-static char	*handle_special_args(int i, int *should_free, int *print_pwd)
+static char	*handle_special_args(char **args, int i, int *should_free,
+	int *print_pwd)
 {
-	if (shell()->cmds->args[i] && ft_strcmp(shell()->cmds->args[i], "-") == 0)
+	if (args[i] && ft_strcmp(args[i], "-") == 0)
 	{
 		*print_pwd = 1;
 		return (get_env_var("OLDPWD"));
 	}
-	if (!shell()->cmds->args[i] || !shell()->cmds->args[i][0])
+	if (!args[i] || !args[i][0])
 	{
-		if (i > 1 || (shell()->cmds->args[i] && !shell()->cmds->args[i][0]))
+		if (i > 1 || (args[i] && !args[i][0]))
 		{
 			*should_free = 1;
 			return (ft_strdup("."));
 		}
 		return (get_env_var("HOME"));
 	}
-	if (ft_strcmp(shell()->cmds->args[i], "~") == 0)
+	if (ft_strcmp(args[i], "~") == 0)
 		return (get_env_var("HOME"));
-	return (shell()->cmds->args[i]);
+	return (args[i]);
 }
 
 char	*cd_get_target(char **args, int *should_free, int *print_pwd)
@@ -91,5 +92,5 @@ char	*cd_get_target(char **args, int *should_free, int *print_pwd)
 		shell()->exit_code = 1;
 		return (NULL);
 	}
-	return (handle_special_args(i, should_free, print_pwd));
+	return (handle_special_args(args, i, should_free, print_pwd));
 }

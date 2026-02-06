@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:06 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 19:28:35 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:38:34 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@ int	ft_env(char **args)
 
 	if (args[1])
 	{
-		if (!shell()->stderr_redir)
-		{
-			ft_putstr_fd("env: ‘", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putstr_fd("’: No such file or directory\n", 2);
-		}
+		ft_putstr_fd("env: ‘", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd("’: No such file or directory\n", 2);
 		shell()->exit_code = 127;
 		return (127);
 	}

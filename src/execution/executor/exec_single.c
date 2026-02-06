@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:14 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 13:10:59 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 23:47:06 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ static void	execute_external(t_cmd *cmd)
 	pid = fork();
 	if (pid < 0)
 	{
-		if (!shell()->stderr_redir)
-			perror("fork");
+		perror("fork");
 		shell()->exit_code = 1;
 		return ;
 	}

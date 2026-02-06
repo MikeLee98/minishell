@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/31 10:13:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 13:03:47 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:40:00 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,9 @@ int	is_valid_identifier(char *s)
 
 void	export_identifier_error(char *arg)
 {
-	if (!shell()->stderr_redir)
-	{
-		ft_putstr_fd("minishell: export: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-	}
+	ft_putstr_fd("minishell: export: `", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
 }
 
 int	is_valid_option(char *arg)
@@ -62,29 +59,23 @@ int	is_valid_option(char *arg)
 
 void	export_option_error(char *arg)
 {
-	if (!shell()->stderr_redir)
+	ft_putstr_fd("bash: export: ", 2);
+	if (arg[1] == '-')
+		ft_putstr_fd("--", 2);
+	else
 	{
-		ft_putstr_fd("bash: export: ", 2);
-		if (arg[1] == '-')
-			ft_putstr_fd("--", 2);
-		else
-		{
-			ft_putstr_fd("-", 2);
-			ft_putchar_fd(arg[1], 2);
-		}
-		ft_putstr_fd(": invalid option\n", 2);
-		ft_putstr_fd("export: usage: export [-fn] [name[=value] ...] ", 2);
-		ft_putstr_fd("or export -p\n", 2);
+		ft_putstr_fd("-", 2);
+		ft_putchar_fd(arg[1], 2);
 	}
+	ft_putstr_fd(": invalid option\n", 2);
+	ft_putstr_fd("export: usage: export [-fn] [name[=value] ...] ", 2);
+	ft_putstr_fd("or export -p\n", 2);
 }
 
 void	export_function_error(char *arg)
 {
-	if (!shell()->stderr_redir)
-	{
-		ft_putstr_fd("bash: export: ", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd(": not a function\n", 2);
-	}
+	ft_putstr_fd("bash: export: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": not a function\n", 2);
 	shell()->exit_code = 1;
 }

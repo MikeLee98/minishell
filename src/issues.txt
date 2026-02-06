@@ -1,70 +1,129 @@
+https://github.com/LucasKuhn/minishell_tester.git
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+                                                                                             
+ ██    ██ █ ██    █ █ █████ █   █ █████ █     █       ██████ █████ █████ ██████ █████ █████  
+ ███  ███ █ ███   █ █ █     █   █ █     █     █         ██   █     █       ██   █     █   ██ 
+ █ ████ █ █ █ ██  █ █ █████ █████ ████  █     █         ██   ████  █████   ██   ████  █████  
+ █  ██  █ █ █  ██ █ █     █ █   █ █     █     █         ██   █         █   ██   █     █   ██ 
+ █      █ █ █   ███ █ █████ █   █ █████ █████ █████     ██   █████ █████   ██   █████ █   ██ 
+                                                                                             
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+———————————— redirects
+
+Test  73: ✅⚠️  cat <"./test_files/infile" | echo hi 
+mini error = ()
+bash error = ( Broken pipe)
+
+Test  75: ✅⚠️  cat <"./test_files/infile_big" | echo hi 
+mini error = ()
+bash error = ( Broken pipe)
+
+
+
+
+
+https://github.com/zstenger93/42_minishell_tester.git
+
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                           NOT MANDATORY (WITH VALGRIND)                       🚀
+🚀                        "NOT" MANDATORY WITH VALGRIND                          🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # **************************************************************************** #
 #                                   BUILTINS                                   #
 # **************************************************************************** #
- 
-105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
+
+102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
+cd '/////' 2>/dev/null
+
+105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
 cd "doesntexist" 2>/dev/null 
 
-107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
+107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
 cd "wtf" 2>/dev/null 
-
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                             MANDATORY (WITH VALGRIND)                         🚀
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-
-# **************************************************************************** #
-#                                   BUILTINS                                   #
-# **************************************************************************** #
-
-solved - 140: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:360
-env what
-
-unknown error - 150: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:390
-export
-
-different case not specified, exit code 2 - 165: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:420
-export --TEST=123
-
-different case not specified, exit code 2 - 170: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:430
-export -TEST=100
-
-different case not specified, exit code 2 - 185: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:460
-export -TEST=123
-
-# **************************************************************************** #
-#                                  PATH FAILS                                  #
-# **************************************************************************** #
-
-bash identical behaviour - 11: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/2_path_check.sh:43
-env -i ./minishell
-cd /bin/
-ls
 
 # **************************************************************************** #
 #                                     WILD                                     #
 # **************************************************************************** #
 
-13: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
+13: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:46
 echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
-14: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:49
-echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
-echo $?
-
-15: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
+15: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  LEAKS: ✅  minishell_tester_zstenger93/cmds/mand/9_go_wild.sh:52
 echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
 echo $?
 
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 930  LEAKING: 0 
-                     STD_OUT: 6  STD_ERR: 4  EXIT_CODE: 4  
+             TOTAL TEST COUNT: 941  TESTS PASSED: 936  LEAKING: 0
+                     STD_OUT: 2  STD_ERR: 5  EXIT_CODE: 1
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 14   
-                                     ✅ 2809
+                                     ❌ 8
+                                     ✅ 2815
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                          "NOT" MANDATORY MINI_DEATH                           🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+46: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:97
+echo seg <> echo seg
+
+50: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:105
+echo <<< echo seegf
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                       🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 61  TESTS PASSED: 59  LEAKING: 0
+                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: 2
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 6   
+                                     ✅ 177
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                           "NOT" MANDATORY NO_ENV                              🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+2: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:4
+unset PATH
+env
+
+3: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:7
+env
+
+4: STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:9
+export
+
+18: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:41
+cd
+cd ~
+
+30: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:84
+unset PATH
+pwd
+cd ~
+pwd
+
+31: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:89
+unset PATH
+pwd
+cd ~
+pwd
+cd -
+pwd
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                       🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 44  TESTS PASSED: 38  LEAKING: 0
+                     STD_OUT: 5  STD_ERR: 3  EXIT_CODE: 2
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 10
+                                     ✅ 122

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
+/*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/03 14:13:16 by mario            ###   ########.fr       */
+/*   Updated: 2026/02/05 22:41:59 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ typedef struct s_shell
 	t_env			*env;
 	t_cmd			*cmds;
 	t_token			*toks;
-	int				exit_code;
 	int				should_exit;
+	int				exit_code;
 }	t_shell;
 
 // ************************************************************************** //
@@ -107,10 +107,11 @@ t_token	*lexer(char *input);
 
 // lexer_helpers.c
 t_token	*create_token(t_token_type type, char *value);
+void	add_token(t_token **head, t_token *new_token);
+
+// lexer_checks.c
 int		is_whitespace(char c);
 int		is_special_char(char c);
-int		is_fd_prefix(char c);
-int		is_redir_char(char c);
 
 // lexer_utils.c
 int		count_backslashes(char *str, int i);
@@ -217,12 +218,19 @@ void	free_env_nodes(t_env *env);
 void	free_env_array(char **array);
 
 // builtin_env.c
-int		ft_env(void);
+int		ft_env(char **args);
 
 // builtin_export.c
 int		ft_export(char **args);
 
-// builtin_print_export.c
+// builtin_export_utils.c
+int		is_valid_identifier(char *s);
+void	export_identifier_error(char *arg);
+int		is_valid_option(char *arg);
+void	export_option_error(char *arg);
+void	export_function_error(char *arg);
+
+// builtin_export_print.c
 void	print_export(t_env *env);
 
 // builtin_unset.c

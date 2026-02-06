@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 10:19:56 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 23:15:36 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 23:52:41 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	execve_with_path(t_cmd *cmd)
 {
 	char	*path_env;
 
+	if (!cmd->args[0] || cmd->args[0][0] == '\0')
+		exit_with_cmd_error("", ": command not found", 127);
 	if (ft_strchr(cmd->args[0], '/'))
 		execute_absolute_path(cmd);
 	path_env = ft_getenv(shell()->env, "PATH");

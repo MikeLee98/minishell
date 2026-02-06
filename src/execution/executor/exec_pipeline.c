@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/01/27 23:51:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 23:45:37 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,6 @@ static void	update_prev_fd(t_pipeline *p)
 		p->prev_fd = -1;
 }
 
-static void	handle_empty_command_pipeline(t_cmd *current, int pipefd[2])
-{
-	if (current->redirections)
-		shell()->exit_code = handle_redirections(current);
-	if (current->next)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
-}
-
 static int	create_pipe_safe(int pipefd[2])
 {
 	if (pipe(pipefd) == -1)
@@ -48,6 +37,36 @@ static int	create_pipe_safe(int pipefd[2])
 	return (0);
 }
 
+static pid_t	handle_empty_command_pipeline(t_cmd *current, int pipefd[2],
+	int prev_fd)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		setup_signals(SIG_DEFAULT);
+		if (prev_fd != -1)
+		{
+			dup2(prev_fd, STDIN_FILENO);
+			close(prev_fd);
+		}
+		if (current->next)
+		{
+			close(pipefd[0]);
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[1]);
+		}
+		if (current->redirections)
+		{
+			if (apply_redirections(current) != 0)
+				exit(1);
+		}
+		exit(0);
+	}
+	return (pid);
+}
+
 static void	exec_pipeline_loop(t_pipeline *p, pid_t *last_pid)
 {
 	while (p->current)
@@ -56,7 +75,10 @@ static void	exec_pipeline_loop(t_pipeline *p, pid_t *last_pid)
 			return ;
 		if (!p->current->args || !p->current->args[0])
 		{
-			handle_empty_command_pipeline(p->current, p->pipefd);
+			p->pid = handle_empty_command_pipeline(p->current,
+					p->pipefd, p->prev_fd);
+			*last_pid = p->pid;
+			update_prev_fd(p);
 			p->current = p->current->next;
 			continue ;
 		}

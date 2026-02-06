@@ -6,7 +6,7 @@
 #    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/19 22:09:11 by migusant          #+#    #+#              #
-#    Updated: 2026/02/02 15:55:02 by migusant         ###   ########.fr        #
+#    Updated: 2026/02/06 11:19:15 by migusant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,62 @@ RESET = \033[0m
 #                              SOURCE FILES                                    #
 # **************************************************************************** #
 
-SRC = $(shell find $(SRC_DIR) -name '*.c' -type f)
+SRC = src/main.c \
+	src/main_utils.c \
+	src/main_pipeline.c \
+	src/main_debug.c \
+	src/main_debug_utils.c \
+	src/parsing/lexer/lexer.c \
+	src/parsing/lexer/lexer_helpers.c \
+	src/parsing/lexer/lexer_checks.c \
+	src/parsing/lexer/lexer_utils.c \
+	src/parsing/lexer/lexer_quotes.c \
+	src/parsing/syntax/syntax_checker.c \
+	src/parsing/syntax/syntax_checker_utils.c \
+	src/parsing/parser/parser.c \
+	src/parsing/parser/parser_utils.c \
+	src/parsing/parser/parser_split_mark.c \
+	src/parsing/parser/parser_heredoc_mark.c \
+	src/parsing/parser/parser_split_apply.c \
+	src/parsing/expander/expander.c \
+	src/parsing/expander/expander_quotes.c \
+	src/parsing/expander/expander_substitutions.c \
+	src/parsing/expander/expander_heredoc.c \
+	src/parsing/expander/expander_utils.c \
+	src/parsing/quotes/quote_removal.c \
+	src/parsing/quotes/quote_removal_utils.c \
+	src/parsing/quotes/quote_removal_single.c \
+	src/parsing/quotes/quote_removal_double.c \
+	src/parsing/signals/signals.c \
+	src/parsing/free.c \
+	src/execution/libft_plus/ft_itoa_heredoc.c \
+	src/execution/libft_plus/ft_strcmp.c \
+	src/execution/env/env_set.c \
+	src/execution/env/env_init.c \
+	src/execution/env/env_shlvl.c \
+	src/execution/env/env_utils.c \
+	src/execution/env/env_unset.c \
+	src/execution/env/free_env.c \
+	src/execution/builtins/builtin_cd.c \
+	src/execution/builtins/builtin_cd_utils.c \
+	src/execution/builtins/builtin_echo.c \
+	src/execution/builtins/builtin_env.c \
+	src/execution/builtins/builtin_exit.c \
+	src/execution/builtins/builtin_export.c \
+	src/execution/builtins/builtin_export_utils.c \
+	src/execution/builtins/builtin_export_print.c \
+	src/execution/builtins/builtin_pwd.c \
+	src/execution/builtins/builtin_unset.c \
+	src/execution/executor/exec_main.c \
+	src/execution/executor/exec_single.c \
+	src/execution/executor/exec_pipeline.c \
+	src/execution/executor/exec_pipeline_utils.c \
+	src/execution/executor/exec_redirect.c \
+	src/execution/executor/exec_paths.c \
+	src/execution/executor/exec_paths_utils.c \
+	src/execution/executor/exec_utils.c \
+	src/execution/executor/heredoc.c
+
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
 # **************************************************************************** #
@@ -65,7 +120,7 @@ $(NAME): $(LIBFT) $(OBJ)
 
 v: all
 	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
-		--suppressions=valgrind.supp ./$(NAME)
+		--suppressions=valgrind.supp -s ./$(NAME)
 
 $(LIBFT):
 	@echo "$(YELLOW)Building libft...$(RESET)"

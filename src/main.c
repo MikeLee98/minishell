@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 10:29:14 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 23:59:52 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,11 @@ static int	init_shell(char **envp)
 			env_set(&shell()->env, "PWD", cwd, 0);
 			free(cwd);
 		}
-		env_set(&shell()->env, "PATH", "/usr/local/bin:/usr/bin:/bin", 0);
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;
-	shell()->exit_code = 0;
 	shell()->should_exit = 0;
+	shell()->exit_code = 0;
 	update_shlvl();
 	setup_signals(SIG_INTERACTIVE);
 	return (1);

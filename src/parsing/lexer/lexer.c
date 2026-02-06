@@ -6,26 +6,11 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:17:32 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 12:17:19 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:32:06 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-
-static void	add_token(t_token **head, t_token *new_token)
-{
-	t_token	*current;
-
-	if (!*head)
-	{
-		*head = new_token;
-		return ;
-	}
-	current = *head;
-	while (current->next)
-		current = current->next;
-	current->next = new_token;
-}
 
 static t_token	*create_operator_token(char *input, int *i)
 {
@@ -102,13 +87,6 @@ t_token	*lexer(char *input)
 			i++;
 		if (!input[i])
 			break ;
-		while (input[i] && is_fd_prefix(input[i]))
-		{
-			if (input[i + 1] && is_redir_char(input[i + 1]))
-				i++;
-			else
-				break ;
-		}
 		if (!handle_token(&head, input, &i))
 		{
 			free_tokens(head);

@@ -6,7 +6,7 @@
 /*   By: mario <mario@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:03 by mario             #+#    #+#             */
-/*   Updated: 2026/02/02 21:06:54 by mario            ###   ########.fr       */
+/*   Updated: 2026/01/21 19:56:04 by mario            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ int	ft_echo(char **args)
 	}
 	if (newline)
 		ft_printf("\n");
+	shell()->exit_code = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/04 20:29:56 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 23:59:52 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	init_shell(char **envp)
 	}
 	shell()->cmds = NULL;
 	shell()->toks = NULL;
-	shell()->stderr_redir = 0;
 	shell()->should_exit = 0;
 	shell()->exit_code = 0;
 	update_shlvl();

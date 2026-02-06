@@ -1,6 +1,47 @@
+https://github.com/LucasKuhn/minishell_tester.git
+
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+                                                                                             
+ ██    ██ █ ██    █ █ █████ █   █ █████ █     █       ██████ █████ █████ ██████ █████ █████  
+ ███  ███ █ ███   █ █ █     █   █ █     █     █         ██   █     █       ██   █     █   ██ 
+ █ ████ █ █ █ ██  █ █ █████ █████ ████  █     █         ██   ████  █████   ██   ████  █████  
+ █  ██  █ █ █  ██ █ █     █ █   █ █     █     █         ██   █         █   ██   █     █   ██ 
+ █      █ █ █   ███ █ █████ █   █ █████ █████ █████     ██   █████ █████   ██   █████ █   ██ 
+                                                                                             
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+———————————— redirects
+
+Test  73: ✅⚠️  cat <"./test_files/infile" | echo hi 
+mini error = ()
+bash error = ( Broken pipe)
+
+Test  75: ✅⚠️  cat <"./test_files/infile_big" | echo hi 
+mini error = ()
+bash error = ( Broken pipe)
+
+
+
+
+
+https://github.com/zstenger93/42_minishell_tester.git
+
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                             MANDATORY (WITH VALGRIND)                         🚀
+🚀                        "NOT" MANDATORY WITH VALGRIND                          🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+# **************************************************************************** #
+#                                   BUILTINS                                   #
+# **************************************************************************** #
+
+102: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:233
+cd '/////' 2>/dev/null
+
+105: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:239
+cd "doesntexist" 2>/dev/null 
+
+107: STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅  minishell_tester_zstenger93/cmds/mand/1_builtins.sh:243
+cd "wtf" 2>/dev/null 
 
 # **************************************************************************** #
 #                                     WILD                                     #
@@ -17,16 +58,37 @@ echo $?
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 941  TESTS PASSED: 939  LEAKING: 0 
-                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: ✓   
+             TOTAL TEST COUNT: 941  TESTS PASSED: 936  LEAKING: 0
+                     STD_OUT: 2  STD_ERR: 5  EXIT_CODE: 1
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 4   
-                                     ✅ 2819
+                                     ❌ 8
+                                     ✅ 2815
 
 
 
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                                 NO_ENV                                        🚀
+🚀                          "NOT" MANDATORY MINI_DEATH                           🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+46: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:97
+echo seg <> echo seg
+
+50: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:105
+echo <<< echo seegf
+
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+🏁                                    RESULT                                       🏁
+🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
+             TOTAL TEST COUNT: 61  TESTS PASSED: 59  LEAKING: 0
+                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: 2
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 6   
+                                     ✅ 177
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                           "NOT" MANDATORY NO_ENV                              🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 2: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:4
@@ -57,44 +119,11 @@ pwd
 cd -
 pwd
 
-40: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:150
-""
-
-41: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]  minishell_tester_zstenger93/cmds/no_env/10_no_env.sh:152
-''
-
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
 🏁                                    RESULT                                       🏁
 🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 44  TESTS PASSED: 36  LEAKING: 0
-                     STD_OUT: 5  STD_ERR: 3  EXIT_CODE: 4
+             TOTAL TEST COUNT: 44  TESTS PASSED: 38  LEAKING: 0
+                     STD_OUT: 5  STD_ERR: 3  EXIT_CODE: 2
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 12
-                                     ✅ 120
-
-
-
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-🚀                                  MINI_DEATH                                   🚀
-🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
-
-46: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:97
-echo seg <> echo seg
-
-50: STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:105
-echo <<< echo seegf
-
-52: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:109
-echo test |  <<lala
-
-53: STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(141)  bash(0) ]  minishell_tester_zstenger93/cmds/mini_death/1_segfault.sh:111
-echo | > la
-
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-🏁                                    RESULT                                       🏁
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 61  TESTS PASSED: 57  LEAKING: 0
-                     STD_OUT: 2  STD_ERR: 2  EXIT_CODE: 4
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 8
-                                     ✅ 175
+                                     ❌ 10
+                                     ✅ 122

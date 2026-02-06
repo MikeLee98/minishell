@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:56:28 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 13:05:55 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:40:34 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,30 +34,24 @@ static int	is_valid_unset_option(const char *s)
 
 static void	unset_option_error(const char *arg)
 {
-	if (!shell()->stderr_redir)
+	ft_putstr_fd("bash: unset: ", 2);
+	if (arg[1] == '-')
+		ft_putstr_fd("--", 2);
+	else
 	{
-		ft_putstr_fd("bash: unset: ", 2);
-		if (arg[1] == '-')
-			ft_putstr_fd("--", 2);
-		else
-		{
-			ft_putstr_fd("-", 2);
-			ft_putchar_fd(arg[1], 2);
-		}
-		ft_putstr_fd(": invalid option\n", 2);
-		ft_putstr_fd("unset: usage: unset [-f] [-v] [-n] [name ...]\n", 2);
+		ft_putstr_fd("-", 2);
+		ft_putchar_fd(arg[1], 2);
 	}
+	ft_putstr_fd(": invalid option\n", 2);
+	ft_putstr_fd("unset: usage: unset [-f] [-v] [-n] [name ...]\n", 2);
 }
 
 static int	unset_conflicting_options_error(int opts)
 {
 	if ((opts & 1) && (opts & 2))
 	{
-		if (!shell()->stderr_redir)
-		{
-			ft_putstr_fd("bash: unset: cannot simultaneously unset ", 2);
-			ft_putstr_fd("a function and a variable\n", 2);
-		}
+		ft_putstr_fd("bash: unset: cannot simultaneously unset ", 2);
+		ft_putstr_fd("a function and a variable\n", 2);
 		shell()->exit_code = 1;
 		return (1);
 	}

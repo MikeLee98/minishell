@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 19:05:22 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:41:59 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ typedef struct s_shell
 	t_env			*env;
 	t_cmd			*cmds;
 	t_token			*toks;
-	int				stderr_redir;
 	int				should_exit;
 	int				exit_code;
 }	t_shell;
@@ -113,8 +112,6 @@ void	add_token(t_token **head, t_token *new_token);
 // lexer_checks.c
 int		is_whitespace(char c);
 int		is_special_char(char c);
-int		is_redir_char(char c);
-int		is_fd_prefix(char c);
 
 // lexer_utils.c
 int		count_backslashes(char *str, int i);

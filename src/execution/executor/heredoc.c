@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:26 by mario             #+#    #+#             */
-/*   Updated: 2026/01/30 16:11:39 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 22:28:00 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 		if (!line)
 		{
 			close(write_fd);
+			cleanup_resources(CLEANUP_CHILD);
 			exit(1);
 		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			close(write_fd);
+			cleanup_resources(CLEANUP_CHILD);
 			exit(0);
 		}
 		write_heredoc_line(hd_expand, write_fd, line);

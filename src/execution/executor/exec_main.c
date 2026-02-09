@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:54:59 by mario             #+#    #+#             */
-/*   Updated: 2026/02/04 19:05:09 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:57:53 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	executor(void)
 		execute_single(shell()->cmds);
 	else
 		execute_pipeline(shell()->cmds);
+	close_unused_heredocs(NULL);
 }
 
 int	run_builtin(char **args)
@@ -39,4 +40,31 @@ int	run_builtin(char **args)
 	if (ft_strcmp(args[0], "exit") == 0)
 		return (ft_exit(args));
 	return (1);
+}
+
+void	close_unused_heredocs(t_cmd *current_cmd)
+{
+	t_cmd	*cmd;
+	t_redir	*r;
+
+	cmd = shell()->cmds;
+	while (cmd)
+	{
+		if (current_cmd && cmd == current_cmd)
+		{
+			cmd = cmd->next;
+			continue ;
+		}
+		r = cmd->redirections;
+		while (r)
+		{
+			if (r->type == TOKEN_REDIR_HEREDOC && r->fd >= 0)
+			{
+				close(r->fd);
+				r->fd = -1;
+			}
+			r = r->next;
+		}
+		cmd = cmd->next;
+	}
 }

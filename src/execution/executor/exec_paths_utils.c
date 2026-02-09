@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 18:35:07 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 22:40:44 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 21:39:57 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	exit_with_cmd_error(char *cmd_name, const char *msg, int code)
 	ft_putstr_fd(cmd_name, 2);
 	ft_putstr_fd((char *)msg, 2);
 	ft_putstr_fd("\n", 2);
+	cleanup_resources(CLEANUP_CHILD);
 	exit(code);
 }
 
@@ -29,7 +30,6 @@ static void	execute_local_file(char *local_path, t_cmd *cmd)
 	envp = env_to_array(shell()->env);
 	execve(local_path, cmd->args, envp);
 	free_env_array(envp);
-	exit_with_cmd_error(cmd->args[0], ": command not found", 127);
 }
 
 static int	validate_local_file(char *local_path, char *cmd_name)

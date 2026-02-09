@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 10:19:56 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 23:52:41 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 21:44:48 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	execute_absolute_path(t_cmd *cmd)
 	if (access(cmd->args[0], X_OK) != 0)
 		exit_with_cmd_error(cmd->args[0], ": Permission denied", 126);
 	execute_at_path(cmd->args[0], cmd);
-	exit_with_cmd_error(cmd->args[0], ": No such file or directory", 127);
+	exit_with_cmd_error(cmd->args[0], ": exec format error", 126);
 }
 
 static void	search_path_dirs(char **paths, t_cmd *cmd)
@@ -47,11 +47,11 @@ static void	search_path_dirs(char **paths, t_cmd *cmd)
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		if (!tmp)
-			exit(1);
+			exit_with_cmd_error(cmd->args[0], ": cannot allocate memory", 1);
 		full_path = ft_strjoin(tmp, cmd->args[0]);
 		free(tmp);
 		if (!full_path)
-			exit(1);
+			exit_with_cmd_error(cmd->args[0], ": cannot allocate memory", 1);
 		if (access(full_path, X_OK) == 0)
 			execute_at_path(full_path, cmd);
 		free(full_path);

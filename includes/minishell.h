@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 22:41:59 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 21:22:18 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@
 # define SIG_IGNORE			1
 # define SIG_DEFAULT		2
 # define SIG_HEREDOC		3
+
+// Cleanup Modes
+# define CLEANUP_PARENT 0
+# define CLEANUP_CHILD  1
 
 // Token Types
 typedef enum e_token_type
@@ -254,6 +258,7 @@ int		ft_exit(char **args);
 // exec_main.c
 void	executor(void);
 int		run_builtin(char **args);
+void	close_unused_heredocs(t_cmd *current_cmd);
 
 // exec_paths.c
 void	execve_with_path(t_cmd *cmd);
@@ -269,6 +274,7 @@ void	execute_single(t_cmd *cmd);
 void	execute_pipeline(t_cmd *cmd);
 
 // exec_pipeline_utils.c
+void	setup_pipeline_fds(int prev_fd, int pipefd[2], int has_next);
 void	pipeline_child_exec(t_pipeline *p);
 void	wait_all_pipeline(pid_t last_pid, t_pipeline *p);
 
@@ -291,7 +297,7 @@ int		prepare_heredocs(void);
 
 // main.c
 t_shell	*shell(void);
-void	cleanup_shell(void);
+void	cleanup_resources(int mode);
 
 // main_utils.c
 int		validate_input(char *input);

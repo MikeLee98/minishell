@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:14 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 23:47:06 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:52:43 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	execute_builtin(t_cmd *cmd)
 	ret = run_builtin(cmd->args);
 	if (shell()->should_exit)
 	{
-		cleanup_shell();
+		cleanup_resources(CLEANUP_PARENT);
 		restore_fds(saved_fds);
 		exit(shell()->exit_code);
 	}
@@ -68,9 +68,11 @@ static void	execute_external(t_cmd *cmd)
 	{
 		setup_signals(SIG_DEFAULT);
 		if (apply_redirections(cmd) != 0)
+		{
+			cleanup_resources(CLEANUP_CHILD);
 			exit(1);
+		}
 		execve_with_path(cmd);
-		exit(127);
 	}
 	setup_signals(SIG_IGNORE);
 	waitpid(pid, &status, 0);

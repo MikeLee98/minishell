@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/05 23:59:52 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 22:27:35 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,17 @@ static void	shell_loop(void)
 	}
 }
 
-void	cleanup_shell(void)
+void	cleanup_resources(int mode)
 {
 	if (MINISHELL_DEBUG)
-		ft_printf("Cleaning up shell...\n");
-	rl_clear_history();
+	{
+		if (mode == CLEANUP_CHILD)
+			ft_printf("Cleaning up child...\n");
+		else
+			ft_printf("Cleaning up shell...\n");
+	}
+	if (mode == CLEANUP_PARENT)
+		rl_clear_history();
 	if (shell()->toks)
 		free_tokens(shell()->toks);
 	if (shell()->cmds)
@@ -88,6 +94,6 @@ int	main(int argc, char **argv, char **envp)
 	if (!init_shell(envp))
 		return (1);
 	shell_loop();
-	cleanup_shell();
+	cleanup_resources(CLEANUP_PARENT);
 	return (shell()->exit_code);
 }

@@ -6,7 +6,7 @@
 #    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/19 22:09:11 by migusant          #+#    #+#              #
-#    Updated: 2026/02/06 11:19:15 by migusant         ###   ########.fr        #
+#    Updated: 2026/02/06 15:16:07 by migusant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -119,7 +119,8 @@ $(NAME): $(LIBFT) $(OBJ)
 	@echo "$(GREEN)$(NAME) successfully created!$(RESET)"
 
 v: all
-	@clear && valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
+	@clear && valgrind --leak-check=full --show-leak-kinds=all \
+		--track-fds=yes --trace-children=yes --track-origins=yes \
 		--suppressions=valgrind.supp -s ./$(NAME)
 
 $(LIBFT):

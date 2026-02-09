@@ -127,3 +127,208 @@ pwd
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 10
                                      ✅ 122
+
+
+
+
+
+Child Leaks and Unclosed FDs:
+
+Test 1 [NO LEAKS]
+make v
+minishell$ "echo hello | \"\" | cat"
+
+Test 2 [NO LEAKS]
+make v
+minishell$ unset EMPTY
+minishell$ echo hello | \$EMPTY | cat
+
+Test 3 [NO LEAKS]
+make v
+minishell$ export VAR=\"\"
+minishell$ echo hello | \$VAR | cat
+
+Test 4 [NO LEAKS]
+make v
+minishell$ echo test | \"\" | \"\" | cat
+
+Test 5 [NO LEAKS]
+make v
+minishell$ nonexistent_command_xyz
+
+Test 6 [NO LEAKS]
+make v
+minishell$ /etc/passwd
+
+Test 7 [NO LEAKS]
+make v
+minishell$ /tmp
+
+Test 8 [NO LEAKS]
+make v
+minishell$ /path/to/nowhere/file
+
+Test 9 [NO LEAKS]
+make v
+minishell$ unset PATH
+minishell$ ls 2>/dev/null
+
+Test 10 [NO LEAKS]
+make v
+minishell$ mkdir -p /tmp/testdir
+minishell$ ls > /tmp/testdir
+minishell$ rmdir /tmp/testdir
+
+Test 11 [NO LEAKS]
+make v
+minishell$ export EMPTY=\"\"
+minishell$ echo test | \$EMPTY < /nonexistent_file
+
+Test 12 [NO LEAKS]
+make v
+minishell$ echo test | cat < /nonexistent_file
+
+Test 13 [NO LEAKS]
+make v
+minishell$ echo hello | export TEST=value | cat
+
+Test 14 [NO LEAKS]
+make v
+minishell$ cat << END
+> line 1
+> line 2
+> END
+
+Test 15 [NO LEAKS]
+make v
+minishell$ echo test | << END
+> line 1
+> line 2
+> END
+
+Test 16 [LEAKS: FD]
+make v
+minishell$ cat << EOF << END
+> line 1
+> EOF
+> line 2
+> END
+
+CTRL+C Tests:
+
+Test 17 [NO LEAKS]
+make v
+minishell$ CTRL+C
+minishell$ echo $?
+130
+
+Test 18 [NO LEAKS]
+make v
+minishell$ sleep 3
+CTRL+C
+minishell$ echo $?
+130
+
+Test 19 [LEAKS: FD and STILL REACH MEM]
+make v
+minishell$ ls << EOF
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ cat << EOF
+> CTRL+C
+minishell$ echo $?
+130
+
+Test 20 [LEAKS: FD and STILL REACH MEM]
+make v
+minishell$ echo test | << EOF
+> CTRL+C
+minishell$ echo $?
+130
+
+
+
+CTRL+\ Tests:
+
+Test 21 [WEIRD BEHAVIOUR]
+make v
+minishell$ CTRL+\
+minishell$ make: *** [Makefile:122: v] Quit (core dumped)
+ENTER
+ENTER
+...
+
+Test 22 [WEIRD BEHAVIOUR]
+make v
+minishell$ sleep 3
+CTRL+\
+make: *** [Makefile:122: v] Quit (core dumped)
+Quit (core dumped)
+ENTER
+ENTER
+...
+
+Test 23 [WEIRD BEHAVIOUR]
+make v
+minishell$ ls << EOF
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER
+ENTER
+ENTER
+...
+make v
+minishell$ cat << EOF
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER
+ENTER
+ENTER
+...
+
+Test 24 [WEIRD BEHAVIOUR] [LEAKS: FD and STILL REACH MEM]
+make v
+minishell$ echo test | << EOF
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER
+ENTER
+ENTER
+...
+
+
+
+CTRL+D Tests:
+
+Test 25 [NO LEAKS]
+make v
+minishell$ CTRL+D
+minishell$ echo $?
+0
+
+Test 26 [NO LEAKS]
+make v
+minishell$ sleep 3
+CTRL+D
+NOTHING
+minishell$ echo $?
+0
+
+Test 27 [NO LEAKS]
+make v
+minishell$ ls << EOF
+> CTRL+D
+minishell$ echo $?
+0
+minishell$ cat << EOF
+> CTRL+D
+minishell$ echo $?
+0
+
+Test 28 [NO LEAKS]
+make v
+minishell$ echo test | << EOF
+> CTRL+D
+minishell$ echo $?
+0

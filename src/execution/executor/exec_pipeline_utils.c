@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 09:04:51 by mario             #+#    #+#             */
-/*   Updated: 2026/01/31 19:25:34 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 21:20:44 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,30 +65,43 @@ static void	update_underscore_var(char *cmd_name)
 	free_split(paths);
 }
 
+void	setup_pipeline_fds(int prev_fd, int pipefd[2], int has_next)
+{
+	if (prev_fd != -1)
+	{
+		dup2(prev_fd, STDIN_FILENO);
+		close(prev_fd);
+	}
+	if (has_next)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+	}
+}
+
 void	pipeline_child_exec(t_pipeline *p)
 {
+	int	exit_code;
+
 	setup_signals(SIG_DEFAULT);
-	signal(SIGPIPE, SIG_DFL);
-	if (p->prev_fd != -1)
-	{
-		dup2(p->prev_fd, STDIN_FILENO);
-		close(p->prev_fd);
-	}
-	if (p->current->next)
-	{
-		close(p->pipefd[0]);
-		dup2(p->pipefd[1], STDOUT_FILENO);
-		close(p->pipefd[1]);
-	}
+	close_unused_heredocs(p->current);
+	setup_pipeline_fds(p->prev_fd, p->pipefd, p->current->next != NULL);
 	if (apply_redirections(p->current) != 0)
+	{
+		cleanup_resources(CLEANUP_CHILD);
 		exit(1);
+	}
 	if (is_builtin(p->current->args[0]))
 	{
+		signal(SIGPIPE, SIG_IGN);
 		update_underscore_var(p->current->args[0]);
-		exit(run_builtin(p->current->args));
+		exit_code = run_builtin(p->current->args);
+		cleanup_resources(CLEANUP_CHILD);
+		exit(exit_code);
 	}
+	signal(SIGPIPE, SIG_DFL);
 	execve_with_path(p->current);
-	exit(127);
 }
 
 void	wait_all_pipeline(pid_t last_pid, t_pipeline *p)

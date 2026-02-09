@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 23:45:37 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/09 21:20:29 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,16 @@ static pid_t	handle_empty_command_pipeline(t_cmd *current, int pipefd[2],
 	if (pid == 0)
 	{
 		setup_signals(SIG_DEFAULT);
-		if (prev_fd != -1)
-		{
-			dup2(prev_fd, STDIN_FILENO);
-			close(prev_fd);
-		}
-		if (current->next)
-		{
-			close(pipefd[0]);
-			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[1]);
-		}
+		setup_pipeline_fds(prev_fd, pipefd, current->next != NULL);
 		if (current->redirections)
 		{
 			if (apply_redirections(current) != 0)
+			{
+				cleanup_resources(CLEANUP_CHILD);
 				exit(1);
+			}
 		}
+		cleanup_resources(CLEANUP_CHILD);
 		exit(0);
 	}
 	return (pid);

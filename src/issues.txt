@@ -1,6 +1,6 @@
 https://github.com/LucasKuhn/minishell_tester.git
 
-🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
                                                                                              
  ██    ██ █ ██    █ █ █████ █   █ █████ █     █       ██████ █████ █████ ██████ █████ █████  
  ███  ███ █ ███   █ █ █     █   █ █     █     █         ██   █     █       ██   █     █   ██ 
@@ -8,7 +8,7 @@ https://github.com/LucasKuhn/minishell_tester.git
  █  ██  █ █ █  ██ █ █     █ █   █ █     █     █         ██   █         █   ██   █     █   ██ 
  █      █ █ █   ███ █ █████ █   █ █████ █████ █████     ██   █████ █████   ██   █████ █   ██ 
                                                                                              
-🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
 ———————————— redirects
 
@@ -132,104 +132,206 @@ pwd
 
 
 
-Child Leaks and Unclosed FDs:
+💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧
+💧                                                                                         💧
+💧    ██████ █   █ █ █     ████      █     █████ █████ █   █ █████     █████ █   █ ████    💧
+💧   █       █   █ █ █     █   █     █     █     █   █ █  █  █         █   █ ██  █ █   █   💧
+💧   █       █████ █ █     █   █     █     ████  █████ ███   █████     █████ █ █ █ █   █   💧
+💧   █       █   █ █ █     █   █     █     █     █   █ █  █      █     █   █ █  ██ █   █   💧
+💧    ██████ █   █ █ █████ ████      █████ █████ █   █ █   █ █████     █   █ █   █ ████    💧
+💧                                                                                         💧
+💧          █   █ █   █  ██████ █     █████ █████ █████ ████      █████ ████  █████        💧
+💧          █   █ ██  █ █       █     █   █ █     █     █   █     █     █   █ █            💧
+💧          █   █ █ █ █ █       █     █   █ █████ ████  █   █     ████  █   █ █████        💧
+💧          █   █ █  ██ █       █     █   █     █ █     █   █     █     █   █     █        💧
+💧           ███  █   █  ██████ █████ █████ █████ █████ ████      █     ████  █████        💧
+💧                                                                                         💧
+💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧💧
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                 GENERAL TESTS:                                🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 Test 1 [NO LEAKS]
 make v
 minishell$ "echo hello | \"\" | cat"
+minishell: echo hello | "" | cat: command not found
+minishell$ CTRL+D
 
 Test 2 [NO LEAKS]
 make v
 minishell$ unset EMPTY
 minishell$ echo hello | \$EMPTY | cat
+minishell: $EMPTY: command not found
+minishell$ CTRL+D
 
 Test 3 [NO LEAKS]
 make v
 minishell$ export VAR=\"\"
 minishell$ echo hello | \$VAR | cat
+minishell: $VAR: command not found
+minishell$ CTRL+D
 
 Test 4 [NO LEAKS]
 make v
 minishell$ echo test | \"\" | \"\" | cat
+minishell: "" | "" | cat: command not found
+minishell$ CTRL+D
 
 Test 5 [NO LEAKS]
 make v
 minishell$ nonexistent_command_xyz
+minishell: nonexistent_command_xyz: command not found
+minishell$ CTRL+D
 
 Test 6 [NO LEAKS]
 make v
 minishell$ /etc/passwd
+minishell: /etc/passwd: Permission denied
+minishell$ CTRL+D
 
 Test 7 [NO LEAKS]
 make v
 minishell$ /tmp
+minishell: /tmp: Is a directory
+minishell$ CTRL+D
 
 Test 8 [NO LEAKS]
 make v
 minishell$ /path/to/nowhere/file
+minishell: /path/to/nowhere/file: No such file or directory
+minishell$ CTRL+D
 
 Test 9 [NO LEAKS]
 make v
 minishell$ unset PATH
 minishell$ ls 2>/dev/null
+minishell: ls: command not found
+minishell$ CTRL+D
 
 Test 10 [NO LEAKS]
 make v
 minishell$ mkdir -p /tmp/testdir
 minishell$ ls > /tmp/testdir
+minishell: /tmp/testdir: Is a directory
 minishell$ rmdir /tmp/testdir
+minishell$ CTRL+D
 
 Test 11 [NO LEAKS]
 make v
 minishell$ export EMPTY=\"\"
 minishell$ echo test | \$EMPTY < /nonexistent_file
+minishell: /nonexistent_file: No such file or directory
+minishell$ CTRL+D
 
 Test 12 [NO LEAKS]
 make v
 minishell$ echo test | cat < /nonexistent_file
+minishell: /nonexistent_file: No such file or directory
+minishell$ CTRL+D
 
 Test 13 [NO LEAKS]
 make v
 minishell$ echo hello | export TEST=value | cat
+minishell$ CTRL+D
 
 Test 14 [NO LEAKS]
+make v
+minishell$ nonexistent_cmd | cat
+minishell: nonexistent_cmd: command not found
+minishell$ CTRL+D
+
+Test 15 [NO LEAKS]
+make v
+minishell$ echo a | cat | cat | cat | cat
+a
+minishell$ CTRL+D
+
+Test 16 [NO LEAKS]
+make v
+minishell$ echo hello | export X=1 > /tmp/test_out | cat
+minishell$ CTRL+D
+
+Test 17 [NO LEAKS]
 make v
 minishell$ cat << END
 > line 1
 > line 2
 > END
+line 1
+line 2
+minishell$ CTRL+D
 
-Test 15 [NO LEAKS]
+Test 18 [NO LEAKS]
 make v
 minishell$ echo test | << END
 > line 1
 > line 2
 > END
+minishell$ CTRL+D
 
-Test 16 [LEAKS: FD]
+Test 19 [NO LEAKS]
 make v
 minishell$ cat << EOF << END
 > line 1
 > EOF
 > line 2
 > END
+line 2
+minishell$ CTRL+D
 
-CTRL+C Tests:
+Test 20 [NO LEAKS]
+make v
+minishell$ echo test | << EOF | << END
+> line 1
+> EOF
+> line 2
+> END
+minishell$ CTRL+D
 
-Test 17 [NO LEAKS]
+Test 21 [NO LEAKS]
+make v
+minishell$ cat << EOF << END << OLA
+> line 1
+> EOF
+> line 2
+> END
+> line 3
+> OLA
+line 3
+minishell$ CTRL+D
+
+Test 22 [NO LEAKS]
+make v
+minishell$ echo test | << EOF | << END | << OLA
+> line 1
+> EOF
+> line 2
+> END
+> line 3
+> OLA
+minishell$ CTRL+D
+
+
+
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                  CTRL+C TESTS:                                🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+
+Test 23 [NO LEAKS]
 make v
 minishell$ CTRL+C
 minishell$ echo $?
 130
 
-Test 18 [NO LEAKS]
+Test 24 [NO LEAKS]
 make v
 minishell$ sleep 3
 CTRL+C
 minishell$ echo $?
 130
 
-Test 19 [LEAKS: FD and STILL REACH MEM]
+Test 25 [LEAKS: FD and STILL REACH MEM]
 make v
 minishell$ ls << EOF
 > CTRL+C
@@ -240,7 +342,7 @@ minishell$ cat << EOF
 minishell$ echo $?
 130
 
-Test 20 [LEAKS: FD and STILL REACH MEM]
+Test 26 [LEAKS: FD and STILL REACH MEM]
 make v
 minishell$ echo test | << EOF
 > CTRL+C
@@ -249,9 +351,11 @@ minishell$ echo $?
 
 
 
-CTRL+\ Tests:
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                  CTRL+\ TESTS:                                🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
-Test 21 [WEIRD BEHAVIOUR]
+Test 27 [WEIRD BEHAVIOUR]
 make v
 minishell$ CTRL+\
 minishell$ make: *** [Makefile:122: v] Quit (core dumped)
@@ -259,7 +363,7 @@ ENTER
 ENTER
 ...
 
-Test 22 [WEIRD BEHAVIOUR]
+Test 28 [WEIRD BEHAVIOUR]
 make v
 minishell$ sleep 3
 CTRL+\
@@ -269,7 +373,7 @@ ENTER
 ENTER
 ...
 
-Test 23 [WEIRD BEHAVIOUR]
+Test 29 [WEIRD BEHAVIOUR]
 make v
 minishell$ ls << EOF
 > CTRL+\
@@ -287,7 +391,7 @@ ENTER
 ENTER
 ...
 
-Test 24 [WEIRD BEHAVIOUR] [LEAKS: FD and STILL REACH MEM]
+Test 30 [WEIRD BEHAVIOUR] [LEAKS: FD and STILL REACH MEM]
 make v
 minishell$ echo test | << EOF
 > CTRL+\
@@ -299,15 +403,17 @@ ENTER
 
 
 
-CTRL+D Tests:
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+🚀                                  CTRL+D TESTS:                                🚀
+🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
-Test 25 [NO LEAKS]
+Test 31 [NO LEAKS]
 make v
 minishell$ CTRL+D
 minishell$ echo $?
 0
 
-Test 26 [NO LEAKS]
+Test 32 [NO LEAKS]
 make v
 minishell$ sleep 3
 CTRL+D
@@ -315,7 +421,7 @@ NOTHING
 minishell$ echo $?
 0
 
-Test 27 [NO LEAKS]
+Test 33 [NO LEAKS]
 make v
 minishell$ ls << EOF
 > CTRL+D
@@ -326,7 +432,7 @@ minishell$ cat << EOF
 minishell$ echo $?
 0
 
-Test 28 [NO LEAKS]
+Test 34 [NO LEAKS]
 make v
 minishell$ echo test | << EOF
 > CTRL+D

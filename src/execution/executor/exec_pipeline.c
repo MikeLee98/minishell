@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:04 by mario             #+#    #+#             */
-/*   Updated: 2026/02/09 21:20:29 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/10 16:39:23 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static pid_t	handle_empty_command_pipeline(t_cmd *current, int pipefd[2],
 	if (pid == 0)
 	{
 		setup_signals(SIG_DEFAULT);
+		close_unused_hd_fds(current);
 		setup_pipeline_fds(prev_fd, pipefd, current->next != NULL);
 		if (current->redirections)
 		{

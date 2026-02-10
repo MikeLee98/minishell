@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:26 by mario             #+#    #+#             */
-/*   Updated: 2026/02/09 22:28:00 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/10 17:19:11 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ static int	create_heredoc(int hd_expand, char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
+		close_unused_hd_fds(NULL);
 		heredoc_child(hd_expand, delimiter, pipefd[1]);
 	}
 	close(pipefd[1]);
@@ -82,8 +83,7 @@ static int	create_heredoc(int hd_expand, char *delimiter)
 	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
 	{
-		close(pipefd[0]);
-		return (shell()->exit_code = 130, -1);
+		return (close(pipefd[0]), shell()->exit_code = 130, -1);
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		print_heredoc_warning(delimiter);
@@ -103,6 +103,7 @@ int	prepare_heredocs(void)
 		{
 			if (r->type == TOKEN_REDIR_HEREDOC)
 			{
+				close_previous_hd_fds(cmd->redirections, r);
 				r->fd = create_heredoc(r->hd_expand, r->file);
 				if (r->fd < 0)
 					return (-1);

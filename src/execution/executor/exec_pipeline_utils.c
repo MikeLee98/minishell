@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 09:04:51 by mario             #+#    #+#             */
-/*   Updated: 2026/02/09 21:20:44 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/10 16:07:53 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	pipeline_child_exec(t_pipeline *p)
 	int	exit_code;
 
 	setup_signals(SIG_DEFAULT);
-	close_unused_heredocs(p->current);
+	close_unused_hd_fds(p->current);
 	setup_pipeline_fds(p->prev_fd, p->pipefd, p->current->next != NULL);
 	if (apply_redirections(p->current) != 0)
 	{

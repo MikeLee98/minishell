@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:09 by mario             #+#    #+#             */
-/*   Updated: 2026/02/05 22:41:02 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/10 17:11:11 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,25 @@ static int	open_redir_fd(t_redir *r)
 	return (-1);
 }
 
+static int	apply_dup2(int fd, t_redir *r)
+{
+	int	target;
+
+	if (r->type == TOKEN_REDIR_IN || r->type == TOKEN_REDIR_HEREDOC)
+		target = STDIN_FILENO;
+	else
+		target = STDOUT_FILENO;
+	if (dup2(fd, target) < 0)
+	{
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	if (r->type == TOKEN_REDIR_HEREDOC)
+		r->fd = -1;
+	return (0);
+}
+
 int	apply_redirections(t_cmd *cmd)
 {
 	t_redir	*r;
@@ -43,19 +62,16 @@ int	apply_redirections(t_cmd *cmd)
 	r = cmd->redirections;
 	while (r)
 	{
+		if (r->type == TOKEN_REDIR_HEREDOC && r->fd == -1)
+		{
+			r = r->next;
+			continue ;
+		}
 		fd = open_redir_fd(r);
 		if (fd < 0)
 			return (redir_error(r->file));
-		if (r->type == TOKEN_REDIR_IN || r->type == TOKEN_REDIR_HEREDOC)
-		{
-			if (dup2(fd, STDIN_FILENO) < 0)
-				return (close(fd), -1);
-		}
-		else if (dup2(fd, STDOUT_FILENO) < 0)
-			return (close(fd), -1);
-		close(fd);
-		if (r->type == TOKEN_REDIR_HEREDOC)
-			r->fd = -1;
+		if (apply_dup2(fd, r) < 0)
+			return (-1);
 		r = r->next;
 	}
 	return (0);

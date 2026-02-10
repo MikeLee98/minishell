@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/09 21:22:18 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/10 17:01:42 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,8 @@ int		ft_exit(char **args);
 // exec_main.c
 void	executor(void);
 int		run_builtin(char **args);
-void	close_unused_heredocs(t_cmd *current_cmd);
+void	close_unused_hd_fds(t_cmd *current_cmd);
+void	close_previous_hd_fds(t_redir *redir_list, t_redir *current);
 
 // exec_paths.c
 void	execve_with_path(t_cmd *cmd);

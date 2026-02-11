@@ -156,58 +156,58 @@ Test 1 [NO LEAKS]
 make v
 minishell$ "echo hello | \"\" | cat"
 minishell: echo hello | "" | cat: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 2 [NO LEAKS]
 make v
 minishell$ unset EMPTY
 minishell$ echo hello | \$EMPTY | cat
 minishell: $EMPTY: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 3 [NO LEAKS]
 make v
 minishell$ export VAR=\"\"
 minishell$ echo hello | \$VAR | cat
 minishell: $VAR: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 4 [NO LEAKS]
 make v
 minishell$ echo test | \"\" | \"\" | cat
 minishell: "" | "" | cat: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 5 [NO LEAKS]
 make v
 minishell$ nonexistent_command_xyz
 minishell: nonexistent_command_xyz: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 6 [NO LEAKS]
 make v
 minishell$ /etc/passwd
 minishell: /etc/passwd: Permission denied
-minishell$ CTRL+D
+minishell$ exit
 
 Test 7 [NO LEAKS]
 make v
 minishell$ /tmp
 minishell: /tmp: Is a directory
-minishell$ CTRL+D
+minishell$ exit
 
 Test 8 [NO LEAKS]
 make v
 minishell$ /path/to/nowhere/file
 minishell: /path/to/nowhere/file: No such file or directory
-minishell$ CTRL+D
+minishell$ exit
 
 Test 9 [NO LEAKS]
 make v
 minishell$ unset PATH
 minishell$ ls 2>/dev/null
 minishell: ls: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 10 [NO LEAKS]
 make v
@@ -215,42 +215,42 @@ minishell$ mkdir -p /tmp/testdir
 minishell$ ls > /tmp/testdir
 minishell: /tmp/testdir: Is a directory
 minishell$ rmdir /tmp/testdir
-minishell$ CTRL+D
+minishell$ exit
 
 Test 11 [NO LEAKS]
 make v
 minishell$ export EMPTY=\"\"
 minishell$ echo test | \$EMPTY < /nonexistent_file
 minishell: /nonexistent_file: No such file or directory
-minishell$ CTRL+D
+minishell$ exit
 
 Test 12 [NO LEAKS]
 make v
 minishell$ echo test | cat < /nonexistent_file
 minishell: /nonexistent_file: No such file or directory
-minishell$ CTRL+D
+minishell$ exit
 
 Test 13 [NO LEAKS]
 make v
 minishell$ echo hello | export TEST=value | cat
-minishell$ CTRL+D
+minishell$ exit
 
 Test 14 [NO LEAKS]
 make v
 minishell$ nonexistent_cmd | cat
 minishell: nonexistent_cmd: command not found
-minishell$ CTRL+D
+minishell$ exit
 
 Test 15 [NO LEAKS]
 make v
 minishell$ echo a | cat | cat | cat | cat
 a
-minishell$ CTRL+D
+minishell$ exit
 
 Test 16 [NO LEAKS]
 make v
 minishell$ echo hello | export X=1 > /tmp/test_out | cat
-minishell$ CTRL+D
+minishell$ exit
 
 Test 17 [NO LEAKS]
 make v
@@ -260,7 +260,7 @@ minishell$ cat << END
 > END
 line 1
 line 2
-minishell$ CTRL+D
+minishell$ exit
 
 Test 18 [NO LEAKS]
 make v
@@ -268,7 +268,7 @@ minishell$ echo test | << END
 > line 1
 > line 2
 > END
-minishell$ CTRL+D
+minishell$ exit
 
 Test 19 [NO LEAKS]
 make v
@@ -278,7 +278,7 @@ minishell$ cat << EOF << END
 > line 2
 > END
 line 2
-minishell$ CTRL+D
+minishell$ exit
 
 Test 20 [NO LEAKS]
 make v
@@ -287,7 +287,7 @@ minishell$ echo test | << EOF | << END
 > EOF
 > line 2
 > END
-minishell$ CTRL+D
+minishell$ exit
 
 Test 21 [NO LEAKS]
 make v
@@ -299,7 +299,7 @@ minishell$ cat << EOF << END << OLA
 > line 3
 > OLA
 line 3
-minishell$ CTRL+D
+minishell$ exit
 
 Test 22 [NO LEAKS]
 make v
@@ -310,7 +310,7 @@ minishell$ echo test | << EOF | << END | << OLA
 > END
 > line 3
 > OLA
-minishell$ CTRL+D
+minishell$ exit
 
 
 
@@ -323,6 +323,7 @@ make v
 minishell$ CTRL+C
 minishell$ echo $?
 130
+minishell$ exit
 
 Test 24 [NO LEAKS]
 make v
@@ -330,24 +331,139 @@ minishell$ sleep 3
 CTRL+C
 minishell$ echo $?
 130
+minishell$ exit
 
-Test 25 [LEAKS: FD and STILL REACH MEM]
+Test 25 [NO LEAKS]
+make v
+minishell$ export VAR=value << EOF
+> line 1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ echo $VAR
+
+minishell$ exit
+
+Test 26 [NO LEAKS]
+make v
+minishell$ cd /tmp << EOF
+> line 1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ pwd
+/home/msdmrf/Documents/42lisboa/migusant/common/minishell
+minishell$ exit
+
+Test 27 [NO LEAKS]
 make v
 minishell$ ls << EOF
 > CTRL+C
 minishell$ echo $?
 130
-minishell$ cat << EOF
+minishell$ exit
+
+Test 28 [NO LEAKS]
+make v
+minishell$ ls << EOF
+> line 1
 > CTRL+C
 minishell$ echo $?
 130
+minishell$ exit
 
-Test 26 [LEAKS: FD and STILL REACH MEM]
+Test 29 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 30 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 31 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 32 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> line 2
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 33 [NO LEAKS]
 make v
 minishell$ echo test | << EOF
 > CTRL+C
 minishell$ echo $?
 130
+minishell$ exit
+
+Test 34 [NO LEAKS]
+make v
+minishell$ echo test | << EOF
+> line 1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 35 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 36 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 37 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> END1
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
+
+Test 38 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> END1
+> line 2
+> CTRL+C
+minishell$ echo $?
+130
+minishell$ exit
 
 
 
@@ -355,51 +471,268 @@ minishell$ echo $?
 🚀                                  CTRL+\ TESTS:                                🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
-Test 27 [WEIRD BEHAVIOUR]
+Note: When we press CTRL+\ while running our minishell under valgrind, the signal path gets
+complicated. Normally, SIGQUIT goes directly to our shell, but with make v, valgrind becomes
+the parent process that receives the signal first, then forwards it to our minishell. Our shell
+correctly ignores it (we set signal(SIGQUIT, SIG_IGN) for interactive/heredoc modes), but 
+valgrind's process wrapper doesn't fully isolate the signal, so the make command also sees
+it and prints its own "Quit (core dumped)" message. This causes double messages and terminal
+corruption. 
+
+Test 39 [NO LEAKS]
 make v
 minishell$ CTRL+\
 minishell$ make: *** [Makefile:122: v] Quit (core dumped)
-ENTER
-ENTER
-...
+ENTER KEY PRESS
+exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
 
-Test 28 [WEIRD BEHAVIOUR]
+Test 40 [NO LEAKS]
 make v
 minishell$ sleep 3
-CTRL+\
-make: *** [Makefile:122: v] Quit (core dumped)
+CTRL+\make: *** [Makefile:122: v] Quit (core dumped)
 Quit (core dumped)
-ENTER
-ENTER
-...
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
 
-Test 29 [WEIRD BEHAVIOUR]
+Test 41 [NO LEAKS]
+make v
+minishell$ export VAR=value << EOF
+> line 1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 42 [NO LEAKS]
+make v
+minishell$ cd /tmp << EOF
+> line 1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 43 [NO LEAKS]
 make v
 minishell$ ls << EOF
 > CTRL+\
 > make: *** [Makefile:122: v] Quit (core dumped)
-ENTER
-ENTER
-ENTER
-...
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+includes   minishell_tester_LucasKuhn	test_sigABRT.sh  test_sigKILL.sh  test_sigTERM.sh
+libft	   minishell_tester_zstenger93	test_sigBUS.sh	 test_sigPIPE.sh  valgrind.supp
+Makefile   objects			test_sigFPE.sh	 test_sigQUIT.sh
+minishell  src				test_sigILL.sh	 test_sigSEGV.sh
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 44 [NO LEAKS]
 make v
-minishell$ cat << EOF
+minishell$ ls << EOF
+> line 1
 > CTRL+\
 > make: *** [Makefile:122: v] Quit (core dumped)
-ENTER
-ENTER
-ENTER
-...
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+includes   minishell_tester_LucasKuhn	test_sigABRT.sh  test_sigKILL.sh  test_sigTERM.sh
+libft	   minishell_tester_zstenger93	test_sigBUS.sh	 test_sigPIPE.sh  valgrind.supp
+Makefile   objects			test_sigFPE.sh	 test_sigQUIT.sh
+minishell  src				test_sigILL.sh	 test_sigSEGV.sh
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
 
-Test 30 [WEIRD BEHAVIOUR] [LEAKS: FD and STILL REACH MEM]
+Test 45 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+>
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 46 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+>
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 47 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 48 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> line 2
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+line2
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 49 [NO LEAKS]
 make v
 minishell$ echo test | << EOF
 > CTRL+\
 > make: *** [Makefile:122: v] Quit (core dumped)
-ENTER
-ENTER
-ENTER
-...
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 50 [NO LEAKS]
+make v
+minishell$ echo test | << EOF
+> line 1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 51 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+>
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 52 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+>
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 53 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> END1
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
+
+Test 54 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> END1
+> line 2
+> CTRL+\
+> make: *** [Makefile:122: v] Quit (core dumped)
+ENTER KEY PRESS
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$
+ENTER KEY PRESS
+           exit
+ENTER KEY PRESS
+minishell$ echo $?
+1
 
 
 
@@ -407,34 +740,197 @@ ENTER
 🚀                                  CTRL+D TESTS:                                🚀
 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
-Test 31 [NO LEAKS]
+Test 55 [NO LEAKS]
 make v
 minishell$ CTRL+D
-minishell$ echo $?
-0
 
-Test 32 [NO LEAKS]
+Test 56 [NO LEAKS]
 make v
 minishell$ sleep 3
 CTRL+D
-NOTHING
+CTRL+D
+CTRL+D
+CTRL+D
+CTRL+D
 minishell$ echo $?
 0
+minishell$ exit
 
-Test 33 [NO LEAKS]
+Test 57 [NO LEAKS]
+make v
+minishell$ export VAR=value << EOF
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$ echo $?
+0
+minishell$ echo $VAR
+value
+minishell$ exit
+
+Test 58 [NO LEAKS]
+make v
+minishell$ cd /tmp << EOF
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$ echo $?
+0
+minishell$ pwd
+/pwd
+minishell$ exit
+
+Test 59 [NO LEAKS]
 make v
 minishell$ ls << EOF
 > CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+includes   minishell_tester_LucasKuhn	test_sigABRT.sh  test_sigKILL.sh  test_sigTERM.sh
+libft	   minishell_tester_zstenger93	test_sigBUS.sh	 test_sigPIPE.sh  valgrind.supp
+Makefile   objects			test_sigFPE.sh	 test_sigQUIT.sh
+minishell  src				test_sigILL.sh	 test_sigSEGV.sh
 minishell$ echo $?
 0
-minishell$ cat << EOF
-> CTRL+D
-minishell$ echo $?
-0
+minishell$ exit
 
-Test 34 [NO LEAKS]
+Test 60 [NO LEAKS]
+make v
+minishell$ ls << EOF
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+includes   minishell_tester_LucasKuhn	test_sigABRT.sh  test_sigKILL.sh  test_sigTERM.sh
+libft	   minishell_tester_zstenger93	test_sigBUS.sh	 test_sigPIPE.sh  valgrind.supp
+Makefile   objects			test_sigFPE.sh	 test_sigQUIT.sh
+minishell  src				test_sigILL.sh	 test_sigSEGV.sh
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 61 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 62 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 63 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> line 2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+line 2
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 64 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 65 [NO LEAKS]
+make v
+minishell$ cat << END1 << END2
+> line 1
+> END1
+> line 2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+line 2
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 66 [NO LEAKS]
 make v
 minishell$ echo test | << EOF
 > CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
 minishell$ echo $?
 0
+minishell$ exit
+
+Test 67 [NO LEAKS]
+make v
+minishell$ echo test | << EOF
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `EOF')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 68 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 69 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 70 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END1')
+> line 2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit
+
+Test 71 [NO LEAKS]
+make v
+minishell$ echo test | << END1 | << END2
+> line 1
+> END1
+> line 2
+> CTRL+D
+minishell: warning: here-document at line N delimited by end-of-file (wanted `END2')
+minishell$ echo $?
+0
+minishell$ exit

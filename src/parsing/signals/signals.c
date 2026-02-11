@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 09:52:01 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:51:39 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/11 11:48:59 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
-	exit(130);
+	close(STDIN_FILENO);
 }
 
 void	setup_signals(int mode)

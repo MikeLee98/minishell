@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:55:26 by mario             #+#    #+#             */
-/*   Updated: 2026/02/10 17:19:11 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/11 14:30:21 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static void	heredoc_child(int hd_expand, char *delimiter, int write_fd)
 		{
 			close(write_fd);
 			cleanup_resources(CLEANUP_CHILD);
+			if (errno == EBADF)
+				exit(130);
 			exit(1);
 		}
 		if (ft_strcmp(line, delimiter) == 0)
@@ -106,7 +108,10 @@ int	prepare_heredocs(void)
 				close_previous_hd_fds(cmd->redirections, r);
 				r->fd = create_heredoc(r->hd_expand, r->file);
 				if (r->fd < 0)
+				{
+					close_unused_hd_fds(NULL);
 					return (-1);
+				}
 			}
 			r = r->next;
 		}

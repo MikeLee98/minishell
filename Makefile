@@ -6,7 +6,7 @@
 #    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/19 22:09:11 by migusant          #+#    #+#              #
-#    Updated: 2026/02/06 15:16:07 by migusant         ###   ########.fr        #
+#    Updated: 2026/02/15 22:05:52 by migusant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,6 @@ SRC = src/main.c \
 	src/main_utils.c \
 	src/main_pipeline.c \
 	src/main_debug.c \
-	src/main_debug_utils.c \
 	src/parsing/lexer/lexer.c \
 	src/parsing/lexer/lexer_helpers.c \
 	src/parsing/lexer/lexer_checks.c \

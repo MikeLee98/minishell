@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/10 17:01:42 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/15 22:05:08 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,12 +307,7 @@ int		validate_input(char *input);
 void	process_and_execute(char *input);
 
 // main_debug.c
-void	print_debug_info(void);
 void	print_tokens(t_token *tokens, char *stage);
-void	print_redirections(t_redir *redir);
 void	print_cmd_list(t_cmd *cmd_list, char *stage);
-
-// main_debug_utils.c
-void	print_tokens_copy(char *stage);
 
 #endif

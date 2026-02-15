@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 09:47:58 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/09 22:27:35 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/15 20:10:20 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,12 @@ void	cleanup_resources(int mode)
 	}
 	if (mode == CLEANUP_PARENT)
 		rl_clear_history();
-	if (shell()->toks)
-		free_tokens(shell()->toks);
-	if (shell()->cmds)
-		free_cmd_list(shell()->cmds);
+	free_tokens(shell()->toks);
+	shell()->toks = NULL;
+	free_cmd_list(shell()->cmds);
+	shell()->cmds = NULL;
 	free_env_nodes(shell()->env);
+	shell()->env = NULL;
 }
 
 int	main(int argc, char **argv, char **envp)

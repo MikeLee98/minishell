@@ -6,21 +6,11 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/05 22:30:18 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:59:16 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	print_debug_info(void)
-{
-	if (!shell() || !shell()->toks)
-		return ;
-	print_tokens(shell()->toks, "TOKENS");
-	print_tokens_copy("TOKENS (after expansion)");
-	print_tokens_copy("TOKENS (after word splitting)");
-	print_tokens_copy("TOKENS (after quote removal)");
-}
 
 static char	*token_type_str(t_token_type type)
 {
@@ -61,7 +51,7 @@ void	print_tokens(t_token *tokens, char *stage)
 	}
 }
 
-void	print_redirections(t_redir *redir)
+static void	print_redirections(t_redir *redir)
 {
 	while (redir)
 	{

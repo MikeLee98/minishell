@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 22:18:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/03 12:16:50 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/15 22:12:41 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,19 +95,22 @@ int	parser(void)
 {
 	t_token	*current_token;
 
-	if (!shell() || !shell()->toks)
-		return (0);
+	if (MINISHELL_DEBUG)
+		print_tokens(shell()->toks, "TOKENS (raw)");
 	expand_tokens();
 	remove_empty_word_tokens();
 	if (!shell()->toks)
-	{
-		shell()->cmds = NULL;
-		return (1);
-	}
+		return (shell()->cmds = NULL, 1);
+	if (MINISHELL_DEBUG)
+		print_tokens(shell()->toks, "TOKENS (after expansion)");
 	mark_word_split(shell()->toks);
 	apply_word_split(&shell()->toks);
+	if (MINISHELL_DEBUG)
+		print_tokens(shell()->toks, "TOKENS (after word splitting)");
 	mark_heredoc_expansion(shell()->toks);
 	handle_quotes();
+	if (MINISHELL_DEBUG)
+		print_tokens(shell()->toks, "TOKENS (after quote removal)");
 	shell()->cmds = NULL;
 	current_token = shell()->toks;
 	while (current_token)

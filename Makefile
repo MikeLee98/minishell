@@ -6,7 +6,7 @@
 #    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/19 22:09:11 by migusant          #+#    #+#              #
-#    Updated: 2026/02/15 22:05:52 by migusant         ###   ########.fr        #
+#    Updated: 2026/02/16 17:06:55 by migusant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,6 @@ SRC = src/main.c \
 	src/parsing/lexer/lexer_utils.c \
 	src/parsing/lexer/lexer_quotes.c \
 	src/parsing/syntax/syntax_checker.c \
-	src/parsing/syntax/syntax_checker_utils.c \
 	src/parsing/parser/parser.c \
 	src/parsing/parser/parser_utils.c \
 	src/parsing/parser/parser_split_mark.c \

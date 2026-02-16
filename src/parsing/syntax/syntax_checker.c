@@ -6,30 +6,31 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 09:42:51 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:03:11 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/16 17:09:25 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
+static int	is_redir_token(t_token_type type)
+{
+	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HEREDOC);
+}
+
+static void	print_syntax_error(t_token *token)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+	if (!token)
+		ft_putstr_fd("newline", 2);
+	else
+		ft_putstr_fd(token->value, 2);
+	ft_putstr_fd("'\n", 2);
+}
+
 static int	check_redir_syntax(t_token *token)
 {
-	if (!token->next)
-	{
-		print_syntax_error(NULL);
-		return (0);
-	}
-	else if (token->next->type == TOKEN_PIPE)
-	{
-		print_syntax_error(token->next);
-		return (0);
-	}
-	else if (is_redir_token(token->next->type))
-	{
-		print_syntax_error(token->next);
-		return (0);
-	}
-	else if (token->next->type != TOKEN_WORD)
+	if (!token->next || token->next->type != TOKEN_WORD)
 	{
 		print_syntax_error(token->next);
 		return (0);
@@ -44,12 +45,7 @@ static int	check_pipe_syntax(t_token *token, t_token *prev)
 		print_syntax_error(token);
 		return (0);
 	}
-	else if (!token->next)
-	{
-		print_syntax_error(NULL);
-		return (0);
-	}
-	else if (token->next->type == TOKEN_PIPE)
+	if (!token->next || token->next->type == TOKEN_PIPE)
 	{
 		print_syntax_error(token->next);
 		return (0);

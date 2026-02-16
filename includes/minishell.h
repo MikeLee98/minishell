@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/15 22:05:08 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/16 17:08:42 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,6 @@ void	copy_quoted_section(char *dst, char *src, int *dst_pos, int *src_pos);
 
 // syntax_checker.c
 int		check_syntax(void);
-
-// syntax_checker_utils.c
-int		is_redir_token(t_token_type type);
-void	print_syntax_error(t_token *token);
 
 // parser.c
 void	add_cmd_to_list(t_cmd **head, t_cmd *new_cmd);

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:12:44 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:47:04 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/16 21:28:49 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ void	handle_quotes(void)
 {
 	t_token	*tokens;
 
-	if (!shell() || !shell()->toks)
-		return ;
 	tokens = shell()->toks;
 	while (tokens)
 	{

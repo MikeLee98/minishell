@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:09:57 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:27:00 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/16 21:31:14 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void	expand_tokens(void)
 {
 	t_token	*tokens;
 
-	if (!shell() || !shell()->toks)
-		return ;
 	tokens = shell()->toks;
 	while (tokens)
 	{

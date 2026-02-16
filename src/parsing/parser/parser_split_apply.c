@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:13:38 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:23:42 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/16 21:32:13 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ void	apply_word_split(t_token **tokens)
 	t_token	*next;
 	char	**words;
 
-	if (!tokens || !*tokens)
-		return ;
 	current = *tokens;
 	while (current)
 	{

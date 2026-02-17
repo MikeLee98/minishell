@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:11:08 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 16:43:47 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/17 14:01:04 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*expand_tilde(char *str, int *i)
 	return (ft_strdup("~"));
 }
 
-static char	*extract_var_name(char *str, int *i)
+char	*extract_var_name(char *str, int *i)
 {
 	int	start;
 

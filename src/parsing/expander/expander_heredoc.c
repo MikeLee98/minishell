@@ -6,28 +6,11 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:36:05 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 16:10:57 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/17 14:11:10 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-
-static char	*extract_heredoc_var_name(char *str, int *i)
-{
-	int	start;
-
-	(*i)++;
-	if (str[*i] == '?')
-		return (dup_char_and_advance('?', i));
-	start = *i;
-	if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '_'))
-	{
-		(*i)++;
-		while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
-			(*i)++;
-	}
-	return (ft_substr(str, start, *i - start));
-}
 
 static char	*process_heredoc_char(char *str, int *i)
 {
@@ -42,9 +25,8 @@ static char	*process_heredoc_char(char *str, int *i)
 	}
 	else if (str[*i] == '$')
 	{
-		if (str[*i + 1] && (ft_isalnum(str[*i + 1])
-				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
-			return (expand_var_from_name(extract_heredoc_var_name(str, i)));
+		if (str[*i + 1])
+			return (expand_var_from_name(extract_var_name(str, i)));
 		else
 			return (dup_char_and_advance('$', i));
 	}
@@ -69,7 +51,7 @@ char	*expand_heredoc_line(char *line)
 		segment = process_heredoc_char(line, &i);
 		if (!segment)
 			return (free(result), NULL);
-		result = append_string(result, segment, 1);
+		result = append_string(result, segment);
 		if (!result)
 			return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 19:52:17 by mario             #+#    #+#             */
-/*   Updated: 2026/02/16 17:08:42 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/17 14:01:57 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ char	*expand_ansi_c_quotes(char *str, int *i);
 
 // expander_substitutions.c
 char	*expand_tilde(char *str, int *i);
+char	*extract_var_name(char *str, int *i);
 char	*expand_variable(char *str, int *i);
 
 // expander_heredoc.c
@@ -162,7 +163,7 @@ char	*expand_heredoc_line(char *line);
 // expander_utils.c
 char	*dup_char_and_advance(char c, int *i);
 char	*expand_var_from_name(char *var_name);
-char	*append_string(char *result, char *to_add, int free_add);
+char	*append_string(char *result, char *to_add);
 char	*append_char(char *result, char c);
 
 // quote_removal.c

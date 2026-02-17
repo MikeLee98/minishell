@@ -6,11 +6,24 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/13 09:54:52 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/02 15:32:10 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/17 11:59:29 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+char	*expand_single_quotes(char *str, int *i)
+{
+	int	start;
+
+	start = *i;
+	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	if (str[*i] == '\'')
+		(*i)++;
+	return (ft_substr(str, start, *i - start));
+}
 
 static char	*handle_expansion_char(char *str, int *i, char **result)
 {
@@ -25,7 +38,7 @@ static char	*handle_expansion_char(char *str, int *i, char **result)
 	else if (str[*i] == '$')
 	{
 		expansion = expand_variable(str, i);
-		*result = append_string(*result, expansion, 1);
+		*result = append_string(*result, expansion);
 	}
 	else
 	{
@@ -33,19 +46,6 @@ static char	*handle_expansion_char(char *str, int *i, char **result)
 		(*i)++;
 	}
 	return (*result);
-}
-
-char	*expand_single_quotes(char *str, int *i)
-{
-	int	start;
-
-	start = *i;
-	(*i)++;
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-	if (str[*i] == '\'')
-		(*i)++;
-	return (ft_substr(str, start, *i - start));
 }
 
 static int	handle_escaped_quote(char *str, int *i, char **result)
@@ -93,7 +93,7 @@ char	*expand_ansi_c_quotes(char *str, int *i)
 {
 	int	start;
 
-	(*i) += 2;
+	(*i)++;
 	start = *i;
 	while (str[*i] && str[*i] != '\'')
 		(*i)++;

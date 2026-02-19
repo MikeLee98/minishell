@@ -6,7 +6,7 @@
 /*   By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 09:09:57 by migusant          #+#    #+#             */
-/*   Updated: 2026/02/17 12:56:02 by migusant         ###   ########.fr       */
+/*   Updated: 2026/02/19 16:38:56 by migusant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,5 @@ void	expand_tokens(void)
 			try_expand_token(tokens->next);
 		tokens = tokens->next;
 	}
+	remove_empty_word_tokens();
 }

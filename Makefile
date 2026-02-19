@@ -6,7 +6,7 @@
 #    By: migusant <migusant@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/19 22:09:11 by migusant          #+#    #+#              #
-#    Updated: 2026/02/16 17:06:55 by migusant         ###   ########.fr        #
+#    Updated: 2026/02/19 18:17:44 by migusant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,7 @@ SRC = src/main.c \
 	src/parsing/parser/parser_split_mark.c \
 	src/parsing/parser/parser_heredoc_mark.c \
 	src/parsing/parser/parser_split_apply.c \
+	src/parsing/parser/parser_split_apply_utils.c \
 	src/parsing/expander/expander.c \
 	src/parsing/expander/expander_quotes.c \
 	src/parsing/expander/expander_substitutions.c \
@@ -119,7 +120,7 @@ $(NAME): $(LIBFT) $(OBJ)
 v: all
 	@clear && valgrind --leak-check=full --show-leak-kinds=all \
 		--track-fds=yes --trace-children=yes --track-origins=yes \
-		--suppressions=valgrind.supp -s ./$(NAME)
+		--suppressions=$(shell pwd)/valgrind.supp -s ./$(NAME)
 
 $(LIBFT):
 	@echo "$(YELLOW)Building libft...$(RESET)"
